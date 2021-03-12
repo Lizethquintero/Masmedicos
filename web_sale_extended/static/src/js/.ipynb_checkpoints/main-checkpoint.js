@@ -32,6 +32,7 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
         });
 
         function consultarCiudades(estado, elemento) {
+            console.log('5');
             $.ajax({
                 data: { 'departamento': estado },
                 url: "/search/cities",
@@ -84,16 +85,137 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
             let fiscal_position_asegurador = $("input[name='fiscal_position_id']").val();
             if (edad < 18) {
                 console.log("Eres menor de edad");
-
                 $("input[name='bfemail1']").val(email_asegurador);
                 $("input[name='bfaddress1']").val(adress_asegurador);
-                //$("select[name='bfcountry_id1']").val(country_asegurador);
-                //$("select[name='bfdeparment1']").val(asegurador_state);
-                //$("select[name='bfcity1']").val(ciudad_asegurador);
                 $("input[name='bffijo1']").val(telefono_fijo_asegurador);
-
             }
         });
+        
+        $("input[name='bfdate2']").on('change', function calcularEdad() {
+            let fecha = $(this).val();
+            let hoy = new Date();
+            let cumpleanos = new Date(fecha);
+            let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+            let m = hoy.getMonth() - cumpleanos.getMonth();
+            if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+                edad--;
+            }
+            let email_asegurador = $("input[name='email']").val();
+            let telefono_fijo_asegurador = $("input[name='fijo']").val();
+            let ciudad_asegurador = $("input[name='city']").val();
+            let adress_asegurador = $("input[name='address']").val();
+            let asegurador_state = $("input[name='deparment']").val();
+            let country_asegurador = $("input[name='country_id']").val();
+            let fiscal_position_asegurador = $("input[name='fiscal_position_id']").val();
+            if (edad < 18) {
+                console.log("Eres menor de edad");
+                $("input[name='bfemail2']").val(email_asegurador);
+                $("input[name='bfaddress2']").val(adress_asegurador);
+                $("input[name='bffijo2']").val(telefono_fijo_asegurador);
+            }
+        });
+        
+        
+        $("input[name='bfdate3']").on('change', function calcularEdad() {
+            let fecha = $(this).val();
+            let hoy = new Date();
+            let cumpleanos = new Date(fecha);
+            let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+            let m = hoy.getMonth() - cumpleanos.getMonth();
+            if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+                edad--;
+            }
+            let email_asegurador = $("input[name='email']").val();
+            let telefono_fijo_asegurador = $("input[name='fijo']").val();
+            let ciudad_asegurador = $("input[name='city']").val();
+            let adress_asegurador = $("input[name='address']").val();
+            let asegurador_state = $("input[name='deparment']").val();
+            let country_asegurador = $("input[name='country_id']").val();
+            let fiscal_position_asegurador = $("input[name='fiscal_position_id']").val();
+            if (edad < 18) {
+                console.log("Eres menor de edad");
+                $("input[name='bfemail3']").val(email_asegurador);
+                $("input[name='bfaddress3']").val(adress_asegurador);
+                $("input[name='bffijo3']").val(telefono_fijo_asegurador);
+            }
+        });
+        
+        
+        $("input[name='bfdate4']").on('change', function calcularEdad() {
+            let fecha = $(this).val();
+            let hoy = new Date();
+            let cumpleanos = new Date(fecha);
+            let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+            let m = hoy.getMonth() - cumpleanos.getMonth();
+            if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+                edad--;
+            }
+            let email_asegurador = $("input[name='email']").val();
+            let telefono_fijo_asegurador = $("input[name='fijo']").val();
+            let ciudad_asegurador = $("input[name='city']").val();
+            let adress_asegurador = $("input[name='address']").val();
+            let asegurador_state = $("input[name='deparment']").val();
+            let country_asegurador = $("input[name='country_id']").val();
+            let fiscal_position_asegurador = $("input[name='fiscal_position_id']").val();
+            if (edad < 18) {
+                console.log("Eres menor de edad");
+                $("input[name='bfemail4']").val(email_asegurador);
+                $("input[name='bfaddress4']").val(adress_asegurador);
+                $("input[name='bffijo4']").val(telefono_fijo_asegurador);
+            }
+        });
+        
+        
+        $("input[name='bfdate5']").on('change', function calcularEdad() {
+            let fecha = $(this).val();
+            let hoy = new Date();
+            let cumpleanos = new Date(fecha);
+            let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+            let m = hoy.getMonth() - cumpleanos.getMonth();
+            if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+                edad--;
+            }
+            let email_asegurador = $("input[name='email']").val();
+            let telefono_fijo_asegurador = $("input[name='fijo']").val();
+            let ciudad_asegurador = $("input[name='city']").val();
+            let adress_asegurador = $("input[name='address']").val();
+            let asegurador_state = $("input[name='deparment']").val();
+            let country_asegurador = $("input[name='country_id']").val();
+            let fiscal_position_asegurador = $("input[name='fiscal_position_id']").val();
+            if (edad < 18) {
+                console.log("Eres menor de edad");
+                $("input[name='bfemail5']").val(email_asegurador);
+                $("input[name='bfaddress5']").val(adress_asegurador);
+                $("input[name='bffijo5']").val(telefono_fijo_asegurador);
+            }
+        });
+        
+        
+        $("input[name='bfdate6']").on('change', function calcularEdad() {
+            let fecha = $(this).val();
+            let hoy = new Date();
+            let cumpleanos = new Date(fecha);
+            let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+            let m = hoy.getMonth() - cumpleanos.getMonth();
+            if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+                edad--;
+            }
+            let email_asegurador = $("input[name='email']").val();
+            let telefono_fijo_asegurador = $("input[name='fijo']").val();
+            let ciudad_asegurador = $("input[name='city']").val();
+            let adress_asegurador = $("input[name='address']").val();
+            let asegurador_state = $("input[name='deparment']").val();
+            let country_asegurador = $("input[name='country_id']").val();
+            let fiscal_position_asegurador = $("input[name='fiscal_position_id']").val();
+            if (edad < 18) {
+                console.log("Eres menor de edad");
+                $("input[name='bfemail6']").val(email_asegurador);
+                $("input[name='bfaddress6']").val(adress_asegurador);
+                $("input[name='bffijo6']").val(telefono_fijo_asegurador);
+            }
+        });
+        
+        
 
 
         $.validator.addMethod("formMovilFijoLength", function (value, element) {
@@ -106,7 +228,8 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
 
 
         $.validator.addMethod("lettersonly", function(value, element) {
-            return this.optional(element) || /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g.test(value);
+            //return this.optional(element) || /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g.test(value);
+            return this.optional(element) || /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]/g.test(value);
         }, "¡Upss! deben ser ser solo letras");
 
 
@@ -419,6 +542,7 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
 
 
     function consultarCiudadesBeneficiary(estado, elemento, item) {
+        console.log('4');
             $.ajax({
                 data: { 'departamento': estado },
                 url: "/search/cities",
@@ -1550,6 +1674,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
         });
         
         function consultarCiudadesCreditCard(estado, elemento) {
+            console.log('3');
             $.ajax({
                 data: { 'departamento': estado },
                 url: "/search/cities",
@@ -1570,6 +1695,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
             });
         }
         function consultarCiudadesPSE(estado, elemento) {
+            console.log('2');
             $.ajax({
                 data: { 'departamento': estado },
                 url: "/search/cities",
@@ -1590,6 +1716,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
             });
         }
         function consultarCiudadesCash(estado, elemento) {
+            console.log('1');
             $.ajax({
                 data: { 'departamento': estado },
                 url: "/search/cities",
@@ -1674,11 +1801,13 @@ odoo.define('web_sale_extended.payment_process', function(require) {
         $('#cash_city_id').selectpicker('refresh')
         
         var credit_city = "select[name='credit_card_city']";
-        consultarCiudadesCreditCard(partner_state_id, credit_city);
         var pse_city = "select[name='pse_city']";
-        consultarCiudadesPSE(partner_state_id, pse_city);
         var cash_city = "select[name='cash_city']";
-        consultarCiudadesCash(partner_state_id, cash_city);
+        if (partner_state_id){
+            consultarCiudadesCreditCard(partner_state_id, credit_city);
+            consultarCiudadesPSE(partner_state_id, pse_city);
+            consultarCiudadesCash(partner_state_id, cash_city);
+        }
        
         $.validator.addMethod("creditCardfechaVencimiento", function (value, element) {
             var lastYear = new Date().getFullYear();

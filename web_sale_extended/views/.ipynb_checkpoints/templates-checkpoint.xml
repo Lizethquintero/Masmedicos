@@ -369,7 +369,7 @@
                                         <div style="text-align: left;">
                                             <font color="#3333cc">
                                                 <b style="font-size: 18px;">
-                                                    Terminemos con el proceso de pago de tu nombre
+                                                    Terminemos  proceso de pago de tu nombre
                                                     <t t-esc="sale_order.order_line[0].product_template_id.name"/> 
                                                     para ti y tu grupo familiar, es seguro y muy rápido, gracias a PayU.</b>
                                             </font>
