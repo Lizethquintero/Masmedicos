@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!--<template id="portal_my_home_my_subscription" name="Portal My Home: Subscription Entries" inherit_id="portal.portal_my_home" priority="40">
+          <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+              <t t-call="portal.portal_docs_entry">
+                  <t t-set="title">Subscripciones</t>
+                  <t t-set="url" t-value="'/my/subscription'"/>
+                  <t t-set="count" t-value="beneficiary_count"/>
+              </t>
+          </xpath>
+      </template>-->
+    
+    <template id="address" name="Address Management">
+        <t t-set="no_footer" t-value="1"/>
+        <t t-call="website.layout">
+        <div id="wrap">
+            <div class="container oe_website_sale py-2">
+                <div class="row">
+                    <div class="col-12">
+                        <t t-call="website_sale.wizard_checkout">
+                            <t t-set="step" t-value="20" />
+                        </t>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
+                        <t t-call="website_sale.cart_summary">
+                            <t t-set="hide_coupon">True</t>
+                            <t t-set="redirect" t-valuef="/shop/address"/>
+                        </t>
+                    </div>
+                    <div class="col-12 col-xl order-xl-1 oe_cart">
+                        <div>
+                            <!--<t t-if="mode == ('new', 'billing')">-->
+                                
+                                <section class="s_text_block pt0 pb0" data-name="Text block" style="">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-12 pb0 pt0">
+                                                <div class="s_alert clearfix s_alert_sm w-100" data-name="Alert" style="background: #FFFFFF; border: 1px solid #3333CC; box-sizing: border-box; box-shadow: 0px 0px 10px rgba(51, 51, 204, 0.5); border-radius: 5px;">
+                                                    <img class="img-fluid o_we_custom_image float-left" src="/web_sale_extended/static/src/images/Img_tip.png" data-original-title="" title="" aria-describedby="tooltip561547"/>
+                                                    <i class="fa-2x s_alert_icon" data-original-title="" title="" aria-describedby="tooltip831158"/>
+                                                    <div class="s_alert_content" style="">
+                                                    <p/>
+                                                    <div style="text-align: left;">
+                                                        <font color="#3333cc">
+                                                        <b style="font-size: 18px;">¡Genial que quieras ser parte de Más Médicos! </b>
+                                                        <span style="font-size: 18px;">
+                                                            <b>Llenemos</b>
+                                                        </span>
+                                                        <b style="font-size: 18px;">&amp;nbsp;la siguiente información para adquirir tu <t t-esc="order_detail[0].product_template_id.name"/>, es fácil y rápido.</b>
+                                                        </font>
+                                                        <br/>
+                                                    </div>
+                                                        <div style="text-align: left;">
+                                                            <span style="font-size: 14px;">Ésta es la información del comprador del plan, ¡comencemos!</span>
+                                                        </div>
+                                                    <p/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                                
+                                
+                                <!--<h2 class="o_page_header mt8">Dirección
+                                    <small> Ó </small>
+                                    <a role="button" href='/web/login?redirect=/shop/checkout' 
+                                    class='btn btn-primary' style="margin-top: -11px">Inicia Sesión</a>
+                                </h2>-->
+                            <!--</t>-->
+                            <!--<t t-if="mode == ('edit', 'billing')">
+                                <h2 class="o_page_header mt8">Dirección</h2>
+                            </t>
+                            <t t-if="mode[1] == 'shipping'">
+                                <h2 class="o_page_header mt8">Dirección de entrega </h2>
+                            </t>
+                            <t t-if="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id">
+                                <div class="alert alert-warning" role="alert" t-if="not only_services">
+                                    <h4 class="alert-heading">Be aware!</h4>
+                                    <p  groups="sale.group_delivery_invoice_address">
+                                        You are editing your <b>billing and shipping</b> addresses at the same time!<br/>
+                                        If you want to modify your shipping address, create a <a href='/shop/address'>new address</a>.
+                                    </p>
+                                </div>
+                            </t>-->
+                            <!--<t t-if="error" t-foreach="error.get('error_message', [])" t-as="err">-->
+                            <t t-if="error">
+                                <div class="alert alert-success alert-dismissable d-print-none" role="status" style="text-align:center;">
+                                    <t t-if="error.get('error_message') == 'document_invalid'">
+                                        <h4 class="text-danger">¡Upss! has registrado un documento que no es valido</h4>
+                                    </t>
+                                    <t t-else="">
+                                        <h5 class="text-danger" t-esc="error.get('error_message')" />
+                                    </t>
+                                </div>
+                            </t>
+                            <form id="shop" action="/shop/address" method="post" class="checkout_autoformat">
+                                <div class="form-row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="name">Primer Nombre</label>
+                                            <input type="text" name="name" 
+                                            t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" 
+                                            t-att-value="'name' in checkout and checkout['name']" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="othernames">Segundo  Nombre</label>
+                                            <input type="text" name="othernames" 
+                                            t-attf-class="form-control #{error.get('othernames') and 'is-invalid' or ''}" 
+                                            t-att-value="'othernames' in checkout and checkout['othernames']" />
+                                        </div>
+                                    </div> 
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="lastname">Primer  Apellido</label>
+                                            <input type="text" name="lastname" 
+                                            t-attf-class="form-control #{error.get('lastname') and 'is-invalid' or ''}" 
+                                            t-att-value="'lastname' in checkout and checkout['lastname']"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="lastname2">Segundo  Apellido</label>
+                                            <input type="text" name="lastname2" 
+                                            t-attf-class="form-control #{error.get('lastname2') and 'is-invalid' or ''}" 
+                                            t-att-value="'lastname2' in checkout and checkout['lastname2']" />
+                                        </div>
+                                    </div>                                           
+                                            <!-- <div 
+                                            t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-lg-6 div_name">
+                                                <label class="col-form-label" for="name">Primer Nombre</label>
+                                                <input type="text" name="name" 
+                                                t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" 
+                                                t-att-value="'name' in checkout and checkout['name']" />
+                                            </div>
+                                            <div 
+                                            t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-lg-6 div_name">
+                                                <label class="col-form-label" for="second_name">Segundo Nombre</label>
+                                                <input type="text" name="second_name"  />
+                                            </div> -->
+                                    <div class="w-100"/>
+                                    <!--<t t-if="mode[1] == 'billing'">-->
+                                        <div t-attf-class="form-group #{error.get('email') and 'o_has_error' or ''} col-lg-6" 
+                                        id="div_email">
+                                            <label class="col-form-label" for="email">Email</label>
+                                            <input type="email" name="email" 
+                                            t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}" 
+                                            t-att-value="'email' in checkout and checkout['email']" />
+                                        </div>
+                                    <!--</t>-->
+                                    <div t-attf-class="form-group #{error.get('phone') and 'o_has_error' or ''} col-lg-6" 
+                                    id="div_phone">
+                                        <label class="col-form-label" for="phone">Teléfono</label>
+                                        <input type="tel" name="phone" 
+                                        t-attf-class="form-control #{error.get('phone') and 'is-invalid' or ''}" 
+                                        t-att-value="'phone' in checkout and checkout['phone']" />
+                                    </div>
+                                    <div t-attf-class="form-group #{error.get('') and 'o_has_error' or ''} col-lg-6">
+                                        <label class="col-form-label" for="document">Tipo de documento</label>
+                                        <select name="document" class="selectpicker" id="document" 
+                                        t-attf-class="form-control #{error.get('') and 'is-invalid' or ''}" 
+                                        t-att-mode="mode[1]">
+                                            <option value="" selected="True">Tipo documento...</option>
+                                            <t t-foreach="document_types" t-as="dt">
+                                                <option t-att-value="dt.id">
+                                                    <t t-esc="dt.name" /> 
+                                                </option>
+                                            </t>
+                                                    
+                                                    
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label" for="identification_document">Número de documento</label>
+                                            <input type="text" name="identification_document" 
+                                            t-attf-class="form-control #{error.get('identification_document') and 'is-invalid' or ''}" 
+                                            t-att-value="'identification_document' in checkout and checkout['identification_document']" />
+                                        </div>
+                                    </div> 
+                                    <div t-attf-class="form-group #{error.get('') and 'o_has_error' or ''} col-lg-6">
+                                        <label class="col-form-label" for="birthdate_date">Fecha nacimiento</label>
+                                            <input type="date" name="birthdate_date" 
+                                            t-attf-class="form-control #{error.get('birthdate_date') and 'is-invalid' or ''}" 
+                                            t-att-value="'identification_document' in checkout and checkout['birthdate_date']" />
+
+                                        
+                                    </div>
+                                    <div t-attf-class="form-group #{error.get('') and 'o_has_error' or ''} col-lg-6">
+
+                                        <label class="col-form-label" for="expedition_date">Fecha de exp del documento</label>
+                                            <input type="date" name="expedition_date" 
+                                            t-attf-class="form-control #{error.get('expedition_date') and 'is-invalid' or ''}" 
+                                             />
+                                    </div>
+                                    <div class="w-100"/>
+                                    <div t-attf-class="form-group #{error.get('street') and 'o_has_error' or ''} col-lg-12 div_street">
+                                        <label class="col-form-label" for="street">Dirección 
+                                        <span class="d-none d-md-inline"> </span></label>
+                                        <input type="text" name="street" 
+                                        t-attf-class="form-control #{error.get('street') and 'is-invalid' or ''}" 
+                                        t-att-value="'street' in checkout and checkout['street']" />
+                                    </div>
+                                            <!-- <div 
+                                            t-attf-class="form-group #{error.get('street2') and 'o_has_error' or ''} col-lg-12 div_street2">
+                                                <label class="col-form-label label-optional" for="street2">Street 2</label>
+                                                <input type="text" name="street2" 
+                                                t-attf-class="form-control #{error.get('street2') and 'is-invalid' or ''}" 
+                                                t-att-value="'street2' in checkout and checkout['street2']" />
+                                            </div> -->
+                                    
+                                    
+                                    
+                                    <div class="w-100"/>
+                                    <div t-attf-class="form-group #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
+                                        <label class="col-form-label" for="country_id">País</label>
+                                        <select class="selectpicker" data-size="5" data-live-search="true"  id="country_id" name="country_id" 
+                                        t-attf-class="form-control #{error.get('country_id') and 'is-invalid' or ''}" t-att-mode="mode[1]">
+                                            <option value="">País...</option>
+                                            <t t-foreach="countries" t-as="c">
+                                                <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
+                                                    <t t-esc="c.name" />
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <div t-attf-class="form-group #{error.get('state_id') and 'o_has_error' or ''} col-lg-6 div_state" 
+                                    t-att-style="(not country or not country.state_ids) and 'display: none'">
+                                        <label class="col-form-label" for="state_id">Departamento</label>
+                                        <select class="selectpicker" data-size="4" id="state_id" data-live-search="true" name="state_id" 
+                                        t-attf-class="form-control #{error.get('state_id') and 'is-invalid' or ''}" data-init="1">
+                                            <option value="">Departamento</option>
+                                            <t t-foreach="country_states" t-as="s">
+                                                <option t-att-value="s.id" 
+                                                        t-att-selected="s.id == ('state_id' in checkout and country and checkout['state_id'] != '' 
+                                                                        and int(checkout['state_id']))">
+                                                    <t t-esc="s.name" />
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    
+                                    
+                                    <div class="w-100"></div>
+                                    <t t-set='zip_city' />
+                                    <!--t-value='country and [x for x in country.get_address_fields() if x in ["zip", "city"]] or ["city", "zip"]'-->
+                                    <!--<t t-if="'zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')">-->
+                                        <div t-attf-class="form-group #{error.get('zip') and 'o_has_error' or ''} col-md-4 div_zip">
+                                            <label class="col-form-label label-optional" for="zip">Código postal</label>
+                                            <input type="text"  name="zip"
+                                            t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}" 
+                                            t-att-value="'zip' in checkout and checkout['zip']" readonly="true" />
+                                            
+                                            <input type="hidden"  name="zip_id"/>
+                                        </div>
+                                    <!--</t>-->
+                                            <!-- <div t-attf-class="form-group #{error.get('city') and 'o_has_error' or ''} col-md-8 div_city">
+                                                <label class="col-form-label" for="city">Ciudad</label>
+                                                <input type="text" name="city" t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}" 
+                                                t-att-value="'city' in checkout and checkout['city']" />
+                                            </div> -->
+                                    <div t-attf-class="form-group #{error.get('city') and 'o_has_error' or ''} col-md-8 div_city">
+                                        <label class="col-form-label" for="city">Ciudad</label>
+                                        <select 
+                                                class="selectpicker"
+                                                data-size="10" 
+                                                data-live-search="true"
+                                                id="city"
+                                                name="city" 
+                                                t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}" 
+                                                t-att-value="'city' in checkout and checkout['city']"
+                                                t-att-style="(not country or not country.state_ids) and 'display: none'"
+                                                >
+                                            <option value="">Ciudad...</option>
+                                            <t t-foreach="cities" t-as="c">
+                                                <option t-att-value="c.city_id.name" t-att-selected="c.name">
+                                                    <t t-esc="c.name" /> <t t-esc="c.city_id.name" /> <t t-esc="c.city_id.state_id.name" /> <t t-esc="c.city_id.state_id.country_id.name" />
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+
+                                            <!-- <div t-attf-class="input-group row">
+                                                  <label for="city_id" class="col-md-3 col-form-label">Ciudad Origen</label>
+                                                  <t t-if="calendar_appointment_type_id == 1">
+                                                    <div class="col-md-9">
+                                                      <input
+                                                          type="text"
+                                                          name="search_city"
+                                                          class="search-query-city form-control oe_search_box"
+                                                          placeholder="Seleccione una Ciudad..."
+                                                          data-limit="10"
+                                                          t-att-value="search_city"/>
+                                                      <input type="hidden" name="city_id" class="search-query-city-id"/>
+                                                    </div>
+                                                  </t>
+                                                  <t t-else="">
+                                                    <div t-attf-class="form-group #{error.get('city') and 'o_has_error' or ''} col-md-8 div_city">
+                                                        <label class="col-form-label" for="city">City</label>
+                                                        <input type="text" name="city" t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}" 
+                                                        t-att-value="'city' in checkout and checkout['city']" />
+                                                    </div>
+                                                  </t>
+                                            </div> -->
+
+                                    <!--<t t-if="'zip' in zip_city and zip_city.index('zip') &gt; zip_city.index('city')">
+                                        <div t-attf-class="form-group #{error.get('zip') and 'o_has_error' or ''} col-md-4 div_zip">
+                                            <label class="col-form-label label-optional" for="zip">Código postal</label>
+                                            <input type="text" name="zip" t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}" 
+                                            t-att-value="'zip' in checkout and checkout['zip']"  readonly="true"/>
+                                        </div>
+                                    </t>-->
+                                    
+                                    
+                                    
+                                    <div t-attf-class="form-group #{error.get('fiscal_position_id') and 'o_has_error' or ''} col-lg-12 div_fiscal_position">
+                                        <span style="font-weight: bold;">Posición Fiscal</span>
+                                        <i class="fa fa-question-circle rounded"
+                                           id="posicion_fiscal_help_icon"
+                                           data-original-title="" title="" aria-describedby="tooltip725291" 
+                                           style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 255); height:32px; width:32px; valign:middle;margin-top:-2vh;"/>
+                                        
+                                        
+                                        <!--<label class="col-form-label fa fa-question-circle rounded s_features_grid_icon" for="fiscal_position_id" style="width:100%">-->
+                                        
+                                        <div id="posicion_fiscal_help" 
+                                             style="display:none;color:#FFF;padding:5px;font-weight:100;float:right;margin-right:5%;font-weight:noset;font-size:12px;background-color: #1e1f24;border-radius: 5px;">
+                                            <span>No Declarantes: Personas que no declaran Renta</span><!--<span>No Declarantes: Personas no Declarantes de Renta</span>-->
+                                            <br/>
+                                            <span>No Responsable: Personas que no son responsables ante la DIAN por ningún impuesto (ej. IVA, ICA, Retencion)</span><br/>
+                                            <span>Declarantes: Personas que declaran renta</span>
+                                        </div>
+                                        <!--</label>-->
+                                        <select class="selectpicker" data-size="4" id="fiscal_position_id" data-live-search="true" name="fiscal_position_id" 
+                                        t-attf-class="form-control #{error.get('fiscal_position_id') and 'is-invalid' or ''}" data-init="1">
+                                            <option value="">Posición Fiscal</option>
+                                            <t t-foreach="fiscal_position_ids" t-as="s">
+                                                <option t-att-value="s.id">
+                                                    <t t-esc="s.name" />
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    
+                                    
+                                    
+                                    
+                                    <div class="col-lg-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" name="tyc" id="defaultCheck1"/>
+                                            <label class="form-check-label" for="tyc">
+                                                Acepto términos y condiciones
+                                                <a href="#terminos" id="btn_terminos"> (leer)</a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" name="aceptacion_datos" id="defaultCheck2"/>
+                                            <label class="form-check-label" for="aceptacion_datos" style="text-size:10px;">
+                                                Acepto política de tratamiento de datos
+                                                <a href="#politica" id="btn_politica"> (leer)</a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12" id="terminos">
+                                        <iframe src="/web_sale_extended/static/src/files/terminos.pdf" width="100%" height="680px">Acepto términos y condiciones</iframe>
+                                    </div>
+                                    <div class="col-lg-12" id="politica">
+                                        <iframe src="/web_sale_extended/static/src/files/tratamiento_de_datos.pdf" width="100%" height="680px">Acepto política de tratamiento de datos</iframe>
+                                    </div>
+                                    <div class="w-100"/>
+                                    <t t-if="mode == ('new', 'billing') and not only_services">
+                                        <div class="col-lg-12">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" id='shipping_use_same' class="mr8" name='use_same' value="1" checked='checked'/>Ship to the same address
+                                                    <span class='ship_to_other text-muted' style="display: none">&amp;nbsp;(<i>Your shipping address will be requested later) </i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    </div>
+
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <input type="hidden" name="submitted" value="1" />
+                                    <input type="hidden" name="partner_id" t-att-value="partner_id or '0'" />
+                                    <input type="hidden" name="callback" t-att-value="callback" />
+                                        <!-- Example -->
+                                    <input type="hidden" name="field_required" t-att-value="'phone,name'" />
+                                    <p/>
+                                    <div class="d-flex justify-content-end">
+                                        <!--<a role="button" t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-secondary mb32">
+                                            <i class="fa fa-chevron-left"/>
+                                            <span>Atrás</span>
+                                        </a>-->
+                                        <button class="btn btn-custom mb32">
+                                            <span>Guardar</span>
+                                            <i class="fa fa-chevron-right"/>
+                                        </button>
+                                       <!-- <a role="button" href="#" class="btn btn-primary mb32 a-submit a-submit-disable a-submit-loading">-->
+                                            
+                                    </div>
+                                </form>
+                            
+
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+</odoo>

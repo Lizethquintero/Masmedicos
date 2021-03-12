@@ -1,0 +1,1742 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Custom CSS-JS">
+		<xpath expr="." position="inside">
+			<link rel="stylesheet" href="/web_sale_extended/static/src/lib/bootstrap-select.min.css"/>
+            <link rel="stylesheet" href="/web_sale_extended/static/src/css/main.css"/>
+			<script  src="/web_sale_extended/static/src/lib/bootstrap-select.min.js"></script>
+			<script src="/web_sale_extended/static/src/lib/jquery.typeahead.min.js" type="text/javascript"></script>
+            <script src="/web_sale_extended/static/src/lib/jquery.validate.min.js" type="text/javascript"></script>
+			<script type="text/javascript" id="hs-script-loader" async="true" defer="true"  src="//js.hs-scripts.com/6287375.js"></script>
+			<script src="/web_sale_extended/static/src/js/main.js" type="text/javascript"></script>
+		</xpath>
+    </template>
+    
+    <!-- Plantilla enviada luego del pago exitoso con tarjeta de crédito de payu -->
+    <template id="payulatam_success_process" name="PayU Latam Payment Process">
+        <t t-set="no_footer" t-value="1"/>
+            <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container oe_website_sale py-2">
+                <div class="row">
+                    <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
+                        <div class="card">
+                            <div class="card-body p-xl-0">
+                                <div class="col-lg-auto d-print-none">
+                                    <div class="card bg-white mb-4 sticky-top" id="sidebar_content">
+                                        <div class="card-body text-center pb-2 pt-3">
+                                            <h2 class="mb-0"><b data-id="total_amount">
+                                                $ <span class="oe_currency_value"><t t-esc="order_id.amount_total" 
+                                                    t-options='{"widget": "float", "precision": 2}'/></span></b> 
+                                            </h2>
+                                        </div>
+                                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                                            <li class="list-group-item flex-grow-1">
+                                                <a role="button" 
+                                                   id="o_sale_portal_paynow" 
+                                                   data-toggle="modal" 
+                                                   data-target="#modalaccept" 
+                                                   href="#" 
+                                                   class="btn-block mb8 btn btn-primary disabled">
+                                                    <i class="fa fa-check"></i> Pago Realizado
+                                                </a>
+                                                <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                                    <div class="btn-group flex-grow-1 mr-1 mb-1">
+                                                        <a class="btn btn-secondary btn-block o_download_btn" 
+                                                           title="Descargar" 
+                                                           href="">
+                                                            <i class="fa fa-download"></i> Descargar
+                                                        </a>
+                                                    </div>
+                                                    <div class="btn-group flex-grow-1 mb-1">
+                                                        <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print" 
+                                                            id="print_invoice_report" 
+                                                            title="Imprimir" 
+                                                            target="_blank" 
+                                                            href="">
+                                                            <i class="fa fa-print"></i> Imprimir
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="navspy list-group-item pl-0 flex-grow-1" role="complementary">
+                                                <ul class="nav flex-column bs-sidenav"></ul>
+                                            </li>
+                                        </ul>
+                                        <div class="card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block">
+                                            Con tecnología de 
+                                            <a target="_blank" 
+                                               href="" 
+                                               title="odoo">
+                                                <img src="/web_sale_extended/static/src/img/PayU.png" alt="Logo de Odoo" height="15"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="quote_content" class="col-12 col-xl order-xl-1 oe_cart">
+                        <section class="s_text_block pt0 pb0" data-name="Text block">
+                            <div class="col-lg-12 pt0 pb0">
+                                <div class="s_alert clearfix w-100 s_alert_md" data-name="Alert" style="border:none;">
+                                    <i class="fa-2x s_alert_icon"></i>
+                                    <div class="s_alert_content">
+                                        <p></p>
+                                        <div style="text-align:center;">
+                                            <font color="#39b54a">
+                                            </font>
+                                            <img class="img-fluid o_we_custom_image" 
+                                                 src="/web/image/1109/Img_success%282%29.png?access_token=a79d70ef-5174-4077-b854-a03eff98c0be" 
+                                                 style="width:auto;"/><br/>
+                                            <font color="#39b54a">
+                                              <span style="font-size:36px;">Proceso de pago terminado exitosamente gracias a PayU</span>
+                                            </font><br/>
+					    <!--<font color="#39b54a" t-if="state">
+                                              <span style="font-size:18px;">Estado: <t t-esc="state"/></span>
+                                            </font><br/>
+                                            <font color="#39b54a" t-if="error">
+                                              <span style="font-size:18px;">Descripción: <t t-esc="error"/></span>
+                                            </font><br/>
+                                            <font color="#39b54a" t-if="responseCode">
+                                              <span style="font-size:18px;">Código Respuesta: <t t-esc="responseCode"/></span>
+                                            </font><br/>
+                                            <font color="#39b54a" t-if="transactionId">
+                                              <span style="font-size:18px;">ID Transacción: <t t-esc="transactionId"/></span>
+                                            </font><br/>
+                                            <font color="#39b54a" t-if="order_Id">
+                                              <span style="font-size:18px;">ID Orden: <t t-esc="order_Id"/></span>
+                                            </font>
+					    <br/>-->
+                                        </div>
+                                        <div style="text-align:center;">
+                                            <span style="font-size:18px;">Para continuar con el registro del asegurado principal y los beneficiarios:</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="s_btn text-center pt16 pb16" data-name="Button">
+                                    <a class="btn btn-primary" 
+                                       id="submit_beneficiaries_add" 
+                                       data-original-title="" 
+                                       title="" 
+                                       aria-describedby="tooltip188699"
+                                       style="color:#FFF;">Registra tus Beneficiarios
+                                       <i class="fa fa-chevron-right"/>
+                                    </a>
+                                    <input type="hidden" name="order_id" t-att-value="order_id.id"/>
+                                  </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                </div>   
+            </div>
+         </t>
+     </template>
+    
+    <!-- Plantilla enviada luego del pago rechazado con tarjeta de crédito de payu -->
+    <template id="payulatam_rejected_process" name="PayU Latam Payment Rejected">     
+         <t t-set="no_footer" t-value="1"/>
+            <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container oe_website_sale py-2">
+                <div class="row">
+                    <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
+                        <div class="card">
+                            <div class="card-body p-xl-0">
+                                <div class="col-lg-auto d-print-none">
+                                    <div class="card bg-white mb-4 sticky-top" id="sidebar_content">
+                                        <div class="card-body text-center pb-2 pt-3">
+                                            <h2 class="mb-0"><b data-id="total_amount">
+                                                $ <span class="oe_currency_value"><t t-esc="order_id.amount_total" 
+                                                    t-options='{"widget": "float", "precision": 2}'/></span></b> 
+                                            </h2>
+                                        </div>
+                                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                                            <li class="list-group-item flex-grow-1">
+                                                <a role="button" 
+                                                   id="o_sale_portal_paynow" 
+                                                   data-toggle="modal" 
+                                                   data-target="#modalaccept" 
+                                                   href="#" 
+                                                   class="btn-block mb8 btn btn-primary disabled">
+                                                    <i class="fa fa-check"></i> Pago No Realizado
+                                                </a>
+                                            </li>
+                                            <li class="navspy list-group-item pl-0 flex-grow-1" role="complementary">
+                                                <ul class="nav flex-column bs-sidenav"></ul>
+                                            </li>
+                                        </ul>
+                                        <div class="card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block">
+                                            Con tecnología de 
+                                            <a target="_blank" 
+                                               href="" 
+                                               title="odoo">
+                                                <img src="/web_sale_extended/static/src/img/PayU.png" alt="Logo de Odoo" height="15"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="quote_content" class="col-12 col-xl order-xl-1 oe_cart">
+                        <section class="s_text_block pt0 pb0" data-name="Text block">
+                            <div class="col-lg-12 pt0 pb0">
+                                <div class="s_alert clearfix w-100 s_alert_md" data-name="Alert" style="border:none;">
+                                    <i class="fa-2x s_alert_icon"></i>
+                                    <div class="s_alert_content">
+                                        <p></p>
+                                        <div style="text-align:center;">
+                                            <font color="#39b54a">
+                                            </font>
+                                            <img class="img-fluid o_we_custom_image" 
+                                                 src="/web/image/1109/Img_success%282%29.png?access_token=a79d70ef-5174-4077-b854-a03eff98c0be" 
+                                                 style="width:auto;"/><br/>
+                                            <font color="red">
+                                              <span style="font-size:36px;">Proceso de pago rechazado</span>
+                                            </font><br/>
+                                            <font color="red" t-if="state">
+                                              <span style="font-size:18px;">Estado: <t t-esc="state"/></span>
+                                            </font><br/>
+                                            <font color="red" t-if="error">
+                                              <span style="font-size:18px;">Descripción: <t t-esc="error"/></span>
+                                            </font><br/>
+                                            <font color="red" t-if="responseCode">
+                                              <span style="font-size:18px;">Código Respuesta: <t t-esc="responseCode"/></span>
+                                            </font><br/>
+                                            <font color="red" t-if="transactionId">
+                                              <span style="font-size:18px;">ID Transacción: <t t-esc="transactionId"/></span>
+                                            </font><br/>
+                                            <font color="red" t-if="order_Id">
+                                              <span style="font-size:18px;">ID Orden: <t t-esc="order_Id"/></span>
+                                            </font>
+                                            <br/>
+                                        </div>
+                                        <div style="text-align:center;">
+                                            <span style="font-size:18px;color:#FFF;">Por favor intentelo de nuevo:</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="s_btn text-center pt16 pb16" data-name="Button">
+                                    <a class="btn btn-primary" style="color:#FFF;"
+                                       id="submit_payment_rejected" 
+                                       data-original-title="" 
+                                       title="" 
+                                       aria-describedby="tooltip188699">Regresar al Proceso de Pago
+                                       <i class="fa fa-chevron-right"/>
+                                    </a>
+                                  </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                </div>   
+            </div>
+         </t>
+     </template>
+    
+    
+    
+    <!-- Plantilla enviada luego del pago exitoso con metodo efectivo de payu -->
+    <template id="payulatam_success_process_cash" name="PayU Latam Payment Process Cash">
+         <t t-set="no_footer" t-value="1"/>
+            <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container oe_website_sale py-2">
+                <div class="row">
+                    <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
+                        <div class="card">
+                            <div class="card-body p-xl-0">
+                                <div class="col-lg-auto d-print-none">
+                                    <div class="card bg-white mb-4 sticky-top" id="sidebar_content">
+                                        <div class="card-body text-center pb-2 pt-3">
+                                            <h2 class="mb-0"><b data-id="total_amount">
+                                                $ <span class="oe_currency_value"><t t-esc="order_id.amount_total" 
+                                                    t-options='{"widget": "float", "precision": 2}'/></span></b> 
+                                            </h2>
+                                        </div>
+                                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                                            <li class="list-group-item flex-grow-1">
+                                                <a role="button" 
+                                                   id="o_sale_portal_paynow" 
+                                                   data-toggle="modal" 
+                                                   data-target="#modalaccept" 
+                                                   href="#" 
+                                                   class="btn-block mb8 btn btn-primary disabled">
+                                                    <i class="fa fa-check"></i> Pago Realizado
+                                                </a>
+                                                <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                                    <div class="btn-group flex-grow-1 mr-1 mb-1">
+                                                        <a class="btn btn-secondary btn-block o_download_btn" 
+                                                           title="Descargar" 
+                                                           href="">
+                                                            <i class="fa fa-download"></i> Descargar
+                                                        </a>
+                                                    </div>
+                                                    <div class="btn-group flex-grow-1 mb-1">
+                                                        <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print" 
+                                                            id="print_invoice_report" 
+                                                            title="Imprimir" 
+                                                            target="_blank" 
+                                                            href="">
+                                                            <i class="fa fa-print"></i> Imprimir
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="navspy list-group-item pl-0 flex-grow-1" role="complementary">
+                                                <ul class="nav flex-column bs-sidenav"></ul>
+                                            </li>
+                                        </ul>
+                                        <div class="card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block">
+                                            Con tecnología de 
+                                            <a target="_blank" 
+                                               href="" 
+                                               title="odoo">
+                                                <img src="/web_sale_extended/static/src/img/PayU.png" alt="Logo de Odoo" height="15"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="quote_content" class="col-12 col-xl order-xl-1 oe_cart">
+                        <section class="s_text_block pt0 pb0" data-name="Text block">
+                            <div class="col-lg-12 pt0 pb0">
+                                <div class="s_alert clearfix w-100 s_alert_md" data-name="Alert" style="border:none;">
+                                    <i class="fa-2x s_alert_icon"></i>
+                                    <div class="s_alert_content">
+                                        <p></p>
+                                        <div style="text-align:center;">
+                                            <font color="#39b54a">
+                                            </font>
+                                            <img class="img-fluid o_we_custom_image" 
+                                                 src="/web/image/1109/Img_success%282%29.png?access_token=a79d70ef-5174-4077-b854-a03eff98c0be" 
+                                                 style="width:auto;"/><br/>
+                                            <font color="#39b54a">
+                                              <span style="font-size:36px;">Recibo de Pago generado exitosamente gracias a PayU</span>
+                                            </font><br/>
+					    <!--<font color="#39b54a" t-if="state">
+                                              <span style="font-size:18px;">Estado: <t t-esc="state"/></span>
+                                            </font><br/>
+                                            <font color="#39b54a" t-if="error">
+                                              <span style="font-size:18px;">Descripción: <t t-esc="error"/></span>
+                                            </font><br/>
+                                            <font color="#39b54a" t-if="responseCode">
+                                              <span style="font-size:18px;">Código Respuesta: <t t-esc="responseCode"/></span>
+                                            </font><br/>
+                                            <font color="#39b54a" t-if="transactionId">
+                                              <span style="font-size:18px;">ID Transacción: <t t-esc="transactionId"/></span>
+                                            </font><br/>
+                                            <font color="#39b54a" t-if="order_Id">
+                                              <span style="font-size:18px;">ID Orden: <t t-esc="order_Id"/></span>
+                                            </font>
+					    <br/>-->
+                                        </div>
+                                        <div style="text-align:center;">
+                                            <span style="font-size:18px;">Para continuar con el registro del asegurado principal y los beneficiarios enviareamos un correo electrónico tan pronto tengamos confirmación del pago por parte de PayU. En este correo tendrá las indicaciones para que finalices tú proceso de afiliación:</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="s_btn text-center pt16 pb16" data-name="Button">
+                                    <a class="btn btn-primary" 
+                                       id="submit_beneficiaries_add" 
+                                       data-original-title="" 
+                                       title="" 
+                                       aria-describedby="tooltip188699"
+                                       style="color:#FFF;">Registra tus Beneficiarios
+                                       <i class="fa fa-chevron-right"/>
+                                    </a>
+                                    <input type="hidden" name="order_id" t-att-value="order_id.id"/>
+                                  </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                </div>   
+            </div>
+         </t>
+     </template>
+    
+    <!-- Plantilla enviada luego del pago rechazado con metodo efectivo de payu -->
+    <template id="payulatam_rejected_process_cash" name="PayU Latam Payment Process Cash">
+         <t t-set="no_footer" t-value="1"/>
+            <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container oe_website_sale py-2">
+                <div class="row">
+                    <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
+                        <div class="card">
+                            <div class="card-body p-xl-0">
+                                <div class="col-lg-auto d-print-none">
+                                    <div class="card bg-white mb-4 sticky-top" id="sidebar_content">
+                                        <div class="card-body text-center pb-2 pt-3">
+                                            <h2 class="mb-0"><b data-id="total_amount">
+                                                $ <span class="oe_currency_value"><t t-esc="order_id.amount_total" 
+                                                    t-options='{"widget": "float", "precision": 2}'/></span></b> 
+                                            </h2>
+                                        </div>
+                                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                                            <li class="list-group-item flex-grow-1">
+                                                <a role="button" 
+                                                   id="o_sale_portal_paynow" 
+                                                   data-toggle="modal" 
+                                                   data-target="#modalaccept" 
+                                                   href="#" 
+                                                   class="btn-block mb8 btn btn-primary disabled">
+                                                    <i class="fa fa-check"></i> Pago NO Realizado
+                                                </a>
+                                            </li>
+                                            <li class="navspy list-group-item pl-0 flex-grow-1" role="complementary">
+                                                <ul class="nav flex-column bs-sidenav"></ul>
+                                            </li>
+                                        </ul>
+                                        <div class="card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block">
+                                            Con tecnología de 
+                                            <a target="_blank" 
+                                               href="" 
+                                               title="odoo">
+                                                <img src="/web_sale_extended/static/src/img/PayU.png" alt="Logo de Odoo" height="15"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="quote_content" class="col-12 col-xl order-xl-1 oe_cart">
+                        <section class="s_text_block pt0 pb0" data-name="Text block">
+			    <input type="hidden" name="url_payment_receipt_pdf" id="url_payment_receipt_pdf" t-att-value="url_payment_receipt_pdf"/>
+                            <div class="col-lg-12 pt0 pb0">
+                                <div class="s_alert clearfix w-100 s_alert_md" data-name="Alert" style="border:none;">
+                                    <i class="fa-2x s_alert_icon"></i>
+                                    <div class="s_alert_content">
+                                        <p></p>
+                                        <div style="text-align:center;">
+                                            <font color="#39b54a">
+                                            </font>
+                                            <img class="img-fluid o_we_custom_image" 
+                                                 src="/web/image/1109/Img_success%282%29.png?access_token=a79d70ef-5174-4077-b854-a03eff98c0be" 
+                                                 style="width:auto;"/><br/>
+                                            <font color="red">
+                                              <span style="font-size:36px;">Recibo de pago NO generado</span>
+                                            </font><br/>
+                                            <font color="red" t-if="state">
+                                              <span style="font-size:18px;">Estado: <t t-esc="state"/></span>
+                                            </font><br/>
+                                            <font color="red" t-if="error">
+                                              <span style="font-size:18px;">Descripción: <t t-esc="error"/></span>
+                                            </font><br/>
+                                            <font color="red" t-if="responseCode">
+                                              <span style="font-size:18px;">Código Respuesta: <t t-esc="responseCode"/></span>
+                                            </font><br/>
+                                            <font color="red" t-if="transactionId">
+                                              <span style="font-size:18px;">ID Transacción: <t t-esc="transactionId"/></span>
+                                            </font><br/>
+                                            <font color="red" t-if="order_Id">
+                                              <span style="font-size:18px;">ID Orden: <t t-esc="order_Id"/></span>
+                                            </font>
+                                            <br/>
+                                        </div>
+                                        <div style="text-align:center;">
+                                            <span style="font-size:18px;">Por favor intentelo de nuevo</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="s_btn text-center pt16 pb16" data-name="Button">
+                                    <a class="btn btn-primary" 
+                                       id="submit_beneficiaries_add" 
+                                       data-original-title="" 
+                                       title="" 
+                                       aria-describedby="tooltip188699"
+                                       style="color:#FFF;">Ir al proceso de Pago
+                                       <i class="fa fa-chevron-right"/>
+                                    </a>
+                                    <input type="hidden" name="order_id" t-att-value="order_id"/>
+                                  </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                </div> 
+            </div>
+         </t>
+     </template>
+    
+    
+    <!-- Plantilla enviada luego del pago exitoso con metodo PSE de payu -->
+     <template id="payulatam_success_process_pse" name="PayU Latam Payment Process PSE">
+         <t t-set="no_footer" t-value="1"/>
+            <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container oe_website_sale py-2">
+                <div class="row">
+                 
+                    <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
+                        <div class="card">
+                            <div class="card-body p-xl-0">
+                                <div class="col-lg-auto d-print-none">
+                                    <div class="card bg-white mb-4 sticky-top" id="sidebar_content">
+                                        <div class="card-body text-center pb-2 pt-3">
+                                            <h2 class="mb-0"><b data-id="total_amount">
+                                                $ <span class="oe_currency_value"><t t-esc="order_id.amount_total" 
+                                                    t-options='{"widget": "float", "precision": 2}'/></span></b> 
+                                            </h2>
+                                        </div>
+                                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                                            <li class="list-group-item flex-grow-1">
+                                                <a role="button" 
+                                                   id="o_sale_portal_paynow" 
+                                                   data-toggle="modal" 
+                                                   data-target="#modalaccept" 
+                                                   href="#" 
+                                                   class="btn-block mb8 btn btn-primary disabled">
+                                                    <i class="fa fa-check"></i> Pago Dirigido al Banco
+                                                </a>
+                                                <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                                    <div class="btn-group flex-grow-1 mr-1 mb-1">
+                                                        <a class="btn btn-secondary btn-block o_download_btn" 
+                                                           title="Descargar" 
+                                                           href="">
+                                                            <i class="fa fa-download"></i> Descargar
+                                                        </a>
+                                                    </div>
+                                                    <div class="btn-group flex-grow-1 mb-1">
+                                                        <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print" 
+                                                            id="print_invoice_report" 
+                                                            title="Imprimir" 
+                                                            target="_blank" 
+                                                            href="">
+                                                            <i class="fa fa-print"></i> Imprimir
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="navspy list-group-item pl-0 flex-grow-1" role="complementary">
+                                                <ul class="nav flex-column bs-sidenav"></ul>
+                                            </li>
+                                        </ul>
+                                        <div class="card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block">
+                                            Con tecnología de 
+                                            <a target="_blank" 
+                                               href="" 
+                                               title="odoo">
+                                                <img src="/web_sale_extended/static/src/img/PayU.png" alt="Logo de Odoo" height="15"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="quote_content" class="col-12 col-xl order-xl-1 oe_cart">
+                        <section class="s_text_block pt0 pb0" data-name="Text block">
+                            <input type="hidden" name="bank_url" id="bank_url" t-att-value="bank_url"/>
+                            <input type="hidden" name="url_payment_receipt_pdf" id="url_payment_receipt_pdf" t-att-value="url_payment_receipt_pdf"/>
+                            <div class="col-lg-12 pt0 pb0">
+                                <div class="s_alert clearfix w-100 s_alert_md" data-name="Alert" style="border:none;">
+                                    <i class="fa-2x s_alert_icon"></i>
+                                    <div class="s_alert_content">
+                                        <p></p>
+                                        <div style="text-align:center;">
+                                            <font color="#39b54a">
+                                            </font>
+                                            <img class="img-fluid o_we_custom_image" 
+                                                 src="/web/image/1109/Img_success%282%29.png?access_token=a79d70ef-5174-4077-b854-a03eff98c0be" 
+                                                 style="width:auto;"/><br/>
+                                            <font color="#39b54a">
+                                              <span style="font-size:36px;">Proceso de pago PSE procesado exitosamente gracias a PayU</span>
+                                            </font><br/>
+					    <!--<font color="#39b54a" t-if="state">
+                                              <span style="font-size:18px;">Estado: <t t-esc="state"/></span>
+                                            </font><br/>
+                                            <font color="#39b54a" t-if="error">
+                                              <span style="font-size:18px;">Descripción: <t t-esc="error"/></span>
+                                            </font><br/>
+                                            <font color="#39b54a" t-if="responseCode">
+                                              <span style="font-size:18px;">Código Respuesta: <t t-esc="responseCode"/></span>
+                                            </font><br/>
+                                            <font color="#39b54a" t-if="transactionId">
+                                              <span style="font-size:18px;">ID Transacción: <t t-esc="transactionId"/></span>
+                                            </font><br/>
+                                            <font color="#39b54a" t-if="order_Id">
+                                              <span style="font-size:18px;">ID Orden: <t t-esc="order_Id"/></span>
+                                            </font>
+					    <br/>-->
+                                        </div>
+                                        <div style="text-align:center;">
+                                            <span style="font-size:18px;">Para continuar enviaremos un correo electrónico que le permitirá registrar el aegurado principal y sus beneficiarios. Este correo llegará tan proto recibamos la confirmación final del banco.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="s_btn text-center pt16 pb16" data-name="Button">
+                                    <a class="btn btn-primary" 
+                                       id="submit_pse_end" 
+                                       data-original-title="" 
+                                       title="" 
+                                       aria-describedby="tooltip188699"
+                                       style="color:#FFF;">Terminar
+                                       <i class="fa fa-chevron-right"/>
+                                    </a>
+                                    <input type="hidden" name="order_id" t-att-value="order_id"/>
+                                  </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                </div>
+            </div>
+         </t> 
+     </template>
+    
+    
+    <template id="payulatam_rejected_process_pse" name="PayU Latam Payment Process PSE">
+         <t t-set="no_footer" t-value="1"/>
+            <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container oe_website_sale py-2">
+                <div class="row">
+                    <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
+                        <div class="card">
+                            <div class="card-body p-xl-0">
+                                <div class="col-lg-auto d-print-none">
+                                    <div class="card bg-white mb-4 sticky-top" id="sidebar_content">
+                                        <div class="card-body text-center pb-2 pt-3">
+                                            <h2 class="mb-0"><b data-id="total_amount">
+                                                $ <span class="oe_currency_value"><t t-esc="order_id.amount_total" 
+                                                    t-options='{"widget": "float", "precision": 2}'/></span></b> 
+                                            </h2>
+                                        </div>
+                                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                                            <li class="list-group-item flex-grow-1">
+                                                <a role="button" 
+                                                   id="o_sale_portal_paynow" 
+                                                   data-toggle="modal" 
+                                                   data-target="#modalaccept" 
+                                                   href="#" 
+                                                   class="btn-block mb8 btn btn-primary disabled">
+                                                    <i class="fa fa-check"></i> Pago NO Realizado
+                                                </a>
+                                            </li>
+                                            <li class="navspy list-group-item pl-0 flex-grow-1" role="complementary">
+                                                <ul class="nav flex-column bs-sidenav"></ul>
+                                            </li>
+                                        </ul>
+                                        <div class="card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block">
+                                            Con tecnología de 
+                                            <a target="_blank" 
+                                               href="" 
+                                               title="odoo">
+                                                <img src="/web_sale_extended/static/src/img/PayU.png" alt="Logo de Odoo" height="15"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="quote_content" class="col-12 col-xl order-xl-1 oe_cart">
+                        <section class="s_text_block pt0 pb0" data-name="Text block">
+                            <div class="col-lg-12 pt0 pb0">
+                                <div class="s_alert clearfix w-100 s_alert_md" data-name="Alert" style="border:none;">
+                                    <i class="fa-2x s_alert_icon"></i>
+                                    <div class="s_alert_content">
+                                        <p></p>
+                                        <div style="text-align:center;">
+                                            <font color="red">
+                                            </font>
+                                            <img class="img-fluid o_we_custom_image" 
+                                                 src="/web/image/1109/Img_success%282%29.png?access_token=a79d70ef-5174-4077-b854-a03eff98c0be" 
+                                                 style="width:auto;"/><br/>
+                                            <font color="red">
+                                              <span style="font-size:36px;">Proceso de pago por PSE rechazado</span>
+                                            </font><br/>
+                                            <font color="#red" t-if="state">
+                                              <span style="font-size:18px;">Estado: <t t-esc="state"/></span>
+                                            </font><br/>
+                                            <font color="#red" t-if="error">
+                                              <span style="font-size:18px;">Descripción: <t t-esc="error"/></span>
+                                            </font><br/>
+                                            <font color="#red" t-if="responseCode">
+                                              <span style="font-size:18px;">Código Respuesta: <t t-esc="responseCode"/></span>
+                                            </font><br/>
+                                            <font color="#red" t-if="transactionId">
+                                              <span style="font-size:18px;">ID Transacción: <t t-esc="transactionId"/></span>
+                                            </font><br/>
+                                            <font color="#red" t-if="order_Id">
+                                              <span style="font-size:18px;">ID Orden: <t t-esc="order_Id"/></span>
+                                            </font>
+                                            <br/>
+                                        </div>
+                                        <div style="text-align:center;">
+                                            <span style="font-size:18px;">Por favor vuelva a intentar</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="s_btn text-center pt16 pb16" data-name="Button">
+                                    <a class="btn btn-primary" 
+                                       id="submit_pse_payment_process" 
+                                       data-original-title="" 
+                                       title="" 
+                                       aria-describedby="tooltip188699"
+                                       style="color:#FFF;">Ir al proceso de Pago
+                                       <i class="fa fa-chevron-right"/>
+                                    </a>
+                                    <input type="hidden" name="order_id" t-att-value="order_id"/>
+                                  </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                </div>   
+            </div>
+         </t>
+     </template>
+    
+    <!-- Plantilla con los procesos de pago -->
+    <template id="web_sale_extended_payment_process" name="PayU Latam Payment Process">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Compra - Metodo de Pago</t>
+            <t t-set="no_footer">1</t>
+            <div id="wrap">
+                <div class="container oe_website_sale py-2">
+                    <div class="row">
+                        <div class="col-12">
+                            <t t-call="website_sale.wizard_checkout">
+                                <t t-set="step" t-value="40"/>
+                            </t>
+                        </div>
+                        <div class="col-12" t-if="errors">
+                            <t t-foreach="errors" t-as="error">
+                                <div class="alert alert-danger" t-if="error" role="alert">
+                                    <h4>
+                                        <t t-esc="error[0]"/>
+                                    </h4>
+                                    <t t-esc="error[1]"/>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="col-12 col-xl-auto order-xl-2">
+                            <t t-call="website_sale.cart_summary"/>
+                        </div>
+                        <div class="col-12 col-xl order-xl-1 oe_cart">
+                            <section class="s_text_block pt0 pb0" data-name="Text block" style="">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-lg-12 pb0 pt0">
+                                            <div 
+                                                class="s_alert clearfix s_alert_sm w-100" 
+                                                data-name="Alert" 
+                                                style="background: #FFFFFF; border: 1px solid #3333CC; box-sizing: border-box; 
+                                                                        box-shadow: 0px 0px 10px rgba(51, 51, 204, 0.5); border-radius: 5px;">
+                                                <img class="img-fluid o_we_custom_image float-left" 
+                                                    src="/web_sale_extended/static/src/images/Img_tip.png" 
+                                                    data-original-title="" title="" 
+                                                    aria-describedby="tooltip561547"/>
+                                                <i class="fa-2x s_alert_icon" data-original-title="" title="" aria-describedby="tooltip831158"/>
+                                                <div class="s_alert_content" style="">
+                                                    <p/>
+                                                    <div style="text-align: left;">
+                                                        <font color="#3333cc">
+                                                            <b style="font-size: 18px;">
+                                                                Terminemos con el proceso de pago de tu 
+                                                                <t t-esc="order.order_line[0].product_template_id.name"/> 
+                                                                para ti y tu grupo familiar, es seguro y muy rápido, gracias a PayU.</b>
+                                                        </font>
+                                                        <br/>
+                                                    </div>
+                                                    <div style="text-align: left;">
+                                                        <b>Esta es la información del pagador del plan, así como la información
+                                                            de facturación. Una ves terminado éste proceso, de una generamos tu poliza.</b>
+                                                    </div>
+                                                    <p/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                          
+                            <div class="card">
+                                <div class="card-body" id="shipping_and_billing">
+                                    <a class="float-right no-decoration" href="/shop/checkout"><i class="fa fa-edit"/> Edit</a>
+                                    <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)"/>
+                                    <div>
+                                      <b>Comprador:
+                                      </b>
+                                        <span t-esc="order.partner_id.name"/>
+                                        <span t-esc="order.partner_id" 
+                                              t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" 
+                                              class="address-inline"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_payment_1"/>
+                                <div id="informations">
+                                    <nav>
+                                      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                        <a class="nav-item nav-link active" 
+                                           id="nav-home-tab" 
+                                           data-toggle="tab" 
+                                           href="#nav-home" 
+                                           role="tab"
+                                           aria-controls="nav-home" 
+                                           aria-selected="true">
+                                            TARJETA DE CRÉDITO
+                                        </a>
+                                        <a class="nav-item nav-link" 
+                                           id="nav-profile-tab" 
+                                           data-toggle="tab" 
+                                           href="#nav-profile" 
+                                           role="tab" 
+                                           aria-controls="nav-profile" 
+                                           aria-selected="false">
+                                            EFECTIVO
+                                        </a>
+                                        <a class="nav-item nav-link" 
+                                           id="nav-contact-tab" 
+                                           data-toggle="tab" 
+                                           href="#nav-contact" 
+                                           role="tab"
+                                           aria-controls="nav-contact" 
+                                           aria-selected="false">
+                                            TRANSFERENCIA PSE
+                                        </a>
+                                      </div>
+                                    </nav>
+                                </div>
+                                
+                                <div class="tab-content" id="nav-tabContent">
+                                    
+                                    <input type="hidden" id="partner_country_id" name="partner_country_id" 
+                                           t-att-value="order.partner_id.zip_id.city_id.state_id.country_id.id"/>
+                                    <input type="hidden" id="partner_state_id" name="partner_state_id" 
+                                           t-att-value="order.partner_id.zip_id.city_id.state_id.id"/>
+                                    <input type="hidden" id="partner_city_id" name="partner_city_id" 
+                                           t-att-value="order.partner_id.zip_id.city_id.id"/>
+                                    
+                                  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                    <form id="payulatam-payment-form" action="/shop/payment/payulatam-gateway-api" method="post" class="checkout_autoformat">
+                                      <section class="s_references pt32 pb40 bg-white" data-name="References" style="">
+                                        <div class="container">
+                                          <div class="row">
+                                            <div class="col-lg-2">
+                                              <img src="/web_sale_extended/static/src/img/tdc-codensa.png" 
+                                                   class="img img-fluid" 
+                                                   alt="Logo Demo" 
+                                                   data-original-title="" 
+                                                   title="" 
+                                                   aria-describedby="tooltip214079" 
+                                                   style=""/>
+                                            </div>
+                                            <div class="col-lg-2">
+                                              <img src="/web_sale_extended/static/src/img/tdc-visa.png" 
+                                                   class="img img-fluid" 
+                                                   alt="Logo Demo" 
+                                                   data-original-title="" 
+                                                   title="" 
+                                                   aria-describedby="tooltip997456"/>
+                                            </div>
+                                            <div class="col-lg-2">
+                                              <img src="/web_sale_extended/static/src/img/tdc-empty.png" 
+                                                   class="img img-fluid" 
+                                                   alt="Logo Demo" 
+                                                   data-original-title="" 
+                                                   title="" 
+                                                   aria-describedby="tooltip684457"/>
+                                            </div>
+                                            <div class="col-lg-2">
+                                              <img src="/web_sale_extended/static/src/img/tdc-mastercard.png" 
+                                                   class="img img-fluid" 
+                                                   alt="Logo Demo" 
+                                                   data-original-title="" 
+                                                   title="" 
+                                                   aria-describedby="tooltip211355" 
+                                                   style=""/>
+                                            </div>
+                                            <div class="col-lg-2">
+                                              <img src="/web_sale_extended/static/src/img/tdc-amex.png" 
+                                                   class="img img-fluid" 
+                                                   alt="Logo Demo" 
+                                                   data-original-title="" 
+                                                   title="" 
+                                                   aria-describedby="tooltip211355"/>
+                                            </div>
+                                            <div class="col-lg-2">
+                                              <img src="/web_sale_extended/static/src/img/tdc-diners.png" 
+                                                   class="img img-fluid" 
+                                                   alt="Logo Demo" 
+                                                   data-original-title="" 
+                                                   title="" 
+                                                   aria-describedby="tooltip211355"/>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </section>
+
+                                        
+                                      <h4>Información de la Tarjeta</h4>
+                                      <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="sex" style="color:#FFF !important;">.</label>
+                                                <select name="method_id" class="form-control">
+                                                    <t t-foreach="credit_card_methods" t-as="ccm">
+                                                            <option t-att-value="ccm">
+                                                                <t t-esc="ccm"/>
+                                                            </option>
+                                                        </t>
+                                                </select>
+                                                <!--<select name="credit_card_type" class="form-control">
+                                                    <option value="visa">VISA</option>
+                                                    <option value="mastercard">AMERICAN EXPRESS</option>
+                                                    <option value="mastercard">MASTERCARD</option>
+                                                    <option value="dinners">DINNERS</option>
+                                                </select>-->
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="credit_card_number">Número</label>
+                                                <input class="form-control" type="text" name="credit_card_number"/>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-4 col-md-4">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="credit_card_date_due">Fecha vencimiento</label>
+                                                <!--<select class="selectpicker" data-size="5" data-live-search="true"  id="credit_card_due_month" name="credit_card_due_month" 
+                                                t-attf-class="form-control" t-att-mode="mode[1]">
+                                                    <option value="">País...</option>
+                                                    <t t-foreach="credit_card_due_month_ids" t-as="c">
+                                                        <option t-att-value="c.id">
+                                                            <t t-esc="c.name" />
+                                                        </option>
+                                                    </t>
+                                                </select>-->
+                                                <select name="credit_card_due_month" class="form-control">
+                                                    <option value="01">01</option>
+                                                    <option value="02">02</option>
+                                                    <option value="03">03</option>
+                                                    <option value="04">04</option>
+                                                    <option value="05">05</option>
+                                                    <option value="06">06</option>
+                                                    <option value="07">07</option>
+                                                    <option value="08">08</option>
+                                                    <option value="09">09</option>
+                                                    <option value="10">10</option>
+                                                    <option value="11">11</option>
+                                                    <option value="12">12</option>
+                                                </select>
+  
+                                            </div>
+                                          </div>
+                                          <div class="col-lg-2 col-md-2">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="credit_card_due_year" style="color:#FFF !important;">.</label>
+                                                <select name="credit_card_due_year" class="form-control">
+                                                    <option value="2021">2021</option>
+                                                    <option value="2022">2022</option>
+                                                    <option value="2023">2023</option>
+                                                    <option value="2024">2024</option>
+                                                    <option value="2025">2025</option>
+                                                    <option value="2026">2026</option>
+                                                    <option value="2027">2027</option>
+                                                    <option value="2028">2028</option>
+                                                    <option value="2029">2029</option>
+                                                    <option value="2030">2030</option>
+                                                    <option value="2030">2031</option>
+                                                    <option value="2030">2032</option>
+                                                    <option value="2030">2033</option>
+                                                    <option value="2030">2034</option>
+                                                    <option value="2030">2035</option>
+                                                    <option value="2030">2036</option>
+                                                    <option value="2030">2037</option>
+                                                    <option value="2030">2038</option>
+                                                    <option value="2030">2039</option>
+                                                    <option value="2030">2040</option>
+                                                    <option value="2030">2041</option>
+                                                    <option value="2030">2042</option>
+                                                    <option value="2030">2043</option>
+                                                    <option value="2030">2044</option>
+                                                    <option value="2030">2045</option>
+                                                    <option value="2030">2046</option>
+                                                    <option value="2030">2047</option>
+                                                    <option value="2030">2048</option>
+                                                    <option value="2030">2049</option>
+                                                    <option value="2030">2050</option>
+                                                    <option value="2030">2051</option>
+                                                    <option value="2030">2052</option>
+                                                    <option value="2030">2053</option>
+                                                    <option value="2030">2054</option>
+                                                    <option value="2030">2055</option>
+                                                    <option value="2030">2056</option>
+                                                    <option value="2030">2057</option>
+                                                    <option value="2030">2058</option>
+                                                    <option value="2030">2059</option>
+                                                    <option value="2030">2060</option>
+                                                    <option value="2030">2061</option>
+                                                </select> 
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="credit_card_code">Código de Seguridad (CVV)</label>
+                                                <input class="form-control" type="password" name="credit_card_code" style="width:40%;"/>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      
+                                      
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="credit_card_name">Nombre de la Tarjeta</label>
+                                                <input class="form-control" type="text" name="credit_card_name"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="credit_card_quotes">Número de Cuotas</label>
+                                                <select name="credit_card_quotes" class="form-control">
+                                                    <option value="0">¿En cuantas cuotas desea pagar?</option>
+                                                    <option value="1">1 cuota</option>
+                                                    <option value="2">2 cuotas</option>
+                                                    <option value="3">3 cuotas</option>
+                                                    <option value="4">4 cuotas</option>
+                                                    <option value="5">5 cuotas</option>
+                                                    <option value="6">6 cuotas</option>
+                                                    <option value="7">7 cuotas</option>
+                                                    <option value="8">8 cuotas</option>
+                                                    <option value="9">9 cuotas</option>
+                                                    <option value="10">10 cuotas</option>
+                                                    <option value="11">11 cuotas</option>
+                                                    <option value="12">12 cuotas</option>
+                                                    <option value="24">24 cuotas</option>
+                                                    <option value="36">36 cuotas</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                      </div>
+                                      
+                                      <!--<div class="row">
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="form-check">
+                                              <input class="form-check-input" type="checkbox" value="" name="credit_card_save" id="credit_card_save"/>
+                                              <label class="form-check-label" for="credit_card_save" style="text-size:10px;">
+                                                  Guardar información de mi tarjeta de crédito
+                                              </label>
+                                            </div>
+                                        </div>
+                                      </div>-->
+                                      
+                                      
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-12 col-md-12">
+                                            <separator/><br/>
+                                            <h4>Información Adicional para Facturación</h4>
+                                        </div>
+                                      </div>
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="credit_card_billing_firstname">Nombres</label>
+						<t t-if="order.partner_id.othernames">
+                                                  <input class="form-control" type="text" name="credit_card_billing_firstname" t-att-value="order.partner_id.firstname + ' ' + order.partner_id.othernames"/>
+						</t>
+						<t t-if="not order.partner_id.othernames">
+                                                  <input class="form-control" type="text" name="credit_card_billing_firstname" t-att-value="order.partner_id.firstname"/>
+						</t>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="credit_card_billing_lastname">Apellidos</label>
+						<t t-if="order.partner_id.lastname2">
+                                                <input class="form-control" type="text" name="credit_card_billing_lastname" t-att-value="order.partner_id.lastname"/>
+						</t>
+						<t t-if="not order.partner_id.lastname2">
+                                                <input class="form-control" type="text" name="credit_card_billing_lastname" t-att-value="order.partner_id.lastname + ' ' + order.partner_id.lastname2"/>
+						</t>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      
+                                      
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-2 col-md-2">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="credit_card_partner_type" style="color:#FFF !important;">.</label>
+                                                <select name="credit_card_due_day" class="form-control">
+                                                    <option value="CC">C.C.</option>
+                                                    <option value="CE">CE</option>
+                                                    <option value="NIT">NIT</option>
+                                                    <option value="TI">TI</option>
+                                                    <option value="PP">PP</option>
+                                                    <option value="IDC">IDC</option>
+                                                    <option value="CEL">CEL</option>
+                                                    <option value="RC">RC</option>
+                                                    <option value="DE">DE</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="credit_card_partner_document">Número de Documento</label>
+                                                <input class="form-control" type="text" name="credit_card_partner_document" t-att-value="order.partner_id.identification_document"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="credit_card_billing_email">Email</label>
+                                                <input class="form-control" type="email"  name="credit_card_billing_email" t-att-value="order.partner_id.email" placeholder='ejemplo@ejemplo.com' />
+                                            </div>
+                                        </div>
+                                      </div>
+                                      
+                                      
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-8 col-md-8">
+                                            <div class="form-group">
+                                                 <label class="col-form-label" for="credit_card_partner_street">Dirección de Residencia
+                                                  <span class="d-none d-md-inline"> </span></label>
+                                                  <input class="form-control" type="text" name="credit_card_partner_street" t-att-value="order.partner_id.street"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4">
+                                              <div class="form-group">
+                                                <label class="col-form-label" for="credit_card_partner_phone">Teléfono</label>
+                                                <input class="form-control" type="text" name="credit_card_partner_phone" t-att-value="order.partner_id.phone"/>
+                                              </div>
+                                        </div>
+                                      </div>
+                                      
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                 <label class="col-form-label" for="credit_card_country_id">País</label>
+                                                  <select class="selectpicker" data-size="5" data-live-search="true"  
+                                                          id="credit_card_country_id" name="credit_card_country_id" 
+                                                  t-attf-class="form-control" >
+                                                      <option value="">País...</option>
+                                                      <t t-foreach="countries" t-as="c">
+                                                          <option t-att-value="c.id">
+                                                              <t t-esc="c.name" />
+                                                          </option>
+                                                      </t>
+                                                  </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                              <div class="form-group">
+                                                <label class="col-form-label" for="state_id">Departamento</label>
+                                                <select class="selectpicker" data-size="4" 
+                                                        id="credit_card_state_id" data-live-search="true" name="credit_card_state_id" 
+                                                t-attf-class="form-control" data-init="1">
+                                                    <option value="">Departamento</option>
+                                                    <t t-foreach="country_states" t-as="s">
+                                                        <option t-att-value="s.id">
+                                                            <t t-esc="s.name" />
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                              </div>
+                                        </div>
+                                      </div>
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <label class="col-form-label" for="city">Ciudad</label>
+                                            <select 
+                                                class="selectpicker"
+                                                data-size="10" 
+                                                data-live-search="true"
+                                                id="credit_card_city"
+                                                name="credit_card_city" 
+                                                t-attf-class="form-control" 
+                                                t-att-style="(not country or not country.state_ids) and 'display: none'"
+                                                >
+                                            <option value="">Ciudad...</option>
+                                            <t t-foreach="cities" t-as="c">
+                                                <option t-att-value="c.city_id.name" t-att-selected="c.name">
+                                                    <t t-esc="c.name" /> <t t-esc="c.city_id.name" /> <t t-esc="c.city_id.state_id.name" /> <t t-esc="c.city_id.state_id.country_id.name" />
+                                                </option>
+                                            </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                          <label class="col-form-label label-optional" for="credit_card_zip">Código postal</label>
+                                            <input type="text"  name="credit_card_zip"
+                                            t-attf-class="form-control" 
+                                            readonly="true" />
+                                            <input type="hidden"  name="credit_card_zip_id"/>
+                                          </div>
+                                      </div>
+                                      
+                                      
+                                      <!--<div class="row">
+                                        <div class="col-lg-12 col-md-12" style="padding-top:20px;">
+                                            <div class="form-check">
+                                              <input class="form-check-input" type="checkbox" value="" name="credit_card_recurring" id="credit_card_save"/>
+                                              <label class="form-check-label" for="credit_card_recurring" style="text-size:10px;">
+                                                  Hacer pagos recurrentes cada mes.
+                                              </label>
+                                            </div>
+                                        </div>
+                                      </div>-->
+                                      
+                                      
+                                      <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                      <input type="hidden" name="submitted" value="1" />
+                                      <input type="hidden" name="partner_id" t-att-value="partner_id or '0'" />
+                                      <input type="hidden" name="callback" t-att-value="callback" />
+                                          <!-- Example -->
+                                      <input type="hidden" name="field_required" t-att-value="'phone,name'" />
+                                      <p/>
+                                      <div class="d-flex justify-content-end">
+                                          <!--<a role="button" t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-secondary mb32">
+                                              <i class="fa fa-chevron-left"/>
+                                              <span>Atrás</span>
+                                          </a>-->
+                                          <button class="btn btn-custom mb32">
+                                              <span>Realizar Pago</span>
+                                              <i class="fa fa-chevron-right"/>
+                                          </button>
+                                         <!-- <a role="button" href="#" class="btn btn-primary mb32 a-submit a-submit-disable a-submit-loading">-->
+                                              
+                                      </div>
+                                      
+
+                                    </form>
+                                  </div>
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                                      <form id="payulatam-payment-form-cash" 
+                                            action="/shop/payment/payulatam-gateway-api/cash_process" method="post" class="checkout_autoformat">
+                                        <section class="s_references pt32 pb40 bg-white" data-name="References" style="">
+                                        <div class="container">
+                                          <div class="row">
+                                            <div class="col-lg-2 col-md-2">
+                                              <img class="img-fluid o_we_custom_image float-right" 
+                                                  src="/web_sale_extended/static/src/img/ganagana.png" 
+                                                  data-original-title="" title="" 
+                                                  aria-describedby="tooltip561548"/>
+                                              <!--<img class="img-fluid o_we_custom_image float-right" style="padding-bottom:10px;padding-top:10px;" 
+                                                  src="/web_sale_extended/static/src/img/ganagana.png" 
+                                                  data-original-title="" title="" 
+                                                  aria-describedby="tooltip561548"/>-->
+                                            </div>
+                                            <div class="col-lg-2 col-md-2">
+                                              <img class="img-fluid o_we_custom_image float-right" 
+                                                  src="/web_sale_extended/static/src/img/baloto.png" 
+                                                  data-original-title="" title="" 
+                                                  aria-describedby="tooltip561548"/>
+                                            </div>
+                                            <div class="col-lg-2 col-md-2">
+                                              <img class="img-fluid o_we_custom_image float-right"  
+                                                  src="/web_sale_extended/static/src/img/suchance.png" 
+                                                  data-original-title="" title="" 
+                                                  aria-describedby="tooltip561548"/>
+                                            </div>
+                                            <div class="col-lg-2 col-md-2">
+                                              <img class="img-fluid o_we_custom_image float-right" 
+                                                  src="/web_sale_extended/static/src/img/gana.png" 
+                                                  data-original-title="" title="" 
+                                                  aria-describedby="tooltip561548"/>
+                                            </div>
+                                            <div class="col-lg-2 col-md-2">
+                                              <img class="img-fluid o_we_custom_image float-right" 
+                                                  src="/web_sale_extended/static/src/img/laperla.png" 
+                                                  data-original-title="" title="" 
+                                                  aria-describedby="tooltip561548"/>
+                                            </div>
+                                            <div class="col-lg-2 col-md-2">
+                                              <img class="img-fluid o_we_custom_image float-right" 
+                                                  src="/web_sale_extended/static/src/img/pagatodo.png" 
+                                                  data-original-title="" title="" 
+                                                  aria-describedby="tooltip561548"/>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </section>
+                                      <div class="row">
+                                        <div class="col-lg-12 col-md-12">
+                                            <separator/><br/>
+                                            <h4>Información Adicional para Facturación</h4>
+                                        </div>
+                                      </div>
+
+                                      <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="cash_billing_firstname">Nombres</label>
+                                                <input class="form-control" type="text" name="cash_billing_firstname" 
+                                                       t-att-value="order.partner_id.firstname + ' ' + order.partner_id.othernames"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="cash_billing_lastname">Apellidos</label>
+                                                <input class="form-control" type="text" name="cash_billing_lastname" 
+                                                       t-att-value="order.partner_id.lastname + ' ' + order.partner_id.lastname2"/>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-2 col-md-2">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="cash_partner_type" style="color:#FFF !important;">.</label>
+                                                <select name="cash_partner_type" class="form-control">
+                                                    <option value="CC">C.C.</option>
+                                                    <option value="CE">CE</option>
+                                                    <option value="NIT">NIT</option>
+                                                    <option value="TI">TI</option>
+                                                    <option value="PP">PP</option>
+                                                    <option value="IDC">IDC</option>
+                                                    <option value="CEL">CEL</option>
+                                                    <option value="RC">RC</option>
+                                                    <option value="DE">DE</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="cash_partner_document">Número de Documento</label>
+                                                <input class="form-control" 
+                                                       type="text" name="cash_partner_document" 
+                                                       t-att-value="order.partner_id.identification_document"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="cash_billing_email">Email</label>
+                                                <input class="form-control" type="email"  name="cash_billing_email" 
+                                                       t-att-value="order.partner_id.email" placeholder='ejemplo@ejemplo.com' />
+                                            </div>
+                                        </div>
+                                      </div>
+                                      
+                                      
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-8 col-md-8">
+                                            <div class="form-group">
+                                                 <label class="col-form-label" for="cash_partner_street">Dirección de Residencia
+                                                  <span class="d-none d-md-inline"> </span></label>
+                                                  <input class="form-control" type="text" name="cash_partner_street" t-att-value="order.partner_id.street"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4">
+                                              <div class="form-group">
+                                                <label class="col-form-label" for="cash_partner_phone">Teléfono</label>
+                                                <input class="form-control" type="text" name="cash_partner_phone" t-att-value="order.partner_id.phone"/>
+                                              </div>
+                                        </div>
+                                      </div>
+                                      
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                 <label class="col-form-label" for="cash_country_id">País</label>
+                                                  <select class="selectpicker" data-size="5" data-live-search="true"  id="cash_country_id" name="cash_country_id" 
+                                                  t-attf-class="form-control" >
+                                                      <option value="">País...</option>
+                                                      <t t-foreach="countries" t-as="c">
+                                                          <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
+                                                              <t t-esc="c.name" />
+                                                          </option>
+                                                      </t>
+                                                  </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                              <div class="form-group">
+                                                <label class="col-form-label" for="cash_state_id">Departamento</label>
+                                                <select class="selectpicker" data-size="4" id="cash_state_id" data-live-search="true" name="cash_state_id" 
+                                                t-attf-class="form-control" data-init="1">
+                                                    <option value="">Departamento</option>
+                                                    <t t-foreach="country_states" t-as="s" t-att-selected="s.id == order.partner_id.zip_id.city_id.state_id.id">
+                                                        <option t-att-value="s.id">
+                                                            <t t-esc="s.name" />
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                              </div>
+                                        </div>
+                                      </div>
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <label class="col-form-label" for="cash_city">Ciudad</label>
+                                            <select 
+                                                class="selectpicker"
+                                                data-size="10" 
+                                                data-live-search="true"
+                                                id="cash_city"
+                                                name="cash_city" 
+                                                t-attf-class="form-control" 
+                                                
+                                                t-att-style="(not country or not country.state_ids) and 'display: none'"
+                                                >
+                                            <option value="">Ciudad...</option>
+                                            <t t-foreach="cities" t-as="c">
+                                                <option t-att-value="c.city_id.name" t-att-selected="c.name">
+                                                    <t t-esc="c.name" /> 
+                                                    <t t-esc="c.city_id.name" /> 
+                                                    <t t-esc="c.city_id.state_id.name" /> 
+                                                    <t t-esc="c.city_id.state_id.country_id.name" />
+                                                </option>
+                                            </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                          <label class="col-form-label label-optional" for="zip">Código postal</label>
+                                            <input type="text"  name="cash_zip"
+                                            t-attf-class="form-control" 
+                                            readonly="true" />
+                                            <input type="hidden"  name="cash_zip_id"/>
+                                          </div>
+                                      </div>
+                                          
+                                      <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                      <input type="hidden" name="submitted" value="1" />
+                                      <input type="hidden" name="partner_id" t-att-value="partner_id or '0'" />
+                                      <input type="hidden" name="callback" t-att-value="callback" />
+                                      <p/>
+                                      <div class="d-flex justify-content-end">
+                                          <button id="payment_btn_cash" class="btn btn-primary mb32">
+                                              <span>Generar Recibo de Pago</span>
+                                              <i class="fa fa-chevron-right"/>
+                                          </button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                                      <form id="payulatam-payment-form-pse" action="/shop/payment/payulatam-gateway-api/pse_process" method="post" class="checkout_autoformat">
+                                        <section class="s_references pt32 pb40 bg-white" data-name="References" style="">
+                                        <div class="container">
+                                          <div class="row">
+                                            <div class="col-lg-12 col-md-12">
+                                              <center><img class="img-fluid o_we_custom_image float-center" style="padding-bottom:0px;padding-top:0px;"
+                                                  src="/web_sale_extended/static/src/img/PSE1.png" 
+                                                  data-original-title="" title="" 
+                                                  aria-describedby="tooltip561548"/></center>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        </section>
+                                      
+                                      
+                                      <div class="row" style="text-align: justify;">
+                                        <div class="col-lg-12 col-md-12">
+                                            <p>Todas las compras y pagos por PSE son realizados en línea y la confirmación es inmediata.</p>
+                                            <p>Algunos bancos tiene un procedimiento de autenticación en su página (por ejemplo, una segunda clave). Si nunca has realizado pagos por internet con tu cuenta de ahorros o corriente, es posible que necesites tramitar una autorización anten tu banco.</p>
+                                        </div>
+                                      </div>
+                                      
+                                      
+                                      <div class="row">
+                                        <div class="col-lg6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="pse_bank" style="color:#FFF !important;">.</label>
+                                                <!--<select name="pse_bank" class="form-control">
+                                                    <t t-foreach="bank_list" t-as="ccm">
+                                                            <option t-att-value="ccm.pseCode">
+                                                                <t t-esc="ccm.description"/>
+                                                            </option>
+                                                        </t>
+                                                </select>-->
+                                                <select name="pse_bank" class="form-control">
+                                                    <option value="0">A continuación seleccione su banco</option>
+                                                    <option value="1059">BANCAMIA</option>
+                                                    <option value="1040">BANCO AGRARIO</option>
+                                                    <option value="10322">BANCO CAJA SOCIAL</option>
+                                                    <option value="1052">BANCO COMERCIAL AVVILLAS S.A.</option>
+                                                    <option value="1061">BANCO COOMEVA S.A. - BANCOOMEVA</option>
+                                                    <option value="1066">BANCO COOPERATIVO COOPCENTRAL</option>
+                                                    <option value="1058">BANCO CREDIFINANCIERA</option>
+                                                    <option value="1051">BANCO DAVIVIENDA</option>
+                                                    <option value="1039">BANCO DE BOGOTA</option>
+                                                    <option value="1023">BANCO DE OCCIDENTE</option>
+                                                    <option value="1062">BANCO FALABELLA</option>
+                                                    <option value="1012">BANCO GNB SUDAMERIS</option>
+                                                    <option value="1060">BANCO PICHINCHA S.A.</option>
+                                                    <option value="1002">BANCO POPULAR</option>
+                                                    <option value="1101">BANCO PSE</option>
+                                                    <option value="1065">BANCO SANTANDER COLOMBIA</option>
+                                                    <option value="1069">BANCO SERFINANZA</option>
+                                                    <option value="1035">BANCO TEQUENDAMA</option>
+                                                    <option value="1022">BANCO UNION COLOMBIANO</option>
+                                                    <option value="1013">BBVA COLOMBIA S.A.</option>
+                                                    <option value="1009">CITIBANK COLOMBIA S.A.</option>
+                                                    <option value="1551">DAVIPLATA</option>
+                                                    <option value="1006">ITAU</option>
+                                                    <option value="1508">NEQUI</option>
+                                                    <option value="1151">RAPPIPAY</option>
+                                                    <option value="1078">SCOTIABANK COLPATRIA UAT</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                         <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="pse_owner">Titular de la cuenta</label>
+                                                <input class="form-control" type="text" name="pse_owner"/>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="pse_person_type">Tipo de Persona</label>
+                                                <select name="pse_person_type" class="form-control">
+                                                    <option value="N">Persona Natural</option>
+                                                    <option value="J">Persona Jurídica</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="pse_partner_document">Número de Documento</label>
+                                                <input class="form-control" type="text" name="pse_partner_document"/>
+                                            </div>
+                                        </div>
+                                        
+                                      </div>
+                                      
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-12 col-md-12">
+                                            <separator/><br/>
+                                            <h4>Información Adicional para Facturación</h4>
+                                        </div>
+                                      </div>
+                                      
+
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="pse_billing_firstname">Nombres</label>
+                                                <input class="form-control" type="text" name="pse_billing_firstname" t-att-value="order.partner_id.firstname + ' ' + order.partner_id.othernames"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="pse_billing_lastname">Apellidos</label>
+                                                <input class="form-control" type="text" name="pse_billing_lastname" t-att-value="order.partner_id.lastname + ' ' + order.partner_id.lastname2"/>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      
+                                      
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-2 col-md-2">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="pse_partner_type" style="color:#FFF !important;">.</label>
+                                                <select name="pse_partner_type" class="form-control">
+                                                    <option value="CC">C.C.</option>
+                                                    <option value="CE">CE</option>
+                                                    <option value="NIT">NIT</option>
+                                                    <option value="TI">TI</option>
+                                                    <option value="PP">PP</option>
+                                                    <option value="IDC">IDC</option>
+                                                    <option value="CEL">CEL</option>
+                                                    <option value="RC">RC</option>
+                                                    <option value="DE">DE</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="pse_partner_document">Número de Documento</label>
+                                                <input class="form-control" type="text" name="pse_partner_document" t-att-value="order.partner_id.identification_document"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="pse_billing_email">Email</label>
+                                                <input class="form-control" type="email"  name="pse_billing_email" t-att-value="order.partner_id.email" placeholder='ejemplo@ejemplo.com' />
+                                            </div>
+                                        </div>
+                                      </div>
+                                      
+                                      
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-8 col-md-8">
+                                            <div class="form-group">
+                                                 <label class="col-form-label" for="pse_partner_street">Dirección de Residencia
+                                                  <span class="d-none d-md-inline"> </span></label>
+                                                  <input class="form-control" type="text" name="pse_partner_street" t-att-value="order.partner_id.street"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4">
+                                              <div class="form-group">
+                                                <label class="col-form-label" for="pse_partner_phone">Teléfono</label>
+                                                <input class="form-control" type="text" name="pse_partner_phone" t-att-value="order.partner_id.phone"/>
+                                              </div>
+                                        </div>
+                                      </div>
+                                      
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="form-group">
+                                                 <label class="col-form-label" for="pse_country_id">País</label>
+                                                  <select class="selectpicker" data-size="5" data-live-search="true"  id="pse_country_id" name="pse_country_id" 
+                                                  t-attf-class="form-control" >
+                                                      <option value="">País...</option>
+                                                      <t t-foreach="countries" t-as="c">
+                                                          <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
+                                                              <t t-esc="c.name" />
+                                                          </option>
+                                                      </t>
+                                                  </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                              <div class="form-group">
+                                                <label class="col-form-label" for="pse_state_id">Departamento</label>
+                                                <select class="selectpicker" data-size="4" id="pse_state_id" data-live-search="true" name="pse_state_id" 
+                                                t-attf-class="form-control" data-init="1">
+                                                    <option value="">Departamento</option>
+                                                    <t t-foreach="country_states" t-as="s">
+                                                        <option t-att-value="s.id">
+                                                            <t t-esc="s.name" />
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                              </div>
+                                        </div>
+                                      </div>
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <label class="col-form-label" for="pse_city">Ciudad</label>
+                                            <select 
+                                                class="selectpicker"
+                                                data-size="10" 
+                                                data-live-search="true"
+                                                id="pse_city"
+                                                name="pse_city" 
+                                                t-attf-class="form-control" 
+                                                
+                                                t-att-style="(not country or not country.state_ids) and 'display: none'"
+                                                >
+                                            <option value="">Ciudad...</option>
+                                            <t t-foreach="cities" t-as="c">
+                                                <option t-att-value="c.city_id.name" t-att-selected="c.name">
+                                                    <t t-esc="c.name" /> <t t-esc="c.city_id.name" /> <t t-esc="c.city_id.state_id.name" /> <t t-esc="c.city_id.state_id.country_id.name" />
+                                                </option>
+                                            </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                          <label class="col-form-label label-optional" for="zip">Código postal</label>
+                                            <input type="text"  name="pse_zip"
+                                            t-attf-class="form-control" 
+                                            readonly="true" />
+                                            <input type="hidden"  name="pse_zip_id"/>
+                                          </div>
+                                      </div>
+                                      
+                                      <!--<div class="row">
+                                        <div class="col-lg-12 col-md-12" style="padding-top:20px;">
+                                            <div class="form-check">
+                                              <input class="form-check-input" type="checkbox" value="" name="credit_card_recurring" id="credit_card_save"/>
+                                              <label class="form-check-label" for="credit_card_recurring" style="text-size:10px;">
+                                                  Hacer pagos recurrentes cada mes.
+                                              </label>
+                                            </div>
+                                        </div>
+                                      </div>-->
+                                      
+                                      <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                      <input type="hidden" name="submitted" value="1" />
+                                      <input type="hidden" name="partner_id" t-att-value="partner_id or '0'" />
+                                      <input type="hidden" name="callback" t-att-value="callback" />
+                                          <!-- Example -->
+                                      <input type="hidden" name="field_required" t-att-value="'phone,name'" />
+                                      <p/>
+                                      <div class="d-flex justify-content-end">
+                                          <!--<a role="button" t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-secondary mb32">
+                                              <i class="fa fa-chevron-left"/>
+                                              <span>Atrás</span>
+                                          </a>-->
+                                          <button class="btn btn-custom mb32">
+                                              <span>Realizar Pago</span>
+                                              <i class="fa fa-chevron-right"/>
+                                          </button>
+                                         <!-- <a role="button" href="#" class="btn btn-primary mb32 a-submit a-submit-disable a-submit-loading">-->
+                                              
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe_structure" id="oe_structure_website_sale_payment_2"/>
+            </div>
+        </t>
+    
+    </template>
+    
+
+</odoo>

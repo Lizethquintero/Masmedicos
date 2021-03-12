@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_order_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.form.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Tus Datos" id="tusdatos">
+                        <group string="Información de Verificación del Comprador en tusdatos.co">
+                            <field name="tusdatos_request_id" string="Nó de Solicitud" help="Número de Solicitud de verificación del documento del Comprador."/>
+                            <field name="tusdatos_approved" string="Verificación Aprobada" help="Si la respuesta es positiva por parte de tusdatos se marcará como verdadero."/>
+                            <!--<field name="tusdatos_email" string="Email" help="Número de Solicitud de verificación del documento del Comprador"/>-->
+                            <field name="tusdatos_request_expired" string="Expirado" help="Si la petición tiene más de 4 horas, sin que se haya logrado verificar, el proceso expira y no podrá completarse esta orden de venta."/>
+                        </group>
+                    </page>
+                    
+                    <page string="PayU Latam" id="payulatam">
+                        <group string="Tokenización">
+                            <field name="payulatam_credit_card_token" readonly="True"/>
+                            <field name="payulatam_credit_card_masked" readonly="True"/>
+                            <field name="payulatam_credit_card_identification" readonly="True"/>
+                            <field name="payulatam_credit_card_method" readonly="True"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+</odoo>

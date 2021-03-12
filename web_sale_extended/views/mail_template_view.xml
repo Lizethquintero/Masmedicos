@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="email_template_form" model="ir.ui.view">
+            <field name="model">mail.template</field>
+            <field name="inherit_id" ref="mail.email_template_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='model_id']" position="after">
+                    <!--<field name="tusdatos_process_send"/>-->
+                    <field name="tusdatos_confirmation_accept"/>
+                    <field name="tusdatos_confirmation_reject"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

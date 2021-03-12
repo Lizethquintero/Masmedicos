@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <!-- product.product inherit form view -->
+        <record id="product_einvoicing_normal_form_view" model="ir.ui.view">
+            <field name="name">product.product.inherit.view.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="E-Invoicing" name="einvoicing">
+                        <group>
+                            <group>
+                                <field name="brand_name"/>
+                                <field name="model_name"/>
+                            </group>
+                            <group>
+                                <field name="product_scheme_id"/>
+                                <field name="product_scheme_code"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+                
+            </field>
+        </record>
+        
+    </data>
+</odoo>

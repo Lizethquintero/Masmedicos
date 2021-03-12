@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_open_add_beneficiary_form" model="ir.actions.act_url">
+            <field name="name">Website Beneficiary Form</field>
+            <field name="target">self</field>
+            <field name="url" eval="'/add/beneficiary'"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_open_add_beneficiary_form"/>
+            <field name="state">open</field>
+        </record>
+    </data>
+</odoo>

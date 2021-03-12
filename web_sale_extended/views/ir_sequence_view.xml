@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="sequence_view_inherit" model="ir.ui.view">
+            <field name="model">ir.sequence</field>
+            <field name="inherit_id" ref="base.sequence_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="Sponsors">
+                        <group>
+                            <group>
+                                <field name="logo_website_pdf"/>
+                            </group>
+                            <group>
+                                <field name="logo_header_website_sponsor"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="logo_body_website_sponsor"/>
+                            </group>
+                            
+                             <group>
+                                <field name="beneficiaries_number"/>
+                                 <field name="sponsor_name"/>
+                                 <field name="sponsor_nit"/>
+                                 <field name="sponsor_payment_url"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    
+    
+
+</odoo>

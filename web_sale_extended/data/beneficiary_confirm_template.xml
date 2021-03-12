@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <data noupdate="1">
+   
+        <record id="email_beneficiary_confirm_template" model="mail.template">
+           <field name="name">Plantilla de Confirmación del Proceso de registro de Beneficiarios</field>
+           <field name="email_from">${object.company_id.email}</field>
+           <field name="subject">Confirmación de Afiliación - ${object.name}</field>
+           <field name="email_to">${object.email}</field>
+           <field name="model_id" ref="base.model_res_partner"/>
+           <field name="partner_to" >${object.id}</field>
+           <field name="auto_delete" eval="False"/>
+            <field name="body_html"><![CDATA[
+            <p>Dear ${object.partner_id.name},</p>
+            <p>mensaje</p>
+            ]]></field>
+        </record>
+        
+    </data>
+</odoo>

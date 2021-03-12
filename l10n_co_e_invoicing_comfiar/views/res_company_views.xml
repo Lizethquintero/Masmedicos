@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_company_form" model="ir.ui.view">
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="e-Invoicing COMFIAR" name="Comfiar">
+                        <group>
+                            <group string="Credenciales COMFIAR">
+                                <field name="einvoicing_enabled"/>
+                                <field name="user_comfiar" attrs="{'required': [('einvoicing_enabled', '=', True)]}"/>
+                                <field name="pwd_comfiar" attrs="{'required': [('einvoicing_enabled', '=', True)]}" password="True"/>
+                                <field name="formatoId" attrs="{'required': [('einvoicing_enabled', '=', True)]}"/>
+                            </group>
+                            <group string="Sesion">
+                                <button name="get_sesion_comfiar" type="object" string="Get Session"/>
+                                <field name="sesion_id" readonly="1" password="True"/>
+                                <field name="date_due_sesion" readonly="1" password="True"/>
+                            </group>
+                            <group>                                
+                                <field name="comfiar_send_mail"/>
+                                <field name="odoo_send_mail_einv"/>
+                                <field name="attach_pdf"/>
+                                <field name="report_template" domain="[('model', '=', 'account.move')]"/>
+                                <!-- <field name="pdvid_inv" attrs="{'required': [('einvoicing_enabled', '=', True)]}"/>
+                                <field name="pdvid_nc" attrs="{'required': [('einvoicing_enabled', '=', True)]}"/>
+                                <field name="pdvid_nd" attrs="{'required': [('einvoicing_enabled', '=', True)]}"/> -->
+                            </group>
+                            <group>
+                                <field name="out_invoice_sent"/>
+                                <field name="out_refund_sent"/>
+                                <field name="in_refund_sent"/>
+                                <field name="profile_execution_id" attrs="{'required': [('einvoicing_enabled', '=', True)]}"/>
+                                <field name="einvoicing_email"/>
+                                <field name="einvoicing_partner_no_email"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="tributary_information"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
