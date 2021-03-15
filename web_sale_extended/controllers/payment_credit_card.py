@@ -100,10 +100,8 @@ class WebsiteSaleExtended(WebsiteSale):
             })
             body_message = """
                 <b><span style='color:red;'>PayU Latam - Error en proceso de tokenizacion</span></b><br/>
-                <b>Código:</b> %s<br/>
                 <b>Error:</b> %s
             """ % (
-                token_response['transactionResponse']['code'],
                 token_response['error'], 
             )
             order.message_post(body=body_message, type="comment")
