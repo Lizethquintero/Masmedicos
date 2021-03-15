@@ -272,7 +272,7 @@
                                                     <div class="btn-group flex-grow-1 mr-1 mb-1">
                                                         <a class="btn btn-secondary btn-block o_download_btn" 
                                                            title="Descargar" 
-                                                           href="">
+                                                           t-att-href="url_payment_receipt_pdf">
                                                             <i class="fa fa-download"></i> Descargar
                                                         </a>
                                                     </div>
@@ -281,7 +281,7 @@
                                                             id="print_invoice_report" 
                                                             title="Imprimir" 
                                                             target="_blank" 
-                                                            href="">
+                                                            t-att-href="url_payment_receipt_html">
                                                             <i class="fa fa-print"></i> Imprimir
                                                         </a>
                                                     </div>
@@ -307,6 +307,7 @@
                     <div id="quote_content" class="col-12 col-xl order-xl-1 oe_cart">
                         <section class="s_text_block pt0 pb0" data-name="Text block">
                             <input type="hidden" name="url_payment_receipt_pdf" id="url_payment_receipt_pdf" t-att-value="url_payment_receipt_pdf"/>
+                            <input type="hidden" name="url_payment_receipt_html" id="url_payment_receipt_html" t-att-value="url_payment_receipt_html"/>
                             <div class="col-lg-12 pt0 pb0">
                                 <div class="s_alert clearfix w-100 s_alert_md" data-name="Alert" style="border:none;">
                                     <i class="fa-2x s_alert_icon"></i>
@@ -322,9 +323,10 @@
                                               <span style="font-size:36px;">Recibo de Pago generado exitosamente gracias a PayU</span>
                                             </font><br/>
                                             <font color="#39b54a" t-if="state">
-                                              <span style="font-size:18px;">Estado: <t t-esc="state"/></span>
+                                              <!--<span style="font-size:18px;">Estado: <t t-esc="state"/></span>-->
+                                                <span style="font-size:18px;">Estado: PENDIENTE DE PAGO</span>
                                             </font><br/>
-                                            <font color="#39b54a" t-if="error">
+                                            <!--<font color="#39b54a" t-if="error">
                                               <span style="font-size:18px;">Descripción: <t t-esc="error"/></span>
                                             </font><br/>
                                             <font color="#39b54a" t-if="responseCode">
@@ -332,24 +334,29 @@
                                             </font><br/>
                                             <font color="#39b54a" t-if="transactionId">
                                               <span style="font-size:18px;">ID Transacción: <t t-esc="transactionId"/></span>
-                                            </font><br/>
+                                            </font><br/>-->
                                             <font color="#39b54a" t-if="order_Id">
                                               <span style="font-size:18px;">ID Orden: <t t-esc="order_Id"/></span>
                                             </font>
                                             <br/>
                                         </div>
                                         <div style="text-align:center;">
-                                            <span style="font-size:18px;">Para continuar con el registro del asegurado principal y los beneficiarios enviareamos un correo electrónico tan pronto tengamos confirmación del pago por parte de PayU. En este correo tendrá las indicaciones para que finalices tú proceso de afiliación:</span>
+                                            <span style="font-size:18px;">
+                                                Una vez confirmado el pago te enviareamos un correo electrónico a 
+                                                <b><t t-esc="order_id.partner_id.email"/></b> 
+                                                con las indicaciones para finalizar tú proceso de afiliación y registrar la información 
+                                                del asegurado principal y los beneficiarios del plan elegido. 
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="s_btn text-center pt16 pb16" data-name="Button">
                                     <a class="btn btn-primary" 
-                                       id="submit_beneficiaries_add" 
+                                       id="submit_payment_cash_success" 
                                        data-original-title="" 
                                        title="" 
                                        aria-describedby="tooltip188699"
-                                       style="color:#FFF;">Registra tus Beneficiarios
+                                       style="color:#FFF;">Terminar Proceso de Compra
                                        <i class="fa fa-chevron-right"/>
                                     </a>
                                     <input type="hidden" name="order_id" t-att-value="order_id.id"/>
@@ -449,7 +456,7 @@
                                 </div>
                                 <div class="s_btn text-center pt16 pb16" data-name="Button">
                                     <a class="btn btn-primary" 
-                                       id="submit_beneficiaries_add" 
+                                       id="submit_payment_rejected" 
                                        data-original-title="" 
                                        title="" 
                                        aria-describedby="tooltip188699"
@@ -536,7 +543,6 @@
                     <div id="quote_content" class="col-12 col-xl order-xl-1 oe_cart">
                         <section class="s_text_block pt0 pb0" data-name="Text block">
                             <input type="hidden" name="bank_url" id="bank_url" t-att-value="bank_url"/>
-                            <input type="hidden" name="url_payment_receipt_pdf" id="url_payment_receipt_pdf" t-att-value="url_payment_receipt_pdf"/>
                             <div class="col-lg-12 pt0 pb0">
                                 <div class="s_alert clearfix w-100 s_alert_md" data-name="Alert" style="border:none;">
                                     <i class="fa-2x s_alert_icon"></i>
@@ -765,7 +771,7 @@
                           
                             <div class="card">
                                 <div class="card-body" id="shipping_and_billing">
-                                    <a class="float-right no-decoration" href="/shop/checkout"><i class="fa fa-edit"/> Edit</a>
+                                    <a class="float-right no-decoration" href="/shop/checkout"><i class="fa fa-edit"/> Editar</a>
                                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)"/>
                                     <div>
                                       <b>Comprador:
@@ -1307,6 +1313,36 @@
                                           </div>
                                         </div>
                                       </section>
+                                          
+                                      <div class="row">
+                                        <div class="col-lg-12 col-md-12">
+                                            <separator/><br/>
+                                            <h4>Medio de Pago</h4>
+                                        </div>
+                                      </div>
+                                          
+                                      <div class="row">
+                                        <div class="col-lg6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label" for="cash_bank" style="color:#FFF !important;">.</label>
+                                                <select name="cash_bank" id="cash_bank"
+                                                        t-attf-class="form-control">
+                                                    <option value="">Seleccione su Medio de Pago</option>
+                                                    <option value="BALOTO">BALOTO</option>
+                                                    <option value="BALOTO">EFECTY</option>
+                                                    <option value="BANK_REFERENCED">REFERENCIA BANCARIA</option>
+                                                    <option value="OTHERS_CASH">APUESTAS CUCUTA</option>
+                                                    <option value="OTHERS_CASH">GANA GANA</option>
+                                                    <option value="OTHERS_CASH">SU CHANCE</option>
+                                                    <option value="OTHERS_CASH">ACERTAMOS</option>
+                                                    <option value="OTHERS_CASH">LA PERLA</option>
+                                                    <option value="OTHERS_CASH">APUESTAS UNIDAS</option>
+                                                    <option value="OTHERS_CASH">PAGA TODO</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                      </div>
+
                                       <div class="row">
                                         <div class="col-lg-12 col-md-12">
                                             <separator/><br/>
@@ -1336,7 +1372,7 @@
                                                        t-att-value="order.partner_id.lastname + ' ' + order.partner_id.lastname2"/>
                                                 </t>
                                                 <t t-if="not order.partner_id.lastname2">
-                                                    <input class="form-control" type="text" name="cash_billing_firstname" 
+                                                    <input class="form-control" type="text" name="cash_billing_lastname" 
                                                        t-att-value="order.partner_id.lastname"/>
                                                 </t>
                                             </div>

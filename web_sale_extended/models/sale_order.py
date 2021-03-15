@@ -25,9 +25,11 @@ class SaleOrder(models.Model):
     beneficiary4_id = fields.Many2one('res.partner')
     beneficiary5_id = fields.Many2one('res.partner')
     beneficiary6_id = fields.Many2one('res.partner')
-    #payulatam_order_id = fields.Char('ID de Orden de PayU')
-    #payulatam_transaction_id = fields.Char('ID de Transacción de PayU')
-    #payulatam_state = fields.Char('Estado Transacción de PayU')
+    
+    payulatam_order_id = fields.Char('ID de Orden de PayU')
+    payulatam_transaction_id = fields.Char('ID de Transacción de PayU')
+    payulatam_state = fields.Char('Estado Transacción de PayU')
+    
     payulatam_credit_card_token = fields.Char('Token Para Tarjetas de Crédito')
     payulatam_credit_card_masked = fields.Char('Mascara del Número de Tarjeta')
     payulatam_credit_card_identification = fields.Char('Identificación')
@@ -35,7 +37,7 @@ class SaleOrder(models.Model):
     state =  fields.Selection(selection_add=[('payu_pending', 'PAYU ESPERANDO APROBACIÓN')])
     
     
-    def action_confirm(self):
+    def action_payu_confirm(self):
         if self._get_forbidden_state_confirm() & set(self.mapped('state')):
             raise UserError(_(
                 'It is not allowed to confirm an order in the following states: %s'
@@ -122,28 +124,37 @@ class SaleOrder(models.Model):
             # user_id = record.user_id
             if process_id and not approval:
                 _logger.info(' '.join([str(approval), process_id]))
-                # TusDatos API!!!!
                 _logger.error('***************************** CONSULTA EN TUS DATOS ++++++++++++++++++++++++++++++++++')
                 approval = self.env['api.tusdatos'].personal_data_approval(process_id)
-                
-                #_logger.info(' '.join([str(approval)]))
                 if approval[0]:
                     _logger.error('***************************** LLEGA POSITIVO LA VERIFICACION EN TUS DATOS ++++++++++++++++++++++++++++++++++')
                     _logger.error(approval[0])
                     sale_id.write({'tusdatos_approved': approval})
                     if '-' in process_id:
                         sale_id.write({'tusdatos_request_id': approval[1]['id']})
+                        body_message = """
+                            <b><span style='color:blue;'>TusDatos - Solicitud de Verificación</span></b><br/>
+                            <b>No. Solicitud:</b> %s<br/>
+                        """ % (
+                            tusdatos_validation['process_id'],
+                        )
+                        order.message_post(body=body_message, type="comment")
+                        
+                        
+                        
+                        
                     # EMAIL!!! (subir)
                     #record.action_quatition_send()
                     #template = request.env.ref('web_sale_extended_template_sale_update',
                     #                       raise_if_not_found=False)
                     #template_id = self.env['mail.template'].search([('tusdatos_confirmation_accept', '=', True)], limit=1)
+                    """
                     template_id = self._find_mail_template(force_confirmation_template=True)
                     context = dict(self.env.context)
                     if template_id:
                         sale_id.with_context(force_send=True).message_post_with_template(
                             int(template_id), composition_mode='comment', email_layout_xmlid="mail.mail_notification_paynow")
-                        
+                    """    
                         
                         
                         """
@@ -189,19 +200,19 @@ class SaleOrder(models.Model):
                         template.with_context(cleaned_ctx).send_mail(sale_id.id, force_send=True, raise_exception=True)
                         """
                 else:
-                    _logger.error('***************************** LLEGA NEGATIVA LA RESPUESTA DE TUSDATOS ++++++++++++++++++++++++++++++++++')
-                    _logger.error(approval[1])
                     if approval[1] and 'estado' in approval[1]:
                         if approval[1]['estado'] in ('error, tarea no valida'):
-                            _logger.error('***************************** RESPUESTA: error, tarea no valida ++++++++++++++++++++++++++++++++++')
                             message = """Respuesta Error en Tusdatos.co: Esta respuesta se puede dar por que transcurrieron 4 horas o más 
                                         entre la consulta en tusdatos al momento de la compra y la verificación de Odoo en tus datos para 
                                         ver si la respuesta en positiva o negativa """
-                            sale_id.write({
-                                'tusdatos_request_expired' : True,
-                            })
+                            sale_id.write({'tusdatos_request_expired' : True,})
                             sale_id.message_post(body=message)
                     else:
+                        message = """Respuesta Negativa en Tusdatos.co: Esta respuesta se da por que el documento del comprador se encuentra reportado
+                        en las lista Onu o OFAC"""
+                        sale_id.write({'tusdatos_request_expired' : True,})
+                        sale_id.message_post(body=message)
+                        """
                         _logger.error('***************************** ENVIANDO CORREO DE RESPUESTA NEGATIVA  ++++++++++++++++++++++++++++++++++')
                         template = self.env['mail.template'].search([('tusdatos_confirmation_reject', '=', True)], limit=1)
                         context = dict(self.env.context)
@@ -218,8 +229,9 @@ class SaleOrder(models.Model):
                             cleaned_ctx = dict(self.env.context)
                             cleaned_ctx.pop('default_type', None)
                             template.with_context(lang=self.env.user.lang).send_mail(sale_id.id, force_send=True, raise_exception=True)
-                    """Aseguramos que las transacciones ocurren cada 5 segundos"""
-                    time.sleep(6)
+                        """
+            """Aseguramos que las transacciones ocurren cada 5 segundos"""
+            time.sleep(6)
                     
 
                     

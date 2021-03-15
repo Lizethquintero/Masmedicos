@@ -62,9 +62,10 @@ class TusDatosAPI(models.TransientModel):
         # TODO: change strings to fields from config module
         username = self.env.user.company_id.mail_tusdatos
         passwrd = self.env.user.company_id.password_tusdatos
+        hostname = self.env.user.company_id.hostname_tusdatos
         api_post = ['launch', 'launch/verify', 'launch/car']
         api_get = ['retry', 'results', 'report_json', 'plans', 'querys']
-        hostname = 'https://dash-board.tusdatos.co/api/'
+        #hostname = 'https://dash-board.tusdatos.co/api/'
 
         if endpoint in api_post:
             headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
@@ -99,7 +100,6 @@ class TusDatosAPI(models.TransientModel):
     def launch_query_tusdatos(self, document: str, document_type: str,
                               expedition_date: str = None) -> dict:
         """
-
         Args:
             document: número de documento.
             document_type: tipo de documento.
@@ -170,8 +170,6 @@ class TusDatosAPI(models.TransientModel):
                 _logger.error("****** ERROR: tarea no valida. ******")
             else:
                 _logger.error("****** REALIZANDO VALIDACIÓN EN LISTAS. ******")
-                #_logger.error(validation)
-                #_logger.error(process_id)
                 if endpoint == 'results':
                     approval = not (validation['LISTA_ONU'] or validation['OFAC'])
                 elif endpoint == 'report_json':

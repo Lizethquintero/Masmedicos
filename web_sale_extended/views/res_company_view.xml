@@ -25,18 +25,41 @@
             <field name="model">res.company</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='social_media']" position="before">
-                    <group string="TusDatos" groups="base.group_no_one">
-                        <field name="mail_tusdatos"/>
-                        <field name="password_tusdatos"/>
-                    </group>
-                    <group string="PayU Latam" groups="base.group_no_one">
-                        <field name="payulatam_merchant_id"/>
-                        <field name="payulatam_account_id"/>
-                        <field name="payulatam_api_key"/>
-                        <field name="payulatam_api_login"/>
-                        <field name="payulatam_api_ref_seq_id"/>
-                    </group>
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="TusDatos">
+                        <group string="TusDatos" groups="base.group_no_one">
+                            <field name="hostname_tusdatos"/>
+                            <field name="mail_tusdatos"/>
+                            <field name="password_tusdatos"/>
+                        </group>
+                    </page>
+                    <page string="PayU Latam">
+                        <group>
+                            <field name="payulatam_api_env"/>
+                            <field name="payulatam_cash_expiration"/>
+                            <field name="checkout_landpage_redirect"/>
+                        </group>
+                        <group>
+                            <group string="PayU Latam Producción" groups="base.group_no_one">
+                                <field name="payulatam_api_hostname"/>
+                                <field name="payulatam_merchant_id"/>
+                                <field name="payulatam_account_id"/>
+                                <field name="payulatam_api_key"/>
+                                <field name="payulatam_api_login"/>
+                                <field name="payulatam_api_ref_seq_id"/>
+                                <field name="payulatam_api_response_url"/>
+                            </group>
+                            <group string="PayU Latam Sandbox" groups="base.group_no_one">
+                                <field name="payulatam_api_sandbox_hostname"/>
+                                <field name="payulatam_merchant_sandbox_id"/>
+                                <field name="payulatam_account_sandbox_id"/>
+                                <field name="payulatam_api_sandbox_key"/>
+                                <field name="payulatam_api_sandbox_login"/>
+                                <field name="payulatam_api_ref_seq_sandbox_id"/>
+                                <field name="payulatam_api_response_sandbox_url"/>
+                            </group>
+                        </group>
+                    </page>
                 </xpath>
             </field>
         </record>

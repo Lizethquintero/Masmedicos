@@ -25,11 +25,18 @@
                     </page>
                     
                     <page string="PayU Latam" id="payulatam">
-                        <group string="Tokenización">
-                            <field name="payulatam_credit_card_token" readonly="True"/>
-                            <field name="payulatam_credit_card_masked" readonly="True"/>
-                            <field name="payulatam_credit_card_identification" readonly="True"/>
-                            <field name="payulatam_credit_card_method" readonly="True"/>
+                        <group>
+                            <group string="Transacción de Pago">
+                                <field name="payulatam_order_id" readonly="True"/>
+                                <field name="payulatam_transaction_id" readonly="True"/>
+                                <field name="payulatam_state" readonly="True"/>
+                            </group>
+                            <group string="Tokenización Tarjeta Crédito">
+                                <field name="payulatam_credit_card_token" readonly="True"/>
+                                <field name="payulatam_credit_card_masked" readonly="True"/>
+                                <field name="payulatam_credit_card_identification" readonly="True"/>
+                                <field name="payulatam_credit_card_method" readonly="True"/>
+                            </group>
                         </group>
                     </page>
                 </xpath>

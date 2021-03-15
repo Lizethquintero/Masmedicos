@@ -1617,7 +1617,10 @@ odoo.define('web_sale_extended.payment_process', function(require) {
             window.location.href = url;
         });
         
-        
+        $('#submit_payment_cash_success').on('click', function() {
+            var url = '/shop'
+            window.location.href = url;
+        });
         //$('#payment_btn_cash').on('click', function() {
         //    alert('payulatam-payment-form-cash');
         //    $('#payulatam-payment-form-cash').attr('action', '/shop/payment/payulatam-gateway-api/cash_process');
@@ -1730,7 +1733,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                         $('#cash_city').append($("<option></option>")
                             .attr("value", obj.city_id).text(obj.city));
                     });
-                    $('#pse_city').selectpicker();
+                    $('#cash_city').selectpicker();
                     let data_select = $("#cash_city option:selected").val();
                     consultarZipcodeCash(data_select);
                 }
@@ -1789,7 +1792,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
         $("select[name='pse_city_id']").val(partner_state_id);
         $("select[name='cash_country_id']").val(partner_country_id);
         $("select[name='cash_state_id']").val(partner_state_id);
-        $("select[name='cash_city_id']").val(partner_state_id);
+        $("select[name='cash_city']").val(partner_state_id);
         $('#credit_card_country_id').selectpicker('refresh')
         $('#credit_card_state_id').selectpicker('refresh')
         $('#credit_card_city_id').selectpicker('refresh')
@@ -1798,7 +1801,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
         $('#pse_city_id').selectpicker('refresh')
         $('#cash_country_id').selectpicker('refresh')
         $('#cash_state_id').selectpicker('refresh')
-        $('#cash_city_id').selectpicker('refresh')
+        $('#cash_city').selectpicker('refresh')
         
         var credit_city = "select[name='credit_card_city']";
         var pse_city = "select[name='pse_city']";
@@ -1955,11 +1958,14 @@ odoo.define('web_sale_extended.payment_process', function(require) {
 
         $("#payulatam-payment-form-cash").validate({
             rules: {
+                cash_bank: {
+                    required: true,
+                },
                 cash_billing_firstname: {
                     required: true,
                     lettersonly: true,
                 },
-                cash_card_billing_lastname: {
+                cash_billing_lastname: {
                     required: true,
                     lettersonly: true,
                 },
@@ -1974,8 +1980,20 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 cash_partner_street: {
                     required: true,
                 },
+                cash_country_id: {
+                    required: true,
+                },
+                cash_state_id: {
+                    required: true,
+                },
+                cash_city: {
+                    required: true,
+                },
             },
             messages: {
+                cash_bank: {
+                    required: "¡Upss! debe seleccionar un medio de pago Efectivo"
+                },
                 cash_billing_firstname: {
                     required: "¡Upss! tu(s) nombre(s) es requerido",
                     lettersonly: "¡Upss! debe contener solo letras"
@@ -1994,6 +2012,15 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 },
                 cash_partner_street: {
                     required: "¡Upss! tu documento es requerido",
+                },
+                cash_country_id: {
+                    required: "¡Upss! debes seleccionar un país",
+                },
+                cash_state_id: {
+                    required: "¡Upss! debes seleccionar un departamento",
+                },
+                cash_city: {
+                    required: "¡Upss! debes seleccionar una ciudad",
                 },
             }
         });
@@ -2054,8 +2081,12 @@ odoo.define('web_sale_extended.payment_process', function(require) {
         
         var bank_url = $("#bank_url").val();
         var url_payment_receipt_pdf = $("#url_payment_receipt_pdf").val();
+        var url_payment_receipt_html = $("#url_payment_receipt_html").val();
         if (bank_url) {
             window.open(bank_url);
+        }
+        if (url_payment_receipt_html) {
+            window.open(url_payment_receipt_html);
         }
         if (url_payment_receipt_pdf) {
             window.open(url_payment_receipt_pdf);

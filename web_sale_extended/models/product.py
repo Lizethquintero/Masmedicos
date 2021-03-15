@@ -33,5 +33,7 @@ class ProductTemplate(models.Model):
     logo_body_website_sponsor  = fields.Binary(string="Image del Patrocinador en el cuerpo del documento", readonly=False)
     beneficiaries_number = fields.Integer(string="Número Máximo de Beneficiarios")
     sponsor_payment_url = fields.Char('URL de la Plataforma de Pagos')
+    is_product_landpage = fields.Boolean('Producto Publicado en Landpage')
+    product_landpage_url = fields.Char('URL para Landpage')
     
     

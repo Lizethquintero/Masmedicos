@@ -25,21 +25,22 @@ class PayULatamApi(models.TransientModel):
     currency = fields.Char('Moneda', readonly="True", default='COP')
     language = fields.Char('Moneda', readonly="True", default='es')
     
-    
     def request_payulatam_api(self, endpoint: str, query: dict) -> dict:
         payulatam_api_env = self.env.user.company_id.payulatam_api_env
-        
         if payulatam_api_env == 'prod':
             payulatam_merchant_id = self.env.user.company_id.payulatam_merchant_id
             payulatam_account_id = self.env.user.company_id.payulatam_account_id
             payulatam_api_key = self.env.user.company_id.payulatam_api_key
             payulatam_api_login = self.env.user.company_id.payulatam_api_login
         else:
-            """datos de cuenta para sandbox, vienen de la documentación"""
-            payulatam_merchant_id = '508029'
-            payulatam_account_id = '512321'
-            payulatam_api_key = '4Vj8eK4rloUd272L48hsrarnUA'
-            payulatam_api_login = 'pRRXKOl8ikMmt9u'
+            payulatam_merchant_id = self.env.user.company_id.payulatam_merchant_sandbox_id
+            payulatam_account_id = self.env.user.company_id.payulatam_account_sandbox_id
+            payulatam_api_key = self.env.user.company_id.payulatam_api_sandbox_key
+            payulatam_api_login = self.env.user.company_id.payulatam_api_sandbox_login
+            #payulatam_merchant_id = '508029'
+            #payulatam_account_id = '512321'
+            #payulatam_api_key = '4Vj8eK4rloUd272L48hsrarnUA'
+            #payulatam_api_login = 'pRRXKOl8ikMmt9u'
         
         language = self.language if self.language else 'es'
         api_post = ['PING','GET_PAYMENT_METHODS','SUBMIT_TRANSACTION','AUTHORIZATION_AND_CAPTURE','GET_BANKS_LIST','CREATE_TOKEN']
@@ -49,10 +50,9 @@ class PayULatamApi(models.TransientModel):
             provider = 'https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi'
             if payulatam_api_env == 'prod':
                 provider = 'https://api.payulatam.com/payments-api/4.0/service.cgi'
-                
             auth = HTTPBasicAuth('apikey', payulatam_api_key)
             headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
-            # general values
+            # general values for all request to api
             query.update({
                 'language': language,
                 "merchant": {
@@ -64,11 +64,6 @@ class PayULatamApi(models.TransientModel):
             if payulatam_api_env == 'prod':
                 query.update({"test": False})
             
-            
-            _logger.error('******************1111111111111111111111111111111112')
-            _logger.error(query)
-            #query = json.dumps(query)
-            _logger.error(query)
             response = requests.post(provider, json=query, auth=auth, headers=headers)
             if response.status_code != 200:
                 _logger.error(f'****** ERROR {response.status_code}: validation failed, {response.json()}. ******')
@@ -122,10 +117,6 @@ class PayULatamApi(models.TransientModel):
         query.update(values)
         response = self.request_payulatam_api(command, query)
         return response
-        
-        
-
-
 
     def payulatam_form_generate_values_api(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -198,7 +189,7 @@ class PayULatamApi(models.TransientModel):
         command = 'GET_BANKS_LIST'
         query = {"command": command}
         bankListInformation = {
-            "paymentMethod": "PSE",
+            "paymentMethod": "BALOTO",
             "paymentCountry": "CO"
         }
         query.update({
@@ -240,3 +231,46 @@ class PayULatamApi(models.TransientModel):
         response = self.request_payulatam_api(command, query)
         return response
         
+        
+    def payulatam_get_cash_method_list(self):
+        command = 'GET_PAYMENT_METHODS'
+        _logger.error('111metodos de cash ********************************************************************777711111')
+        query = {"command": command}
+        _logger.error(query)
+        
+        bankListInformation = {
+            #"paymentMethod": "PSE",
+            "paymentCountry": "CO"
+        }
+        query.update({
+            'bankListInformation': bankListInformation,
+        })
+        
+        response = self.request_payulatam_api(command, query)
+        _logger.error(response)
+        if response['code'] == 'SUCCESS':
+            
+            payment_method_ids = response['banks']
+            payment_method_list = []
+            for method in payment_method_ids:
+                payment_method_list.append({
+                    method['description']: method['description'],
+                    method['pseCode']: method['pseCode']
+                })
+            """
+            keys = [
+                "VISA",
+                "MASTERCARD",
+                "DINERS",
+                "CODENSA",
+                "AMEX",
+                "TEST CREDIT CARD"
+            ]
+            new_vals = {
+                required_key: payment_method_list[required_key]
+                for required_key in keys
+                if required_key in payment_method_list
+            }
+            return new_vals
+            """
+            return dict(payment_method_list)
