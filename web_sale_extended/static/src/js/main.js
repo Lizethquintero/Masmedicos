@@ -1840,7 +1840,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 credit_card_code: {
                     required: true,
                     minlength: 3,
-                    maxlength: 3,
+                    maxlength: 4,
                     number: true,
                 },
                 credit_card_name: {

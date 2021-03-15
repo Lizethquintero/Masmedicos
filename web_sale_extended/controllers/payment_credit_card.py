@@ -34,7 +34,7 @@ class WebsiteSaleExtended(WebsiteSale):
             return redirection
         
         """ Si existe una orden activa y llegan sin el metodo de pago """
-        if not post['method_id'] or not post['credit_card_number']:
+        if 'method_id' not in post or 'credit_card_number' not in post:
             return request.redirect('/shop/payment')
         """ Proceso de Pago """
         referenceCode = str(request.env['api.payulatam'].payulatam_get_sequence())
