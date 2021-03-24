@@ -131,13 +131,13 @@ class WebsiteSaleExtended(WebsiteSale):
                 values = kw
             else:
                 if kw['othernames'] == '':
-                    post['othernames'] = ' '
+                    post['othernames'] = ''
                 else:
-                    post['othernames'] = kw['othernames']
+                    post['othernames'] = kw['othernames'].strip()
                 
-                post['firstname'] = kw['name']
-                post['lastname'] = kw['lastname']
-                post['lastname2'] = kw['lastname2']
+                post['firstname'] = kw['name'].strip()
+                post['lastname'] = kw['lastname'].strip()
+                post['lastname2'] = kw['lastname2'].strip()
                 post['document_type_id'] = int(kw["document"])
                 post['person_type'] = "2"
                 post['identification_document'] = kw["identification_document"]
@@ -240,8 +240,32 @@ class WebsiteSaleExtended(WebsiteSale):
             'order_detail': order_detail,
         }
         return request.render("web_sale_extended.address", render_values)
+    
 
+    @http.route(['/shop/confirm_order'], type='http', auth="public", website=True, sitemap=False)
+    def confirm_order(self, **post):
+        order = request.website.sale_get_order()
 
+        redirection = self.checkout_redirection(order)
+        if redirection:
+            return redirection
+
+        order.onchange_partner_shipping_id()
+        order.order_line._compute_tax_id()
+        request.session['sale_last_order_id'] = order.id
+        request.website.sale_get_order(update_pricelist=True)
+        extra_step = request.website.viewref('website_sale.extra_info_option')
+        if extra_step.active:
+            return request.redirect("/shop/extra_info")
+        
+        
+        """ Evaluando si el producto tiene valor cero """
+        if order.main_product_id.list_price == 0:
+            return request.redirect("/my/order/beneficiaries/" + str(order.id))
+
+        return request.redirect("/shop/payment")
+    
+    
     def get_cities(self, department=None):
         ''' LISTADOS DE TODAS LAS CIUDADES '''
         domain = []
@@ -572,6 +596,7 @@ class WebsiteSaleExtended(WebsiteSale):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
     
+    """
     @http.route([
         '''/shop''',
         '''/shop/page/<int:page>''',
@@ -584,6 +609,7 @@ class WebsiteSaleExtended(WebsiteSale):
             #return request.redirect(request.httprequest.referrer or '/web/login')
             return request.redirect(checkout_landpage_redirect)
         raise UserError('Landpage de Productos sin definir. Revise la configuración de PayU Latam')
+    """
 
     @http.route(['/shop/confirmation'], type='http', auth="public", website=True, sitemap=False)
     def payment_confirmation(self, **post):

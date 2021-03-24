@@ -35,6 +35,11 @@ class WebsiteSaleExtended(WebsiteSale):
         descriptionPay = "Payment Origin from " + order.name
         signature = request.env['api.payulatam'].payulatam_get_signature(
             order.amount_total,'COP',referenceCode)
+        payulatam_api_env = request.env.user.company_id.payulatam_api_env
+        if payulatam_api_env == 'prod':
+            payulatam_response_url = request.env.user.company_id.payulatam_api_response_url
+        else:
+            payulatam_response_url = request.env.user.company_id.payulatam_api_response_sandbox_url
         tx_value = {"value": order.amount_total, "currency": "COP"}
         tx_tax = {"value": 0,"currency": "COP"}
         tx_tax_return_base = {"value": 0, "currency": "COP"}
@@ -73,7 +78,7 @@ class WebsiteSaleExtended(WebsiteSale):
             #"billingAddress": post['credit_card_partner_street']
         }
         extraParameters = {
-            "RESPONSE_URL": "http://www.test.com/response",
+            "RESPONSE_URL": payulatam_response_url,
             "PSE_REFERENCE1": "127.0.0.1",
             "FINANCIAL_INSTITUTION_CODE": post['pse_bank'],
             "USER_TYPE": post['pse_person_type'],
@@ -131,6 +136,8 @@ class WebsiteSaleExtended(WebsiteSale):
         elif response['transactionResponse']['state'] == 'PENDING':
             _logger.info('Notificación recibida para el pago de PayU Latam: %s: establecido como PENDIENTE' % (response['transactionResponse']['orderId']))
             order.action_payu_confirm()
+            #request.session['sale_order_id'] = None
+            #request.session['sale_transaction_id'] = None
             error = ''
             render_values = {'error': error}
             render_values.update({
@@ -144,8 +151,6 @@ class WebsiteSaleExtended(WebsiteSale):
             })
             return request.render("web_sale_extended.payulatam_success_process_pse", render_values)
         elif response['transactionResponse']['state'] in ['EXPIRED', 'DECLINED']:
-            _logger.info('Notificación recibida para el pago PayU Latam %s: Orden Cancelada' % (response['transactionResponse']['transactionId']))
-            
             render_values = {}
             #if 'paymentNetworkResponseErrorMessage' in response['transactionResponse']:
             #    if 'ya se encuentra registrada con la referencia' in response['transactionResponse']['paymentNetworkResponseErrorMessage']:

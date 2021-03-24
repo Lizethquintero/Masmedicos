@@ -92,6 +92,18 @@ class WebsiteSaleExtended(WebsiteSale):
         return request.render("web_sale_extended.web_sale_extended_payment_process", render_values)
     
     @http.route(['/shop/payment/payulatam-gateway-api/response'], type='http', auth="public", website=True, sitemap=False)
-    def payment_payulatam_gateway_api_response(self, **get):
+    def payment_payulatam_gateway_api_response(self, **kwargs):
         _logger.error('¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡')
-        _logger.error(get)
+        _logger.error(kwargs)
+        order = request.website.sale_get_order()
+        #redirection = self.checkout_redirection(order)
+        #if redirection:
+        #    return redirection
+        request.session['sale_order_id'] = None
+        request.session['sale_transaction_id'] = None
+        render_values = {}
+        render_values.update({
+            'order_id': order,
+            'response': dict(kwargs),
+        })
+        return request.render("web_sale_extended.web_sale_extended_payment_response_process", render_values)

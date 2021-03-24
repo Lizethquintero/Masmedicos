@@ -43,7 +43,6 @@ class WebsiteSaleExtended(WebsiteSale):
         signature = request.env['api.payulatam'].payulatam_get_signature(
             order.amount_total,'COP',referenceCode)
         
-        
         payulatam_api_env = request.env.user.company_id.payulatam_api_env
         if payulatam_api_env == 'prod':
             payulatam_response_url = request.env.user.company_id.payulatam_api_response_url

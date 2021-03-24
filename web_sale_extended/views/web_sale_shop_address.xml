@@ -49,7 +49,7 @@
                                                         <span style="font-size: 18px;">
                                                             <b>Llenemos</b>
                                                         </span>
-                                                        <b style="font-size: 18px;">la siguiente información para adquirir tu <t t-esc="order_detail[0].product_template_id.name"/>, es fácil y rápido.</b>
+                                                        <b style="font-size: 18px;">la siguiente información para adquirir tu <t t-esc="order_detail[0].product_template_id.name"/> de vigencia anual, es fácil y rápido.</b>
                                                         </font>
                                                         <br/>
                                                     </div>
@@ -250,6 +250,7 @@
                                     <t t-set='zip_city' />
                                     <!--t-value='country and [x for x in country.get_address_fields() if x in ["zip", "city"]] or ["city", "zip"]'-->
                                     <!--<t t-if="'zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')">-->
+                                    <!--+++++++INICIO DE CÓDIGO DEL CÓDIGO POSTAL++++++++-->
                                         <div t-attf-class="form-group #{error.get('zip') and 'o_has_error' or ''} col-md-4 div_zip">
                                             <label class="col-form-label label-optional" for="zip">Código postal</label>
                                             <input type="text"  name="zip"
@@ -258,6 +259,7 @@
                                             
                                             <input type="hidden"  name="zip_id"/>
                                         </div>
+                                    <!--+++++++FIN DE CÓDIGO DEL CÓDIGO POSTAL++++++++-->
                                     <!--</t>-->
                                             <!-- <div t-attf-class="form-group #{error.get('city') and 'o_has_error' or ''} col-md-8 div_city">
                                                 <label class="col-form-label" for="city">Ciudad</label>
@@ -317,26 +319,26 @@
                                     </t>-->
                                     
                                     
-                                    
-                                    <div t-attf-class="form-group #{error.get('fiscal_position_id') and 'o_has_error' or ''} col-lg-12 div_fiscal_position">
+                                    <!--+++++INICIO CÓDIGO DE POSICIÓN FISCAL+++++++-->
+                                    <!--<div t-attf-class="form-group #{error.get('fiscal_position_id') and 'o_has_error' or ''} col-lg-12 div_fiscal_position">
                                         <span style="font-weight: bold;">Posición Fiscal</span>
                                         <i class="fa fa-question-circle rounded"
                                            id="posicion_fiscal_help_icon"
                                            data-original-title="" title="" aria-describedby="tooltip725291" 
-                                           style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 255); height:32px; width:32px; valign:middle;margin-top:-2vh;"/>
+                                           style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 255); height:32px; width:32px; valign:middle;margin-top:-2vh;"/>-->
                                         
-                                        
+                                        <!--++++++++++Este segmento de código estaba originalmente comentado++++++++-->
                                         <!--<label class="col-form-label fa fa-question-circle rounded s_features_grid_icon" for="fiscal_position_id" style="width:100%">-->
-                                        
-                                        <div id="posicion_fiscal_help" 
+                                        <!--++++++++++Fin de segmento de código que estaba originalmente comentado++++++++-->
+                                        <!--<div id="posicion_fiscal_help" 
                                              style="display:none;color:#FFF;padding:5px;font-weight:100;float:right;margin-right:5%;font-weight:noset;font-size:12px;background-color: #1e1f24;border-radius: 5px;">
-                                            <span>No Declarantes: Personas que no declaran Renta</span><!--<span>No Declarantes: Personas no Declarantes de Renta</span>-->
+                                            <span>No Declarantes: Personas que no declaran Renta</span>
                                             <br/>
                                             <span>No Responsable: Personas que no son responsables ante la DIAN por ningún impuesto (ej. IVA, ICA, Retencion)</span><br/>
                                             <span>Declarantes: Personas que declaran renta</span>
-                                        </div>
+                                        </div>-->
                                         <!--</label>-->
-                                        <select class="selectpicker" data-size="4" id="fiscal_position_id" data-live-search="true" name="fiscal_position_id" 
+                                        <!--<select class="selectpicker" data-size="4" id="fiscal_position_id" data-live-search="true" name="fiscal_position_id" 
                                         t-attf-class="form-control #{error.get('fiscal_position_id') and 'is-invalid' or ''}" data-init="1">
                                             <option value="">Posición Fiscal</option>
                                             <t t-foreach="fiscal_position_ids" t-as="s">
@@ -345,8 +347,8 @@
                                                 </option>
                                             </t>
                                         </select>
-                                    </div>
-                                    
+                                    </div>-->
+                                    <!--+++++FIN CÓDIGO DE POSICIÓN FISCAL+++++++-->
                                     
                                     
                                     

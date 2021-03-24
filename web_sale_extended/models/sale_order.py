@@ -12,7 +12,6 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     logo = fields.Binary(related="company_id.logo")
-    # TusDatos.co
     tusdatos_request_id = fields.Char('Report id', default='')
     tusdatos_approved = fields.Boolean('Approved', default=False)
     tusdatos_email = fields.Char('Client e-mail', default='')
@@ -25,16 +24,15 @@ class SaleOrder(models.Model):
     beneficiary4_id = fields.Many2one('res.partner')
     beneficiary5_id = fields.Many2one('res.partner')
     beneficiary6_id = fields.Many2one('res.partner')
-    
     payulatam_order_id = fields.Char('ID de Orden de PayU')
     payulatam_transaction_id = fields.Char('ID de Transacción de PayU')
     payulatam_state = fields.Char('Estado Transacción de PayU')
-    
     payulatam_credit_card_token = fields.Char('Token Para Tarjetas de Crédito')
     payulatam_credit_card_masked = fields.Char('Mascara del Número de Tarjeta')
     payulatam_credit_card_identification = fields.Char('Identificación')
     payulatam_credit_card_method = fields.Char('Metodo de Pago')
     state =  fields.Selection(selection_add=[('payu_pending', 'PAYU ESPERANDO APROBACIÓN')])
+    main_product_id = fields.Many2one('product.product', string="Plan Elegido", compute="_compute_main_product_id", store=True)
     
     
     def action_payu_confirm(self):
@@ -55,11 +53,18 @@ class SaleOrder(models.Model):
         context = self._context.copy()
         context.pop('default_name', None)
 
-        self.with_context(context)._action_confirm()
-        if self.env.user.has_group('sale.group_auto_done_setting'):
-            self.action_done()
+        #self.with_context(context)._action_confirm()
+        #if self.env.user.has_group('sale.group_auto_done_setting'):
+        #    self.action_done()
         return True
     
+    @api.depends('order_line')
+    def _compute_main_product_id(self):
+        for line in self.order_line:
+            if line.product_id.is_product_landpage:
+                self.main_product_id = line.product_id
+            
+            
 
     def tusdatos_approval(self):
         for record in self:
@@ -140,6 +145,8 @@ class SaleOrder(models.Model):
                         )
                         order.message_post(body=body_message, type="comment")
                         
+                        
+                  
                 else:
                     if approval[1] and 'estado' in approval[1]:
                         if approval[1]['estado'] in ('error, tarea no valida'):
@@ -153,6 +160,24 @@ class SaleOrder(models.Model):
                         en las lista Onu o OFAC"""
                         sale_id.write({'tusdatos_request_expired' : True,})
                         sale_id.message_post(body=message)
+                        """
+                        _logger.error('***************************** ENVIANDO CORREO DE RESPUESTA NEGATIVA  ++++++++++++++++++++++++++++++++++')
+                        template = self.env['mail.template'].search([('tusdatos_confirmation_reject', '=', True)], limit=1)
+                        context = dict(self.env.context)
+                        if template:
+                            template_values = template.generate_email(sale_id.id, fields=None)
+                            template_values.update({
+                                #'email_to': sale_id.tusdatos_email,
+                                'email_to': sale_id.partner_id.email,
+                                'auto_delete': False,
+                                #'partner_to': False,
+                                'scheduled_date': False,
+                            })
+                            template.write(template_values)
+                            cleaned_ctx = dict(self.env.context)
+                            cleaned_ctx.pop('default_type', None)
+                            template.with_context(lang=self.env.user.lang).send_mail(sale_id.id, force_send=True, raise_exception=True)
+                        """
             """Aseguramos que las transacciones ocurren cada 5 segundos"""
             time.sleep(6)
                     
