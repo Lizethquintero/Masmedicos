@@ -26,13 +26,17 @@ class SaleOrder(models.Model):
     beneficiary6_id = fields.Many2one('res.partner')
     payulatam_order_id = fields.Char('ID de Orden de PayU')
     payulatam_transaction_id = fields.Char('ID de Transacción de PayU')
+    payulatam_signature = fields.Char('Signature de la Transacción')
     payulatam_state = fields.Char('Estado Transacción de PayU')
     payulatam_credit_card_token = fields.Char('Token Para Tarjetas de Crédito')
     payulatam_credit_card_masked = fields.Char('Mascara del Número de Tarjeta')
     payulatam_credit_card_identification = fields.Char('Identificación')
     payulatam_credit_card_method = fields.Char('Metodo de Pago')
-    state =  fields.Selection(selection_add=[('payu_pending', 'PAYU ESPERANDO APROBACIÓN')])
+    state =  fields.Selection(selection_add=[('payu_pending', 'PAYU ESPERANDO APROBACIÓN'),('payu_approved', 'PAYU APROBADO')])
     main_product_id = fields.Many2one('product.product', string="Plan Elegido", compute="_compute_main_product_id", store=True)
+    payment_method_type = fields.Selection(
+        [ ("Credit Card", "Tarjeta de Crédito"), ("Cash", "Efectivo"), ("PSE", "PSE")]
+    )
     
     
     def action_payu_confirm(self):
@@ -182,4 +186,34 @@ class SaleOrder(models.Model):
             time.sleep(6)
                     
 
-                    
+    def create_subscriptions(self):
+        """
+        Create subscriptions based on the products' subscription template.
+
+        Create subscriptions based on the templates found on order lines' products. Note that only
+        lines not already linked to a subscription are processed; one subscription is created per
+        distinct subscription template found.
+
+        :rtype: list(integer)
+        :return: ids of newly create subscriptions
+        """
+        res = []
+        for order in self:
+            to_create = self._split_subscription_lines()
+            # create a subscription for each template with all the necessary lines
+            for template in to_create:
+                values = order._prepare_subscription_data(template)
+                values['recurring_invoice_line_ids'] = to_create[template]._prepare_subscription_line_data()
+                subscription = self.env['sale.subscription'].sudo().create(values)
+                subscription.onchange_date_start()
+                res.append(subscription.id)
+                to_create[template].write({'subscription_id': subscription.id})
+                subscription.message_post_with_view(
+                    'mail.message_origin_link', values={'self': subscription, 'origin': order},
+                    subtype_id=self.env.ref('mail.mt_note').id, author_id=self.env.user.partner_id.id
+                )
+                """ Una sola subscripción por orden de venta """
+                order.write({
+                    'subscription_id': subscription.id,
+                })
+        return res

@@ -93,17 +93,81 @@ class WebsiteSaleExtended(WebsiteSale):
     
     @http.route(['/shop/payment/payulatam-gateway-api/response'], type='http', auth="public", website=True, sitemap=False)
     def payment_payulatam_gateway_api_response(self, **kwargs):
-        _logger.error('¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡')
+        _logger.error('**********************545+++++++++++++++++++++++++++++++++++++')
         _logger.error(kwargs)
         order = request.website.sale_get_order()
         #redirection = self.checkout_redirection(order)
         #if redirection:
         #    return redirection
-        request.session['sale_order_id'] = None
-        request.session['sale_transaction_id'] = None
-        render_values = {}
-        render_values.update({
-            'order_id': order,
-            'response': dict(kwargs),
-        })
-        return request.render("web_sale_extended.web_sale_extended_payment_response_process", render_values)
+        #request.session['sale_order_id'] = None
+        #request.session['sale_transaction_id'] = None
+        domain = [('payulatam_transaction_id', '=', kwargs['transactionId'])]
+        lapTransactionState = kwargs['lapTransactionState']
+        lapResponseCode = kwargs['lapResponseCode']
+        lapResponseCode = kwargs['lapResponseCode']
+        payulatam_transaction_id = self.env['sale.order'].search(domain, limit=1)
+        if payulatam_transaction_id:
+            if lapTransactionState == 'APPROVED':
+                payulatam_transaction_id.write({
+                    'payulatam_state': 'TRANSACCIÓN APROBADA',
+                    'state': 'payu_approved'
+                })
+            else:
+                payulatam_transaction_id.write({
+                    'payulatam_state': 'TRANSACCIÓN DECLINADA',
+                })
+                payulatam_transaction_id.action_cancel()
+            if request.session['sale_order_id'] and order == payulatam_transaction_id:
+                """ En este caso el usuario puede continuar directamente la transacción """
+                render_values = {}
+                render_values.update({
+                    'order_id': order,
+                    'response': dict(kwargs),
+                })
+                """ Mensaje en la orden de venta con la respuesta de PayU """
+                body_message = """
+                    <b><span style='color:green;'>PayU Latam - Transacción de Pago Aprobada</span></b><br/>
+                    <b>Orden ID:</b> %s<br/>
+                    <b>Transacción ID:</b> %s<br/>
+                    <b>Estado:</b> %s<br/>
+                    <b>Código Respuesta:</b> %s<br/>
+                """ % (
+                    kwargs['reference_pol'], 
+                    kwargs['transactionId'],
+                    kwargs['lapTransactionState'],
+                    kwargs['lapResponseCode'],
+                )
+                payulatam_transaction_id.message_post(body=body_message, type="comment")
+                return request.render("web_sale_extended.web_sale_extended_payment_response_process", render_values)
+            else:
+                """ En caso contrario se envía correo con la información para seguir """
+                template = self.env['mail.template'].search([('payulatam_approved_process', '=', True)], limit=1)
+                context = dict(self.env.context)
+                if template:
+                    template_values = template.generate_email(payulatam_transaction_id.id, fields=None)
+                    template_values.update({
+                        #'email_to': sale_id.tusdatos_email,
+                        'email_to': payulatam_transaction_id.partner_id.email,
+                        'auto_delete': False,
+                        #'partner_to': False,
+                        'scheduled_date': False,
+                    })
+                    template.write(template_values)
+                    cleaned_ctx = dict(self.env.context)
+                    cleaned_ctx.pop('default_type', None)
+                    template.with_context(lang=self.env.user.lang).send_mail(payulatam_transaction_id.id, force_send=True, raise_exception=True)
+                    
+                    """ Mensaje en la orden de venta con la respuesta de PayU """
+                    body_message = """
+                        <b><span style='color:green;'>PayU Latam - Transacción de Pago Aprobada</span></b><br/>
+                        <b>Orden ID:</b> %s<br/>
+                        <b>Transacción ID:</b> %s<br/>
+                        <b>Estado:</b> %s<br/>
+                        <b>Código Respuesta:</b> %s<br/>
+                    """ % (
+                        kwargs['reference_pol'], 
+                        kwargs['transactionId'],
+                        kwargs['lapTransactionState'],
+                        kwargs['lapResponseCode'],
+                    )
+                    payulatam_transaction_id.message_post(body=body_message, type="comment")

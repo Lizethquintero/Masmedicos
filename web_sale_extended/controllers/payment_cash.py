@@ -111,7 +111,9 @@ class WebsiteSaleExtended(WebsiteSale):
             order.write({
                 'payulatam_order_id': response['transactionResponse']['orderId'],
                 'payulatam_transaction_id': response['transactionResponse']['transactionId'],
-                'payulatam_state': response['transactionResponse']['state']
+                'payulatam_state': response['transactionResponse']['state'],
+                'payment_method_type': 'Cash',
+                'payulatam_state': 'PENDIENTE DE PAGO',
             })
             if request.session.get('sale_order_id'):
                 request.session['sale_order_id'] = None

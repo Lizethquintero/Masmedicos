@@ -48,9 +48,11 @@ class WebsiteSaleExtended(WebsiteSale):
                 if "name" in checkout:
                     checkout.pop('name')
                 if "zip_id" in checkout:
-                    checkout.pop('zip_id')
+                    checkout.update({'zip_id': int(checkout['zip_id'])})
+                #    checkout.pop('zip_id')
                 if "state_id" in checkout:
-                    checkout.pop('state_id')
+                    checkout.update({'state_id': int(checkout['state_id'])})
+                #    checkout.pop('state_id')
                 Partner.browse(partner_id).sudo().write(checkout)
         return partner_id
 

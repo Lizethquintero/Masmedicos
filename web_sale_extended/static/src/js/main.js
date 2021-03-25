@@ -32,7 +32,6 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
         });
 
         function consultarCiudades(estado, elemento) {
-            console.log('5');
             $.ajax({
                 data: { 'departamento': estado },
                 url: "/search/cities",
@@ -66,6 +65,21 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                 $('#city').selectpicker();
             }
         });
+        
+        
+        var partner_id = $("input[name='partner_id']").val();
+        var partner_country_id = $("input[name='partner_country_id']").val();
+        var partner_state_id = $("input[name='partner_state_id']").val();
+        var partner_city_id = $("input[name='partner_city_id']").val();
+        var partner_document_type = $("input[name='partner_document_type']").val();
+        if (partner_id && partner_city_id){
+            $("select[name='state_id']").val(partner_state_id)
+            $("select[name='document']").val(partner_document_type)
+            $('#state_id').selectpicker('refresh')
+            $('#document').selectpicker('refresh')
+            consultarCiudades(partner_state_id, partner_city_id);
+        }
+        
 
         $("input[name='bfdate1']").on('change', function calcularEdad() {
             let fecha = $(this).val();
@@ -326,7 +340,6 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                             if (expedition_date > hoy) {
                                 return true;
                             }
-  
                         }
                     },
                     min: {
@@ -775,8 +788,6 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
         return this.optional(element) || /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g.test(value);
     }, "¡Upss! deben ser ser solo letras");
 
-
-
     $("#beneficiary").validate({
             rules: {
                 name: {
@@ -949,12 +960,24 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     max: {
                         depends: function(elem) { 
                             let fecha = $("input[name='bfdate1']").val();
-                            let expedition_date = new Date(fecha);
+                            let birthdate_date = new Date(fecha);
                             let hoy = new Date();
-                            if (expedition_date > hoy) {
+                            if (birthdate_date > hoy) {
                                 return true;
                             }
-  
+                        }
+                    },
+                    min: {
+                        depends: function(elem) { 
+                            let fecha = $("input[name='bfdate1']").val();
+                            let fecha_principal = $("input[name='date']").val();
+                            let parentesco = $("select[name='bfparentesco1']").val();
+                            let birthdate_beneficiary = new Date(fecha);
+                            let birthdate_main = new Date(fecha_principal);
+                            let hoy = new Date();
+                            if (birthdate_beneficiary <= birthdate_main && parentesco == 'H') {
+                                return true;
+                            }
                         }
                     },
                 },
@@ -1018,12 +1041,24 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     max: {
                         depends: function(elem) { 
                             let fecha = $("input[name='bfdate2']").val();
-                            let expedition_date = new Date(fecha);
+                            let birthdate_date = new Date(fecha);
                             let hoy = new Date();
-                            if (expedition_date > hoy) {
+                            if (birthdate_date > hoy) {
                                 return true;
                             }
-  
+                        }
+                    },
+                    min: {
+                        depends: function(elem) { 
+                            let fecha = $("input[name='bfdate2']").val();
+                            let fecha_principal = $("input[name='date']").val();
+                            let parentesco = $("select[name='bfparentesco2']").val();
+                            let birthdate_beneficiary = new Date(fecha);
+                            let birthdate_main = new Date(fecha_principal);
+                            let hoy = new Date();
+                            if (birthdate_beneficiary <= birthdate_main && parentesco == 'H') {
+                                return true;
+                            }
                         }
                     },
                 },
@@ -1087,12 +1122,24 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     max: {
                         depends: function(elem) { 
                             let fecha = $("input[name='bfdate3']").val();
-                            let expedition_date = new Date(fecha);
+                            let birthdate_date = new Date(fecha);
                             let hoy = new Date();
-                            if (expedition_date > hoy) {
+                            if (birthdate_date > hoy) {
                                 return true;
                             }
-  
+                        }
+                    },
+                    min: {
+                        depends: function(elem) { 
+                            let fecha = $("input[name='bfdate3']").val();
+                            let fecha_principal = $("input[name='date']").val();
+                            let parentesco = $("select[name='bfparentesco3']").val();
+                            let birthdate_beneficiary = new Date(fecha);
+                            let birthdate_main = new Date(fecha_principal);
+                            let hoy = new Date();
+                            if (birthdate_beneficiary <= birthdate_main && parentesco == 'H') {
+                                return true;
+                            }
                         }
                     },
                 },
@@ -1156,12 +1203,24 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     max: {
                         depends: function(elem) { 
                             let fecha = $("input[name='bfdate4']").val();
-                            let expedition_date = new Date(fecha);
+                            let birthdate_date = new Date(fecha);
                             let hoy = new Date();
-                            if (expedition_date > hoy) {
+                            if (birthdate_date > hoy) {
                                 return true;
                             }
-  
+                        }
+                    },
+                    min: {
+                        depends: function(elem) { 
+                            let fecha = $("input[name='bfdate4']").val();
+                            let fecha_principal = $("input[name='date']").val();
+                            let parentesco = $("select[name='bfparentesco4']").val();
+                            let birthdate_beneficiary = new Date(fecha);
+                            let birthdate_main = new Date(fecha_principal);
+                            let hoy = new Date();
+                            if (birthdate_beneficiary <= birthdate_main && parentesco == 'H') {
+                                return true;
+                            }
                         }
                     },
                 },
@@ -1225,12 +1284,24 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     max: {
                         depends: function(elem) { 
                             let fecha = $("input[name='bfdate5']").val();
-                            let expedition_date = new Date(fecha);
+                            let birthdate_date = new Date(fecha);
                             let hoy = new Date();
-                            if (expedition_date > hoy) {
+                            if (birthdate_date > hoy) {
                                 return true;
                             }
-  
+                        }
+                    },
+                    min: {
+                        depends: function(elem) { 
+                            let fecha = $("input[name='bfdate5']").val();
+                            let fecha_principal = $("input[name='date']").val();
+                            let parentesco = $("select[name='bfparentesco5']").val();
+                            let birthdate_beneficiary = new Date(fecha);
+                            let birthdate_main = new Date(fecha_principal);
+                            let hoy = new Date();
+                            if (birthdate_beneficiary <= birthdate_main && parentesco == 'H') {
+                                return true;
+                            }
                         }
                     },
                 },
@@ -1294,12 +1365,24 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     max: {
                         depends: function(elem) { 
                             let fecha = $("input[name='bfdate6']").val();
-                            let expedition_date = new Date(fecha);
+                            let birthdate_date = new Date(fecha);
                             let hoy = new Date();
-                            if (expedition_date > hoy) {
+                            if (birthdate_date > hoy) {
                                 return true;
                             }
-  
+                        }
+                    },
+                    min: {
+                        depends: function(elem) { 
+                            let fecha = $("input[name='bfdate6']").val();
+                            let fecha_principal = $("input[name='date']").val();
+                            let parentesco = $("select[name='bfparentesco6']").val();
+                            let birthdate_beneficiary = new Date(fecha);
+                            let birthdate_main = new Date(fecha_principal);
+                            let hoy = new Date();
+                            if (birthdate_beneficiary <= birthdate_main && parentesco == 'H') {
+                                return true;
+                            }
                         }
                     },
                 },
@@ -1407,7 +1490,8 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfdate1: {
                     required: "¡Upss! una fecha de nacimiento es requerido",
-                    max: "¡Upss! debe ser una fecha inferior o igual a la fecha actual"
+                    max: "¡Upss! debe ser una fecha inferior o igual a la fecha actual",
+                    min: "¡Upss! tú hijo no puede ser mayor a ti"
                 },
                 ////////////////////////////////////////////
                 bfirstname2: {
@@ -1458,6 +1542,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 bfdate2: {
                     required: "¡Upss! una fecha de nacimiento es requerido",
                     max: "¡Upss! debe ser una fecha inferior o igual a la fecha actual",
+                    min: "¡Upss! tú hijo no puede ser mayor a ti"
                 },
                 ////////////////////////////////////////////
                 bfirstname3: {
@@ -1508,6 +1593,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 bfdate3: {
                     required: "¡Upss! tu fecha de nacimiento es requerido",
                     max: "¡Upss! debe ser una fecha inferior o igual a la fecha actual",
+                    min: "¡Upss! tú hijo no puede ser mayor a ti"
                 },
                 ////////////////////////////////////////////
                 bfirstname4: {
@@ -1558,6 +1644,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 bfdate4: {
                     required: "¡Upss! tu fecha de nacimiento es requerido",
                     max: "¡Upss! debe ser una fecha inferior o igual a la fecha actual",
+                    min: "¡Upss! tú hijo no puede ser mayor a ti"
                 },
                 ////////////////////////////////////////////
                 bfirstname5: {
@@ -1608,6 +1695,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 bfdate5: {
                     required: "¡Upss! tu fecha de nacimiento es requerido",
                     max: "¡Upss! debe ser una fecha inferior o igual a la fecha actual",
+                    min: "¡Upss! tú hijo no puede ser mayor a ti"
                 },
                 ////////////////////////////////////////////
                 bfirstname6: {
@@ -1658,6 +1746,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 bfdate6: {
                     required: "¡Upss! tu fecha de nacimiento es requerido",
                     max: "¡Upss! debe ser una fecha inferior o igual a la fecha actual",
+                    min: "¡Upss! tú hijo no puede ser mayor a ti"
                 },
             }
         });
@@ -1838,7 +1927,6 @@ odoo.define('web_sale_extended.payment_process', function(require) {
             });
         }
         function consultarCiudadesCash(estado, elemento) {
-            console.log('1');
             $.ajax({
                 data: { 'departamento': estado },
                 url: "/search/cities",
