@@ -392,10 +392,14 @@
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                     <input type="hidden" name="submitted" value="1" />
                                     <input type="hidden" name="partner_id" t-att-value="partner_id or '0'" />
-                                    <input type="hidden" name="partner_country_id" t-att-value="checkout['country_id'].id or '0'" />
-                                    <input type="hidden" name="partner_document_type" t-att-value="checkout['document_type_id'].id or '0'" />
-                                    <input type="hidden" name="partner_state_id" t-att-value="checkout['state_id'].id or '0'" />
-                                    <input type="hidden" name="partner_city_id" t-att-value="checkout['city'] or '0'" />
+                                    <input type="hidden" name="partner_country_id" 
+                                           t-att-value="('country_id' in checkout and checkout['country_id'].id or '0')" />
+                                    <input type="hidden" name="partner_document_type" 
+                                           t-att-value="('document_type_id' in checkout and checkout['document_type_id'].id or '0')" />
+                                    <input type="hidden" name="partner_state_id" 
+                                           t-att-value="('state_id' in checkout and checkout['state_id'].id or '0')" />
+                                    <input type="hidden" name="partner_city_id" 
+                                           t-att-value="('city' in checkout and checkout['city'] or '0')" />
                                     <input type="hidden" name="callback" t-att-value="callback" />
                                         <!-- Example -->
                                     <!--<input type="hidden" name="field_required" t-att-value="'phone,name'" />-->
