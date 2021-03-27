@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, SUPERUSER_ID, _
 from odoo.exceptions import ValidationError
 import time
+import json
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -28,10 +29,12 @@ class SaleOrder(models.Model):
     payulatam_transaction_id = fields.Char('ID de Transacción de PayU')
     payulatam_signature = fields.Char('Signature de la Transacción')
     payulatam_state = fields.Char('Estado Transacción de PayU')
+    payulatam_datetime = fields.Datetime('Fecha y Hora de la Transacción')
     payulatam_credit_card_token = fields.Char('Token Para Tarjetas de Crédito')
     payulatam_credit_card_masked = fields.Char('Mascara del Número de Tarjeta')
     payulatam_credit_card_identification = fields.Char('Identificación')
     payulatam_credit_card_method = fields.Char('Metodo de Pago')
+    payulatam_request_expired = fields.Boolean('Request Expired')
     state =  fields.Selection(selection_add=[('payu_pending', 'PAYU ESPERANDO APROBACIÓN'),('payu_approved', 'PAYU APROBADO')])
     main_product_id = fields.Many2one('product.product', string="Plan Elegido", compute="_compute_main_product_id", store=True)
     payment_method_type = fields.Selection(
@@ -62,12 +65,62 @@ class SaleOrder(models.Model):
         #    self.action_done()
         return True
     
+    def action_payu_approved(self):
+        if self._get_forbidden_state_confirm() & set(self.mapped('state')):
+            raise UserError(_(
+                'It is not allowed to confirm an order in the following states: %s'
+            ) % (', '.join(self._get_forbidden_state_confirm())))
+        for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
+            order.message_subscribe([order.partner_id.id])
+        self.write({
+            'state': 'payu_approved',
+            'date_order': fields.Datetime.now()
+        })
+        context = self._context.copy()
+        context.pop('default_name', None)
+        return True
+    
     @api.depends('order_line')
     def _compute_main_product_id(self):
         for line in self.order_line:
             if line.product_id.is_product_landpage:
                 self.main_product_id = line.product_id
             
+            
+            
+    def _send_order_confirmation_mail(self):
+        if self.env.su:
+            # sending mail in sudo was meant for it being sent from superuser
+            self = self.with_user(SUPERUSER_ID)
+        """
+        template_id = self._find_mail_template(force_confirmation_template=True)
+        if template_id:
+            for order in self:
+                order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', email_layout_xmlid="mail.mail_notification_paynow")
+        """
+        template_id = self.env['mail.template'].search([('payulatam_welcome_process', '=', True)], limit=1)
+        if template_id:
+            for order in self:
+                #order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment')
+                template_id.sudo().send_mail(order.id)
+                
+                
+    def _send_order_payu_latam_approved(self):
+        if self.env.su:
+            # sending mail in sudo was meant for it being sent from superuser
+            self = self.with_user(SUPERUSER_ID)
+        """
+        template_id = self._find_mail_template(force_confirmation_template=True)
+        if template_id:
+            for order in self:
+                order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', email_layout_xmlid="mail.mail_notification_paynow")
+        """
+        template_id = self.env['mail.template'].search([('payulatam_approved_process', '=', True)], limit=1)
+        if template_id:
+            for order in self:
+                order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment')
+
+                
             
 
     def tusdatos_approval(self):
@@ -122,12 +175,12 @@ class SaleOrder(models.Model):
         de parte de tusdatos."""
         sale_ids = self.env['sale.order'].search([
             ('tusdatos_approved', '=', False),
-            ('tusdatos_request_id', '!=', False),
+            ('tusdatos_request_id', '!=', ''),
             ('tusdatos_request_expired', '=', False)
         ])
         _logger.error('***************************** INICIANDO CRON DE CONSULTAS EN TUSDATOS ++++++++++++++++++++++++++++++++++')
+        _logger.error(sale_ids)
         for sale_id in sale_ids:
-            # verificando estado del proceso de consulta
             approval = sale_id.tusdatos_approved
             process_id = sale_id.tusdatos_request_id
             # user_id = record.user_id
@@ -138,52 +191,41 @@ class SaleOrder(models.Model):
                 if approval[0]:
                     _logger.error('***************************** LLEGA POSITIVO LA VERIFICACION EN TUS DATOS ++++++++++++++++++++++++++++++++++')
                     _logger.error(approval[0])
-                    sale_id.write({'tusdatos_approved': approval})
+                    sale_id.write({'tusdatos_approved': True})
                     if '-' in process_id:
-                        sale_id.write({'tusdatos_request_id': approval[1]['id']})
+                        #sale_id.write({'tusdatos_request_id': approval[1]['id']})
                         body_message = """
-                            <b><span style='color:blue;'>TusDatos - Solicitud de Verificación</span></b><br/>
-                            <b>No. Solicitud:</b> %s<br/>
+                            <b><span style='color:green;'>TusDatos - Solicitud de Verificación Aprobada</span></b><br/>
+                            <b>Respuesta:</b> %s<br/>
                         """ % (
-                            tusdatos_validation['process_id'],
+                            json.dumps(approval),
                         )
-                        order.message_post(body=body_message, type="comment")
-                        
-                        
-                  
+                        sale_id.message_post(body=body_message, type="comment")
                 else:
                     if approval[1] and 'estado' in approval[1]:
                         if approval[1]['estado'] in ('error, tarea no valida'):
-                            message = """Respuesta Error en Tusdatos.co: Esta respuesta se puede dar por que transcurrieron 4 horas o más 
+                            message = """<b><span style='color:red;'>TusDatos - Solicitud de Verificación Rechazada</span></b><br/>
+                                        <b>Respuesta Error en Tusdatos.co: Esta respuesta se puede dar por que transcurrieron 4 horas o más 
                                         entre la consulta en tusdatos al momento de la compra y la verificación de Odoo en tus datos para 
-                                        ver si la respuesta en positiva o negativa """
+                                        ver si la respuesta en positiva o negativa </b><br/><b>Respuesta:</b> %s"""% (
+                                            json.dumps(approval),
+                                        )
+                            sale_id.write({'tusdatos_request_expired' : True,})
+                            sale_id.message_post(body=message)
+                        else:
+                            message = """<b><span style='color:red;'>TusDatos - Solicitud de Verificación Rechazada</span></b><br/>
+                            <b>Respuesta:</b> %s
+                            """, (approval if approval else '') 
                             sale_id.write({'tusdatos_request_expired' : True,})
                             sale_id.message_post(body=message)
                     else:
-                        message = """Respuesta Negativa en Tusdatos.co: Esta respuesta se da por que el documento del comprador se encuentra reportado
+                        message = """<b><span style='color:red;'>TusDatos - Solicitud de Verificación Rechazada</span></b><br/>
+                        Esta respuesta se da por que el documento del comprador se encuentra reportado
                         en las lista Onu o OFAC"""
                         sale_id.write({'tusdatos_request_expired' : True,})
                         sale_id.message_post(body=message)
-                        """
-                        _logger.error('***************************** ENVIANDO CORREO DE RESPUESTA NEGATIVA  ++++++++++++++++++++++++++++++++++')
-                        template = self.env['mail.template'].search([('tusdatos_confirmation_reject', '=', True)], limit=1)
-                        context = dict(self.env.context)
-                        if template:
-                            template_values = template.generate_email(sale_id.id, fields=None)
-                            template_values.update({
-                                #'email_to': sale_id.tusdatos_email,
-                                'email_to': sale_id.partner_id.email,
-                                'auto_delete': False,
-                                #'partner_to': False,
-                                'scheduled_date': False,
-                            })
-                            template.write(template_values)
-                            cleaned_ctx = dict(self.env.context)
-                            cleaned_ctx.pop('default_type', None)
-                            template.with_context(lang=self.env.user.lang).send_mail(sale_id.id, force_send=True, raise_exception=True)
-                        """
-            """Aseguramos que las transacciones ocurren cada 5 segundos"""
-            time.sleep(6)
+                """Aseguramos que las transacciones ocurren cada 5 segundos"""
+                time.sleep(6)
                     
 
     def create_subscriptions(self):
@@ -217,3 +259,30 @@ class SaleOrder(models.Model):
                     'subscription_id': subscription.id,
                 })
         return res
+    
+    
+    def cron_get_status_payu_latam(self):
+        """ selección de ordenes de venta a procesar, que están pendientes de respuesta de payu """
+        sale_ids = self.env['sale.order'].search([
+            ('payulatam_transaction_id', '!=', ''),
+            ('state', '=', 'payu_pending'),
+            ('payulatam_request_expired', '=', False),
+            ('payulatam_datetime', '=', ''),
+        ])
+        for sale in sale_ids:
+            """ Consultando orden en payu """
+            if sale.payulatam_transaction_id:
+                """ si existe una transacción """
+                date_now = fields.datetime.now()
+                date_difference = date_now - sale.payulatam_datetime
+                if sale.payment_method_type == 'cash':
+                    if date_difference.minutes > 60:
+                        """ si existe una transacción """
+                        response = self.env['api.tusdatos'].payulatam_get_response_transaction(sale.payulatam_transaction_id)
+                        _logger.error('++++++++++++++++++++++++++ respuesta cron payu latam +++++++++++++++++++++++++++++++++++++++')
+                        _logger.error(response)
+                        
+                        
+
+                    
+            

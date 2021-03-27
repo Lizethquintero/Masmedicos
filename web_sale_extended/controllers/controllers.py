@@ -27,6 +27,8 @@ class WebsiteSaleExtended(WebsiteSale):
             _logger.info("****CREANDO TERCERO NUEVO*****")
             _logger.info(checkout)
             #zip_id = checkout.pop('zip_id')
+            if "name" in checkout:
+                checkout.pop('name')
             partner_id = Partner.sudo().with_context(tracking_disable=True, skip_check_zip=True).create(checkout)
             #partner_id.write({'zip_id': zip_id})
         elif mode[0] == 'edit':
@@ -178,21 +180,35 @@ class WebsiteSaleExtended(WebsiteSale):
                             str(kw["identification_document"]),
                             document_types[str(kw["document"])],
                             expedition_date)
+                        
+                        if 'hallazgo' in tusdatos_validation and tusdatos_validation['hallazgo'] or \
+                        'hallazgos' in tusdatos_validation and tusdatos_validation['hallazgos'] == 'alto':
+                            body_message = """
+                                <b><span style='color:red;'>TusDatos - Verificación Rechazada</span></b><br/>
+                                <b>Respuesta:</b> %s<br/>
+                            """ % (
+                                json.dumps(tusdatos_validation),
+                            )
+                            order.message_post(body=body_message, type="comment")
+                            return werkzeug.utils.redirect('/shop/address?errortusdatos=document_invalid')
+                        
                         if tusdatos_validation and tusdatos_validation.get('process_id'):
                             order.write({'tusdatos_request_id': tusdatos_validation['process_id']})
                             body_message = """
                                 <b><span style='color:blue;'>TusDatos - Solicitud de Verificación</span></b><br/>
                                 <b>No. Solicitud:</b> %s<br/>
+                                <b>Respuesta:</b> %s
                             """ % (
                                 tusdatos_validation['process_id'],
+                                json.dumps(tusdatos_validation),
                             )
                             order.message_post(body=body_message, type="comment")
                         elif tusdatos_validation and tusdatos_validation.get('error'):
                             body_message = """
-                                <b><span style='color:red;'>TusDatos - Solicitud de Verificación</span></b><br/>
-                                <b>Error:</b> %s<br/>
+                                <b><span style='color:red;'>TusDatos - Error en la Solicitud</span></b><br/>
+                                <b>Respuesta:</b> %s<br/>
                             """ % (
-                                tusdatos_validation.get('error'),
+                                json.dumps(tusdatos_validation),
                             )
                             order.message_post(body=body_message, type="comment")
                             return werkzeug.utils.redirect('/shop/address?errortusdatos=document_invalid')
@@ -219,6 +235,22 @@ class WebsiteSaleExtended(WebsiteSale):
         if errortusdatos:
             errors['error_message'] = errortusdatos
         
+        if 'name' in values and values['name']:
+            values = values
+        elif order:
+            values.update({
+                'name': order.partner_id.firstname,
+                'firstname': order.partner_id.firstname,
+                'othernames': order.partner_id.othernames,
+                'lastname': order.partner_id.lastname,
+                'lastname2': order.partner_id.lastname2,
+                'email': order.partner_id.email,
+                'phone': order.partner_id.phone,
+                'birthdate_date': order.partner_id.birthdate_date,
+                'street': order.partner_id.street,
+                'expedition_date': order.partner_id.expedition_date,
+            })
+            
         render_values = {
             'website_sale_order': order,
             'partner_id': partner_id,
@@ -261,6 +293,12 @@ class WebsiteSaleExtended(WebsiteSale):
         
         """ Evaluando si el producto tiene valor cero """
         if order.main_product_id.list_price == 0:
+            body_message = """
+                <b><span style='color:green;'>PayU Latam - Producto con precio cero</span></b><br/>
+                Se ha iniciado una transacción con Producto Precio Cero y el usuario ha sido redirigido al formulario 
+                para el registro de Asegurado y Beneficiarios<br/>
+            """
+            order.message_post(body=body_message, type="comment")
             return request.redirect("/my/order/beneficiaries/" + str(order.id))
 
         return request.redirect("/shop/payment")
@@ -433,7 +471,6 @@ class WebsiteSaleExtended(WebsiteSale):
         """ Confirmando Orden de Venta luego del proceso exitoso de beneficiarios """
         order.action_confirm()
         order._send_order_confirmation_mail()
-
         return request.render("web_sale_extended.beneficiary_detail", kwargs)
 
 

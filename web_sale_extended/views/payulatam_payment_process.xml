@@ -92,21 +92,21 @@
                                             <font color="#39b54a">
                                               <span style="font-size:36px;">Proceso de pago terminado exitosamente gracias a PayU</span>
                                             </font><br/>
-                                            <font color="#39b54a" t-if="state">
-                                              <span style="font-size:18px;">Estado: <t t-esc="state"/></span>
+                                            <!--<font color="white" t-if="state">--><!--<font color="#39b54a" t-if="state">-->
+                                              <!--<span style="font-size:18px;">Estado: <t t-esc="state"/></span>
                                             </font><br/>
-                                            <font color="#39b54a" t-if="error">
+                                            <font color="white" t-if="error">
                                               <span style="font-size:18px;">Descripción: <t t-esc="error"/></span>
                                             </font><br/>
-                                            <font color="#39b54a" t-if="responseCode">
+                                            <font color="white" t-if="responseCode">
                                               <span style="font-size:18px;">Código Respuesta: <t t-esc="responseCode"/></span>
                                             </font><br/>
                                             <font color="#39b54a" t-if="transactionId">
                                               <span style="font-size:18px;">ID Transacción: <t t-esc="transactionId"/></span>
                                             </font><br/>
-                                            <font color="#39b54a" t-if="order_Id">
+                                            <font color="white" t-if="order_Id">
                                               <span style="font-size:18px;">ID Orden: <t t-esc="order_Id"/></span>
-                                            </font>
+                                            </font>-->
                                             <br/>
                                         </div>
                                         <div style="text-align:center;">
@@ -200,23 +200,23 @@
                                             <font color="red" t-if="state">
                                               <span style="font-size:18px;">Estado: <t t-esc="state"/></span>
                                             </font><br/>
-                                            <font color="white" t-if="error"><!--<font color="red" t-if="error">-->
-                                              <span style="font-size:18px;">Descripción: <t t-esc="error"/></span>
+                                            <!--<font color="white" t-if="error">--><!--<font color="red" t-if="error">-->
+                                              <!--<span style="font-size:18px;">Descripción: <t t-esc="error"/></span>
                                             </font><br/>
-                                            <font color="white" t-if="responseCode"><!--<font color="red" t-if="responseCode">-->
+                                            <font color="white" t-if="responseCode">
                                               <span style="font-size:18px;">Código Respuesta: <t t-esc="responseCode"/></span>
                                             </font><br/>
-                                            <font color="white" t-if="transactionId"><!--<font color="red" t-if="transactionId">-->
+                                            <font color="white" t-if="transactionId">
                                               <span style="font-size:18px;">ID Transacción: <t t-esc="transactionId"/></span>
                                             </font><br/>
-                                            <font color="white" t-if="order_Id"><!--<font color="red" t-if="order_Id">-->
+                                            <font color="white" t-if="order_Id">
                                               <span style="font-size:18px;">ID Orden: <t t-esc="order_Id"/></span>
-                                            </font>
+                                            </font>-->
                                             <br/>
                                         </div>
-                                        <div style="text-align:center;">
+                                        <!--<div style="text-align:center;">
                                             <span style="font-size:18px;color:#FFF;">Por favor intentelo de nuevo:</span>
-                                        </div>
+                                        </div>-->
                                     </div>
                                 </div>
                                 
@@ -432,7 +432,7 @@
                                             <font color="red">
                                               <span style="font-size:36px;">Recibo de pago NO generado</span>
                                             </font><br/>
-                                            <font color="red" t-if="state">
+                                            <!--<font color="red" t-if="state">
                                               <span style="font-size:18px;">Estado: <t t-esc="state"/></span>
                                             </font><br/>
                                             <font color="red" t-if="error">
@@ -446,7 +446,7 @@
                                             </font><br/>
                                             <font color="red" t-if="order_Id">
                                               <span style="font-size:18px;">ID Orden: <t t-esc="order_Id"/></span>
-                                            </font>
+                                            </font>-->
                                             <br/>
                                         </div>
                                         <div style="text-align:center;">
@@ -554,13 +554,13 @@
                                             <img class="img-fluid o_we_custom_image" 
                                                  src="/web/image/1109/Img_success%282%29.png?access_token=a79d70ef-5174-4077-b854-a03eff98c0be" 
                                                  style="width:auto;"/><br/>
-                                            <font color="#39b54a">
-                                              <span style="font-size:36px;">Proceso de pago PSE procesado exitosamente gracias a PayU</span>
+                                            <font color="#FF7800">
+                                              <span style="font-size:36px;">Estamos procesando tu pago por PSE gracias a la tecnología de PayU</span>
                                             </font><br/>
-                                            <font color="#39b54a" t-if="state">
+                                            <!--<font color="#39b54a" t-if="state">
                                               <span style="font-size:18px;">Estado: <t t-esc="state"/></span>
-                                            </font><br/>
-                                            <font color="#39b54a" t-if="error">
+                                            </font><br/>-->
+                                            <!--<font color="#39b54a" t-if="error">
                                               <span style="font-size:18px;">Descripción: <t t-esc="error"/></span>
                                             </font><br/>
                                             <font color="#39b54a" t-if="responseCode">
@@ -571,7 +571,7 @@
                                             </font><br/>
                                             <font color="#39b54a" t-if="order_Id">
                                               <span style="font-size:18px;">ID Orden: <t t-esc="order_Id"/></span>
-                                            </font>
+                                            </font>-->
                                             <br/>
                                         </div>
                                         <div style="text-align:center;">
@@ -829,7 +829,7 @@
                                             <font color="#red" t-if="state">
                                               <span style="font-size:18px;">Estado: <t t-esc="state"/></span>
                                             </font><br/>
-                                            <font color="#red" t-if="error">
+                                           <!-- <font color="#red" t-if="error">
                                               <span style="font-size:18px;">Descripción: <t t-esc="error"/></span>
                                             </font><br/>
                                             <font color="#red" t-if="responseCode">
@@ -840,7 +840,7 @@
                                             </font><br/>
                                             <font color="#red" t-if="order_Id">
                                               <span style="font-size:18px;">ID Orden: <t t-esc="order_Id"/></span>
-                                            </font>
+                                            </font>-->
                                             <br/>
                                         </div>
                                         <div style="text-align:center;">

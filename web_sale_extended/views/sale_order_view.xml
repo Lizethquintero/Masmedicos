@@ -7,8 +7,12 @@
             <field name="arch" type="xml">
                 
                 <xpath expr="//notebook" position="inside">
-                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,payu_pending,sale"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,payu_pending,payu_approved,sale"/>
                 </xpath>
+                <xpath expr="//button[@name='action_quotation_send']" position="replace">
+                    <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale,payu_pending,payu_approved"/>
+                </xpath>
+                                    
                 
                 <xpath expr="//notebook" position="inside">
                     <page string="Tus Datos" id="tusdatos">
@@ -31,6 +35,8 @@
                                 <field name="payulatam_transaction_id" readonly="True"/>
                                 <field name="payulatam_state" readonly="True"/>
                                 <field name="payulatam_signature" readonly="True"/>
+                                <field name="payulatam_datetime" readonly="True"/>
+                                <field name="payulatam_request_expired" readonly="True"/>
                             </group>
                             <group string="Tokenización Tarjeta Crédito">
                                 <field name="payulatam_credit_card_token" readonly="True"/>

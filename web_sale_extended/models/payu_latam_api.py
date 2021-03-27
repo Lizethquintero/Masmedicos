@@ -43,8 +43,15 @@ class PayULatamApi(models.TransientModel):
             #payulatam_api_login = 'pRRXKOl8ikMmt9u'
         
         language = self.language if self.language else 'es'
-        api_post = ['PING','GET_PAYMENT_METHODS','SUBMIT_TRANSACTION','AUTHORIZATION_AND_CAPTURE','GET_BANKS_LIST','CREATE_TOKEN']
-        
+        api_post = [
+            'PING',
+            'GET_PAYMENT_METHODS',
+            'SUBMIT_TRANSACTION',
+            'AUTHORIZATION_AND_CAPTURE',
+            'GET_BANKS_LIST',
+            'CREATE_TOKEN',
+            'TRANSACTION_RESPONSE_DETAIL'
+        ]
         if endpoint in api_post:
             headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
             provider = 'https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi'
@@ -234,9 +241,8 @@ class PayULatamApi(models.TransientModel):
         
     def payulatam_get_cash_method_list(self):
         command = 'GET_PAYMENT_METHODS'
-        _logger.error('111metodos de cash ********************************************************************777711111')
         query = {"command": command}
-        _logger.error(query)
+        #_logger.error(query)
         
         bankListInformation = {
             #"paymentMethod": "PSE",
@@ -274,3 +280,14 @@ class PayULatamApi(models.TransientModel):
             return new_vals
             """
             return dict(payment_method_list)
+        
+        
+        
+    def payulatam_get_response_transaction(self, transactionID):
+        command = 'TRANSACTION_RESPONSE_DETAIL'
+        query = {"command": command}
+        query.update({
+            'transactionId': transactionID,
+        })
+        response = self.request_payulatam_api(command, query)
+        return response

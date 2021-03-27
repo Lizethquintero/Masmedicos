@@ -221,6 +221,15 @@ class WebsiteSaleExtended(WebsiteSale):
     
         order.message_post(body=body_message, type="comment")
         if response['transactionResponse']['state'] == 'APPROVED':
+            order.write({
+                'payulatam_order_id': response['transactionResponse']['orderId'],
+                'payulatam_transaction_id': response['transactionResponse']['transactionId'],
+                'payulatam_state': response['transactionResponse']['state'],
+                'payment_method_type': 'Credit Card',
+                'payulatam_state': 'TRANSACCIÓN CON TARJETA DE CRÉDITO APROBADA',
+                'payulatam_datetime': fields.datetime.now(),
+            })
+            order.action_payu_approved()
             render_values = {
                 'error': '',
                 'transactionId': response['transactionResponse']['transactionId'],
@@ -242,11 +251,20 @@ class WebsiteSaleExtended(WebsiteSale):
                 response['transactionResponse']['responseCode']
             )
             order.message_post(body=body_message, type="comment")
-            order.action_confirm()
+            #order.action_confirm()
             return request.render("web_sale_extended.payulatam_success_process", render_values)
         elif response['transactionResponse']['state'] == 'PENDING':
-            if request.session.get('sale_order_id'):
-                request.session['sale_order_id'] = None
+            order.write({
+                'payulatam_order_id': response['transactionResponse']['orderId'],
+                'payulatam_transaction_id': response['transactionResponse']['transactionId'],
+                'payulatam_state': response['transactionResponse']['state'],
+                'payment_method_type': 'Credit Card',
+                'payulatam_state': 'TRANSACCIÓN CON TARJETA DE CRÉDITO PENDIENTE DE APROBACIÓN',
+                'payulatam_datetime': fields.datetime.now(),
+            })
+            order.action_payu_confirm()
+            request.session['sale_order_id'] = None
+            request.session['sale_transaction_id'] = None
             error = 'Transacción en estado %s: %s' % (
                 response['transactionResponse']['transactionId'],response['status']
             )
@@ -258,9 +276,29 @@ class WebsiteSaleExtended(WebsiteSale):
                 'order_Id': response['transactionResponse']['orderId'],
                 'order_id': order
             })
+            body_message = """
+                <b><span style='color:orange;'>PayU Latam - Transacción de pago con tarjeta de crédito</span></b><br/>
+                <b>Orden ID:</b> %s<br/>
+                <b>Transacción ID:</b> %s<br/>
+                <b>Estado:</b> %s<br/>
+                <b>Código Respuesta:</b> %s
+            """ % (
+                response['transactionResponse']['orderId'], 
+                response['transactionResponse']['transactionId'], 
+                'PENDIENTE DE APROBACIÓN', 
+                response['transactionResponse']['responseCode']
+            )
+            order.message_post(body=body_message, type="comment")
             return request.render("web_sale_extended.payulatam_success_process", render_values)
         elif response['transactionResponse']['state'] in ['EXPIRED', 'DECLINED']:
-            _logger.info('Notificación recibida para el pago PayU Latam %s: Orden Cancelada' % (response['transactionResponse']['transactionId']))
+            order.write({
+                'payulatam_order_id': response['transactionResponse']['orderId'],
+                'payulatam_transaction_id': response['transactionResponse']['transactionId'],
+                'payulatam_state': response['transactionResponse']['state'],
+                'payment_method_type': 'Credit Card',
+                'payulatam_state': 'TRANSACCIÓN CON TARJETA DE CRÉDITO RECHAZADA',
+                'payulatam_datetime': fields.datetime.now(),
+            })
             render_values = {'error': '',}
             if response['transactionResponse']['paymentNetworkResponseErrorMessage']:
                 render_values.update({'error': response['transactionResponse']['paymentNetworkResponseErrorMessage']})

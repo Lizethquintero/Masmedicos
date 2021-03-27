@@ -66,20 +66,18 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
             }
         });
         
-        
         var partner_id = $("input[name='partner_id']").val();
         var partner_country_id = $("input[name='partner_country_id']").val();
         var partner_state_id = $("input[name='partner_state_id']").val();
         var partner_city_id = $("input[name='partner_city_id']").val();
         var partner_document_type = $("input[name='partner_document_type']").val();
-        if (partner_id && partner_city_id){
+        if (parseInt(partner_id) > 0 && parseInt(partner_city_id) > 0){
             $("select[name='state_id']").val(partner_state_id)
             $("select[name='document']").val(partner_document_type)
             $('#state_id').selectpicker('refresh')
             $('#document').selectpicker('refresh')
             consultarCiudades(partner_state_id, partner_city_id);
         }
-        
 
         $("input[name='bfdate1']").on('change', function calcularEdad() {
             let fecha = $(this).val();
@@ -242,6 +240,15 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
             //return this.optional(element) || /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g.test(value);
             return this.optional(element) || /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]/g.test(value);
         }, "¡Upss! deben ser ser solo letras");
+        
+        $.validator.addMethod("lettersnumberonly", function(value, element) {
+            var document = $("select[name='document']").val();
+            if (document == '7') { //pasaporte
+                return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
+            } else {
+                return this.optional(element) || /^[0-9]*$/.test(value);
+            }
+        }, "¡Upss! deben ser ser solo letras");
 
 
         $("#terminos").hide();
@@ -278,7 +285,31 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                 },
                 identification_document: {
                     required: true,
-                    number: true,
+                    lettersnumberonly: true,
+                    /*
+                    min: {
+                        depends: function(elem) {
+                            var document = $("select[name='document']").val();
+                            var identification_document = $("input[name='identification_document']").val();
+                            var number = /^[0-9\s]/g;
+                            var numberletter= /^[A-Za-z0-9]/g;
+                            console.log(document);
+                            console.log(identification_document);
+                            if (document == '7') { //pasaporte
+                                if (/^[A-Za-z0-9]/g.test(identification_document)) {
+                                    console.log('ingresando');
+                                    return true;
+                                }
+                                console.log(numberletter.test(identification_document));
+                                return false;
+                            } else {
+                                if (number.test(identification_document) == true) {
+                                    return true;
+                                }
+                                return false;
+                            }
+                        }
+                    },*/
                 },
                 street: {
                     required: true,
@@ -386,7 +417,7 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                 },
                 identification_document: {
                     required: "¡Upss! tu numero de documento es requerido",
-                    number: "¡Upss! este campo solo es numérico"
+                    lettersnumberonly: "¡Upss! solo números (y letras para pasaporte)"
 
                 },
                 street: {
@@ -414,7 +445,7 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                 },
                 birthdate_date: {
                     required: "¡Upss! tu fecha de nacimiento es requerido",
-                    min: "¡Upss! Tienes que ser mayor de edad",
+                    min: "¡Upss! fecha invalida",
                     max: "¡Upss! debes de ser  menor de 69 años para continuar"
 
                 },
@@ -787,6 +818,64 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
     $.validator.addMethod("lettersonly", function(value, element) {
         return this.optional(element) || /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g.test(value);
     }, "¡Upss! deben ser ser solo letras");
+    
+    $.validator.addMethod("lettersnumberonly0", function(value, element) {
+            var document = $("select[name='document_type']").val();
+            if (document == '7') { //pasaporte
+                return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
+            } else {
+                return this.optional(element) || /^[0-9]*$/.test(value);
+            }
+        }, "¡Upss! deben ser ser solo letras");
+    $.validator.addMethod("lettersnumberonly1", function(value, element) {
+            var document = $("select[name='bfdocument1']").val();
+            if (document == '7') { //pasaporte
+                return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
+            } else {
+                return this.optional(element) || /^[0-9]*$/.test(value);
+            }
+        }, "¡Upss! deben ser ser solo letras");
+    $.validator.addMethod("lettersnumberonly2", function(value, element) {
+            var document = $("select[name='bfdocument2']").val();
+            if (document == '7') { //pasaporte
+                return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
+            } else {
+                return this.optional(element) || /^[0-9]*$/.test(value);
+            }
+        }, "¡Upss! deben ser ser solo letras");
+    $.validator.addMethod("lettersnumberonly3", function(value, element) {
+            var document = $("select[name='bfdocument3']").val();
+            if (document == '7') { //pasaporte
+                return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
+            } else {
+                return this.optional(element) || /^[0-9]*$/.test(value);
+            }
+        }, "¡Upss! deben ser ser solo letras");
+    $.validator.addMethod("lettersnumberonly4", function(value, element) {
+            var document = $("select[name='bfdocument4']").val();
+            if (document == '7') { //pasaporte
+                return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
+            } else {
+                return this.optional(element) || /^[0-9]*$/.test(value);
+            }
+        }, "¡Upss! deben ser ser solo letras");
+    $.validator.addMethod("lettersnumberonly5", function(value, element) {
+            var document = $("select[name='bfdocument5']").val();
+            if (document == '7') { //pasaporte
+                return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
+            } else {
+                return this.optional(element) || /^[0-9]*$/.test(value);
+            }
+        }, "¡Upss! deben ser ser solo letras");
+    $.validator.addMethod("lettersnumberonly6", function(value, element) {
+            var document = $("select[name='bfdocument6']").val();
+            if (document == '7') { //pasaporte
+                return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
+            } else {
+                return this.optional(element) || /^[0-9]*$/.test(value);
+            }
+        }, "¡Upss! deben ser ser solo letras");
+    
 
     $("#beneficiary").validate({
             rules: {
@@ -829,7 +918,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 numero_documento: {
                     required: true,
-                    number: true,
+                    lettersnumberonly0: true,
                 },
                 address: {
                     required: true,
@@ -941,7 +1030,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfnumero_documento1: {
                     required: true,
-                    number: true,
+                    lettersnumberonly1: true,
                 },
                 bfaddress1: {
                     required: true,
@@ -1022,7 +1111,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfnumero_documento2: {
                     required: true,
-                    number: true,
+                    lettersnumberonly2: true,
                 },
                 bfaddress2: {
                     required: true,
@@ -1103,7 +1192,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfnumero_documento3: {
                     required: true,
-                    number: true,
+                    lettersnumberonly3: true,
                 },
                 bfaddress3: {
                     required: true,
@@ -1184,7 +1273,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfnumero_documento4: {
                     required: true,
-                    number: true,
+                    lettersnumberonly4: true,
                 },
                 bfaddress4: {
                     required: true,
@@ -1265,7 +1354,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfnumero_documento5: {
                     required: true,
-                    number: true,
+                    lettersnumberonly5: true,
                 },
                 bfaddress5: {
                     required: true,
@@ -1346,7 +1435,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfnumero_documento6: {
                     required: true,
-                    number: true,
+                    lettersnumberonly6: true,
                 },
                 bfaddress6: {
                     required: true,
@@ -1418,7 +1507,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 numero_documento: {
                     required: "¡Upss! un numero de documento es requerido",
-                    number: "¡Upss! este campo solo es numérico"
+                    lettersnumberonly0: "¡Upss! solo números (y letras para pasaporte)"
                 },
                 address: {
                     required: "¡Upss! una dirección es requerida",
@@ -1434,7 +1523,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 date: {
                     required: "¡Upss! una fecha de nacimiento es requerido",
-                    min: "¡Upss! Debe ser mayor de edad",
+                    min: "¡Upss! fecha invalida",
                     max: "¡Upss! debes de ser  menor de 69 años para continuar"
                 },
                 expedition_date: {
@@ -1474,7 +1563,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfnumero_documento1: {
                     required: "¡Upss! un numero de documento es requerido",
-                    number: "¡Upss! este campo solo es numérico"
+                    lettersnumberonly1: "¡Upss! solo números (y letras para pasaporte)"
                 },
                 bfaddress1: {
                     required: "¡Upss! una dirección es requerida",
@@ -1525,7 +1614,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfnumero_documento2: {
                     required: "¡Upss! un numero de documento es requerido",
-                    number: "¡Upss! este campo solo es numérico"
+                    lettersnumberonly2: "¡Upss! solo números (y letras para pasaporte)"
                 },
                 bfaddress2: {
                     required: "¡Upss! una dirección es requerida",
@@ -1576,7 +1665,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfnumero_documento3: {
                     required: "¡Upss! tu numero de documento es requerido",
-                    number: "Este campo solo es numérico"
+                    lettersnumberonly3: "¡Upss! solo números (y letras para pasaporte)"
                 },
                 bfaddress3: {
                     required: "¡Upss! tu dirección es requerido",
@@ -1627,7 +1716,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfnumero_documento4: {
                     required: "¡Upss! tu numero de documento es requerido",
-                    number: "Este campo solo es numérico"
+                    lettersnumberonly4: "¡Upss! solo números (y letras para pasaporte)"
                 },
                 bfaddress4: {
                     required: "¡Upss! tu dirección es requerido",
@@ -1678,7 +1767,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfnumero_documento5: {
                     required: "¡Upss! tu numero de documento es requerido",
-                    number: "Este campo solo es numérico"
+                    lettersnumberonly5: "¡Upss! solo números (y letras para pasaporte)"
                 },
                 bfaddress5: {
                     required: "¡Upss! tu dirección es requerido",
@@ -1729,7 +1818,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfnumero_documento6: {
                     required: "¡Upss! tu numero de documento es requerido",
-                    number: "Este campo solo es numérico"
+                    lettersnumberonly6: "¡Upss! solo números (y letras para pasaporte)"
                 },
                 bfaddress6: {
                     required: "¡Upss! tu dirección es requerido",

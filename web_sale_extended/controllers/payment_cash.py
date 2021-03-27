@@ -114,6 +114,7 @@ class WebsiteSaleExtended(WebsiteSale):
                 'payulatam_state': response['transactionResponse']['state'],
                 'payment_method_type': 'Cash',
                 'payulatam_state': 'PENDIENTE DE PAGO',
+                'payulatam_datetime': fields.datetime.now(),
             })
             if request.session.get('sale_order_id'):
                 request.session['sale_order_id'] = None
@@ -121,7 +122,7 @@ class WebsiteSaleExtended(WebsiteSale):
                 
             """ Mensaje en la orden de venta con la respuesta de PayU """
             body_message = """
-                <b><span style='color:green;'>PayU Latam - Transacción de Pago en Efectivo</span></b><br/>
+                <b><span style='color:orange;'>PayU Latam - Transacción de Pago en Efectivo</span></b><br/>
                 <b>Orden ID:</b> %s<br/>
                 <b>Transacción ID:</b> %s<br/>
                 <b>Estado:</b> %s<br/>
@@ -155,6 +156,14 @@ class WebsiteSaleExtended(WebsiteSale):
             return request.render("web_sale_extended.payulatam_success_process_cash", render_values)
         elif response['transactionResponse']['state'] in ['EXPIRED', 'DECLINED']:
             """ Mensaje en la orden de venta con la respuesta de PayU """
+            order.write({
+                'payulatam_order_id': response['transactionResponse']['orderId'],
+                'payulatam_transaction_id': response['transactionResponse']['transactionId'],
+                'payulatam_state': response['transactionResponse']['state'],
+                'payment_method_type': 'Cash',
+                'payulatam_state': 'TRANSACCIÓN RECHAZADA',
+                'payulatam_datetime': fields.datetime.now(),
+            })
             body_message = """
                 <b><span style='color:red;'>PayU Latam - Error en Transacción de Pago en Efectivo</span></b><br/>
                 <b>Orden ID:</b> %s<br/>
@@ -176,7 +185,7 @@ class WebsiteSaleExtended(WebsiteSale):
                 'transactionId': response['transactionResponse']['transactionId'],
                 'responseCode': response['transactionResponse']['responseCode'],
                 'order_Id': response['transactionResponse']['orderId'],
-                'order_id': order
+                'order_id': order,
             })
             return request.render("web_sale_extended.payulatam_rejected_process_cash", render_values)
         else:

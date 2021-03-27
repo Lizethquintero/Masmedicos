@@ -251,14 +251,22 @@
                                     <!--t-value='country and [x for x in country.get_address_fields() if x in ["zip", "city"]] or ["city", "zip"]'-->
                                     <!--<t t-if="'zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')">-->
                                     <!--+++++++INICIO DE CÓDIGO DEL CÓDIGO POSTAL++++++++-->
-                                        <div t-attf-class="form-group #{error.get('zip') and 'o_has_error' or ''} col-md-4 div_zip">
+                                    <div t-attf-class="form-group #{error.get('zip') and 'o_has_error' or ''} col-md-4 div_zip" style="color: transparent;">
+                                            <label class="col-form-label label-optional" for="zip">Código postal</label>
+                                            <input style="visibility: hidden;" type="text" name="zip" 
+                                            t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}" 
+                                            t-att-value="'zip' in checkout and checkout['zip']" readonly="true"/>
+                                            
+                                            <input type="hidden" name="zip_id"/>
+                                        </div>
+                                        <!--<div t-attf-class="form-group #{error.get('zip') and 'o_has_error' or ''} col-md-4 div_zip">
                                             <label class="col-form-label label-optional" for="zip">Código postal</label>
                                             <input type="text"  name="zip"
                                             t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}" 
                                             t-att-value="'zip' in checkout and checkout['zip']" readonly="true" />
                                             
                                             <input type="hidden"  name="zip_id"/>
-                                        </div>
+                                        </div>-->
                                     <!--+++++++FIN DE CÓDIGO DEL CÓDIGO POSTAL++++++++-->
                                     <!--</t>-->
                                             <!-- <div t-attf-class="form-group #{error.get('city') and 'o_has_error' or ''} col-md-8 div_city">
@@ -391,15 +399,15 @@
 
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                     <input type="hidden" name="submitted" value="1" />
-                                    <input type="hidden" name="partner_id" t-att-value="partner_id or '0'" />
+                                    <input type="hidden" name="partner_id" t-att-value="website_sale_order.partner_id and website_sale_order.partner_id.id or partner_id or '0'" />
                                     <input type="hidden" name="partner_country_id" 
-                                           t-att-value="('country_id' in checkout and checkout['country_id'].id or '0')" />
+                                           t-att-value="('country_id' in checkout and checkout['country_id'].id or website_sale_order.partner_id.country_id and website_sale_order.partner_id.country_id.id or '0')" />
                                     <input type="hidden" name="partner_document_type" 
-                                           t-att-value="('document_type_id' in checkout and checkout['document_type_id'].id or '0')" />
+                                           t-att-value="('document_type_id' in checkout and checkout['document_type_id'].id or website_sale_order.partner_id.document_type_id and website_sale_order.partner_id.document_type_id.id or '0')" />
                                     <input type="hidden" name="partner_state_id" 
-                                           t-att-value="('state_id' in checkout and checkout['state_id'].id or '0')" />
+                                           t-att-value="('state_id' in checkout and checkout['state_id'].id or website_sale_order.partner_id.state_id and website_sale_order.partner_id.state_id.id or '0')" />
                                     <input type="hidden" name="partner_city_id" 
-                                           t-att-value="('city' in checkout and checkout['city'] or '0')" />
+                                           t-att-value="('city' in checkout and checkout['city'] or website_sale_order.partner_id.zip_id.city_id and website_sale_order.partner_id.zip_id.city_id.id or '0')" />
                                     <input type="hidden" name="callback" t-att-value="callback" />
                                         <!-- Example -->
                                     <!--<input type="hidden" name="field_required" t-att-value="'phone,name'" />-->

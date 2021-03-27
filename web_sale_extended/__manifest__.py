@@ -43,6 +43,7 @@
         #'reports/res_partner_report.xml',
         'data/shop_address.xml',
         'data/tus_datos_bot.xml',
+        'data/payu_latam_bot.xml',
         'data/beneficiary_confirm_template.xml'
     ],
     # only loaded in demonstration mode

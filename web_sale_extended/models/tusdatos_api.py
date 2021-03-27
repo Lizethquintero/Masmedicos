@@ -171,10 +171,10 @@ class TusDatosAPI(models.TransientModel):
             else:
                 _logger.error("****** REALIZANDO VALIDACIÓN EN LISTAS. ******")
                 if endpoint == 'results':
-                    approval = not (validation['LISTA_ONU'] or validation['OFAC'])
+                    approval = not 'LISTA_ONU' in validation or 'OFAC' in validation
                 elif endpoint == 'report_json':
                     #approval = not (validation['ofac'] or validation['lista_onu'] or validation['lista_ofac'])
-                    approval = not (validation['ofac'] or validation['lista_onu'])
+                    approval = not ('ofac' in validation or 'lista_onu' in validation)
         else:
             # TODO: add id to sale_order for queue validation process
             _logger.error("****** ERROR: Approbation not processed. ******")

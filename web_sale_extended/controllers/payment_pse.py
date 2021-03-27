@@ -32,7 +32,7 @@ class WebsiteSaleExtended(WebsiteSale):
         """ Proceso de Pago """
         referenceCode = str(request.env['api.payulatam'].payulatam_get_sequence())
         accountId = request.env['api.payulatam'].payulatam_get_accountId()
-        descriptionPay = "Payment Origin from " + order.name
+        descriptionPay = "Payment Origin from " + str(order.name)
         signature = request.env['api.payulatam'].payulatam_get_signature(
             order.amount_total,'COP',referenceCode)
         payulatam_api_env = request.env.user.company_id.payulatam_api_env
@@ -104,26 +104,34 @@ class WebsiteSaleExtended(WebsiteSale):
         }
         response = request.env['api.payulatam'].payulatam_credit_cards_payment_request(credit_card_values)
         if response['code'] != 'SUCCESS':
-            render_values = {'error': response['error']}
-            return request.render("web_sale_extended.payulatam_rejected_process", render_values)
-        _logger.error(response)
-        """poniendo mensaje en la orden de venta con la respuesta de PayU"""
-        body_message = """
-            <b>PayU Latam - Transacción de Pago PSE</b><br/>
-            <b>Orden ID:</b> %s<br/>
-            <b>Transacción ID:</b> %s<br/>
-            <b>Estado:</b> %s<br/>
-            <b>Código Respuesta:</b> %s
-        """ % (
-            response['transactionResponse']['orderId'], 
-            response['transactionResponse']['transactionId'], 
-            response['transactionResponse']['state'], 
-            response['transactionResponse']['responseCode']
-        )
-        order.message_post(body=body_message, type="comment")
+            body_message = """
+                <b><span style='color:red;'>PayU Latam - Error en pago con PSE</span></b><br/>
+                <b>Código:</b> %s<br/>
+                <b>Error:</b> %s
+            """ % (
+                response['code'],
+                "Error de comunicación con PayU Latam"
+            )
+            if not request.session['sale_order_id']:
+                checkout_landpage_redirect = request.env.user.company_id.checkout_landpage_redirect
+                if checkout_landpage_redirect:
+                    return request.redirect(checkout_landpage_redirect)
+                return request.redirect("/web/login")
+            else:
+                order.message_post(body=body_message, type="comment")
+                render_values = {'error': response['error']}
+                return request.render("web_sale_extended.payulatam_rejected_process", render_values)        
+
         if response['transactionResponse']['state'] == 'APPROVED':
-            _logger.info('APPROVED Validated PayU Latam payment for tx %s: set as done' % (response['transactionResponse']['orderId']))
-            order.action_payu_confirm()
+            order.write({
+                'payulatam_order_id': response['transactionResponse']['orderId'],
+                'payulatam_transaction_id': response['transactionResponse']['transactionId'],
+                'payulatam_state': response['transactionResponse']['state'],
+                'payment_method_type': 'PSE',
+                'payulatam_state': 'TRANSACCIÓN CON PSE PENDIENTE DE APROBACIÓN',
+                'payulatam_datetime': fields.datetime.now(),
+            })
+            order.action_payu_approved()
             render_values = {'error': ''}
             render_values.update({
                 'state': response['transactionResponse']['state'],
@@ -132,12 +140,32 @@ class WebsiteSaleExtended(WebsiteSale):
                 'order_Id': response['transactionResponse']['orderId'],
                 'order_id': order
             })
+            body_message = """
+                <b><span style='color:green;'>PayU Latam - Transacción de pago con PSE</span></b><br/>
+                <b>Orden ID:</b> %s<br/>
+                <b>Transacción ID:</b> %s<br/>
+                <b>Estado:</b> %s<br/>
+                <b>Código Respuesta:</b> %s
+            """ % (
+                response['transactionResponse']['orderId'], 
+                response['transactionResponse']['transactionId'], 
+                'APROBADO', 
+                response['transactionResponse']['responseCode']
+            )
+            order.message_post(body=body_message, type="comment")
             return request.render("web_sale_extended.payulatam_success_process_pse", render_values)
         elif response['transactionResponse']['state'] == 'PENDING':
-            _logger.info('Notificación recibida para el pago de PayU Latam: %s: establecido como PENDIENTE' % (response['transactionResponse']['orderId']))
             order.action_payu_confirm()
-            #request.session['sale_order_id'] = None
-            #request.session['sale_transaction_id'] = None
+            request.session['sale_order_id'] = None
+            request.session['sale_transaction_id'] = None
+            order.write({
+                'payulatam_order_id': response['transactionResponse']['orderId'],
+                'payulatam_transaction_id': response['transactionResponse']['transactionId'],
+                'payulatam_state': response['transactionResponse']['state'],
+                'payment_method_type': 'PSE',
+                'payulatam_state': 'TRANSACCIÓN CON PSE PENDIENTE DE APROBACIÓN',
+                'payulatam_datetime': fields.datetime.now(),
+            })
             error = ''
             render_values = {'error': error}
             render_values.update({
@@ -149,8 +177,29 @@ class WebsiteSaleExtended(WebsiteSale):
                 'order_id': order,
                 'bank_url': response['transactionResponse']['extraParameters']['BANK_URL']
             })
+            body_message = """
+                <b><span style='color:orange;'>PayU Latam - Transacción de pago con PSE</span></b><br/>
+                <b>Orden ID:</b> %s<br/>
+                <b>Transacción ID:</b> %s<br/>
+                <b>Estado:</b> %s<br/>
+                <b>Código Respuesta:</b> %s
+            """ % (
+                response['transactionResponse']['orderId'], 
+                response['transactionResponse']['transactionId'], 
+                'PENDIENTE DE APROBACIÓN', 
+                response['transactionResponse']['responseCode']
+            )
+            order.message_post(body=body_message, type="comment")
             return request.render("web_sale_extended.payulatam_success_process_pse", render_values)
         elif response['transactionResponse']['state'] in ['EXPIRED', 'DECLINED']:
+            order.write({
+                'payulatam_order_id': response['transactionResponse']['orderId'],
+                'payulatam_transaction_id': response['transactionResponse']['transactionId'],
+                'payulatam_state': response['transactionResponse']['state'],
+                'payment_method_type': 'PSE',
+                'payulatam_state': 'TRANSACCIÓN CON PSE RECHAZADA',
+                'payulatam_datetime': fields.datetime.now(),
+            })
             render_values = {}
             #if 'paymentNetworkResponseErrorMessage' in response['transactionResponse']:
             #    if 'ya se encuentra registrada con la referencia' in response['transactionResponse']['paymentNetworkResponseErrorMessage']:
@@ -164,6 +213,19 @@ class WebsiteSaleExtended(WebsiteSale):
                 'order_Id': response['transactionResponse']['orderId'],
                 'order_id': order
             })
+            body_message = """
+                <b><span style='color:red;'>PayU Latam - Transacción de pago con PSE</span></b><br/>
+                <b>Orden ID:</b> %s<br/>
+                <b>Transacción ID:</b> %s<br/>
+                <b>Estado:</b> %s<br/>
+                <b>Código Respuesta:</b> %s
+            """ % (
+                response['transactionResponse']['orderId'], 
+                response['transactionResponse']['transactionId'], 
+                'RECHAZADO', 
+                response['transactionResponse']['responseCode']
+            )
+            order.message_post(body=body_message, type="comment")
             return request.render("web_sale_extended.payulatam_rejected_process_pse", render_values)
         else:
             error = 'Se recibió un estado no reconocido para el pago de PayU Latam %s: %s, set as error' % (

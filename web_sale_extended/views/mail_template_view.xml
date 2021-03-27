@@ -9,6 +9,7 @@
                     <field name="tusdatos_confirmation_accept"/>
                     <field name="tusdatos_confirmation_reject"/>
                     <field name="payulatam_approved_process"/>
+                    <field name="payulatam_welcome_process"/>
                 </xpath>
             </field>
         </record>
