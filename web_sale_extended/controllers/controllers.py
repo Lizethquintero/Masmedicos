@@ -181,8 +181,8 @@ class WebsiteSaleExtended(WebsiteSale):
                             document_types[str(kw["document"])],
                             expedition_date)
                         
-                        if 'hallazgo' in tusdatos_validation and tusdatos_validation['hallazgo'] or \
-                        'hallazgos' in tusdatos_validation and tusdatos_validation['hallazgos'] == 'alto':
+                        if 'hallazgo' in tusdatos_validation and tusdatos_validation['hallazgo']:
+                        #'hallazgos' in tusdatos_validation and tusdatos_validation['hallazgos'] == 'alto':
                             body_message = """
                                 <b><span style='color:red;'>TusDatos - Verificación Rechazada</span></b><br/>
                                 <b>Respuesta:</b> %s<br/>
