@@ -105,7 +105,7 @@ class WebsiteSaleExtended(WebsiteSale):
         lapTransactionState = kwargs['lapTransactionState']
         lapResponseCode = kwargs['lapResponseCode']
         lapResponseCode = kwargs['lapResponseCode']
-        payulatam_transaction_id = self.env['sale.order'].search(domain, limit=1)
+        payulatam_transaction_id = request.env['sale.order'].search(domain, limit=1)
         if payulatam_transaction_id:
             if lapTransactionState == 'APPROVED':
                 payulatam_transaction_id.write({
