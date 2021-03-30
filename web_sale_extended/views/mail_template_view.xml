@@ -6,10 +6,17 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='model_id']" position="after">
                     <!--<field name="tusdatos_process_send"/>-->
-                    <field name="tusdatos_confirmation_accept"/>
-                    <field name="tusdatos_confirmation_reject"/>
-                    <field name="payulatam_approved_process"/>
-                    <field name="payulatam_welcome_process"/>
+                    <group>
+                        <group>
+                            <field name="tusdatos_confirmation_accept"/>
+                            <field name="tusdatos_confirmation_reject"/>
+                        </group>
+                        <group>
+                            <field name="payulatam_approved_process"/>
+                            <field name="payulatam_welcome_process"/>
+                            <field name="payulatam_rejected_process"/>
+                        </group>
+                    </group>
                 </xpath>
             </field>
         </record>

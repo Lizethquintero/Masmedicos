@@ -37,9 +37,12 @@ class SaleOrder(models.Model):
     payulatam_request_expired = fields.Boolean('Request Expired')
     state =  fields.Selection(selection_add=[('payu_pending', 'PAYU ESPERANDO APROBACIÓN'),('payu_approved', 'PAYU APROBADO')])
     main_product_id = fields.Many2one('product.product', string="Plan Elegido", compute="_compute_main_product_id", store=True)
-    payment_method_type = fields.Selection(
-        [ ("Credit Card", "Tarjeta de Crédito"), ("Cash", "Efectivo"), ("PSE", "PSE")]
-    )
+    payment_method_type = fields.Selection([
+        ("Credit Card", "Tarjeta de Crédito"), 
+        ("Cash", "Efectivo"), 
+        ("PSE", "PSE"),
+        ("Product Without Price", "Producto con Precio $0"),
+    ])
     
     
     def action_payu_confirm(self):
@@ -107,19 +110,20 @@ class SaleOrder(models.Model):
                 
     def _send_order_payu_latam_approved(self):
         if self.env.su:
-            # sending mail in sudo was meant for it being sent from superuser
             self = self.with_user(SUPERUSER_ID)
-        """
-        template_id = self._find_mail_template(force_confirmation_template=True)
-        if template_id:
-            for order in self:
-                order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', email_layout_xmlid="mail.mail_notification_paynow")
-        """
         template_id = self.env['mail.template'].search([('payulatam_approved_process', '=', True)], limit=1)
         if template_id:
             for order in self:
-                order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment')
-
+                template_id.sudo().send_mail(order.id)
+                
+                
+    def _send_order_payu_latam_rejected(self):
+        if self.env.su:
+            self = self.with_user(SUPERUSER_ID)
+        template_id = self.env['mail.template'].search([('payulatam_rejected_process', '=', True)], limit=1)
+        if template_id:
+            for order in self:
+                template_id.sudo().send_mail(order.id)
                 
             
 
@@ -267,21 +271,87 @@ class SaleOrder(models.Model):
             ('payulatam_transaction_id', '!=', ''),
             ('state', '=', 'payu_pending'),
             ('payulatam_request_expired', '=', False),
-            ('payulatam_datetime', '=', ''),
+            ('payulatam_datetime', '!=', False),
         ])
+        _logger.error(sale_ids)
         for sale in sale_ids:
             """ Consultando orden en payu """
             if sale.payulatam_transaction_id:
+                _logger.error(sale.payulatam_transaction_id)
+                _logger.error(sale.payment_method_type)
                 """ si existe una transacción """
                 date_now = fields.datetime.now()
                 date_difference = date_now - sale.payulatam_datetime
-                if sale.payment_method_type == 'cash':
-                    if date_difference.minutes > 60:
+                if sale.payment_method_type == 'Cash':
+                    _logger.error(date_difference.seconds)
+                    if date_difference.seconds > 3600:
                         """ si existe una transacción """
-                        response = self.env['api.tusdatos'].payulatam_get_response_transaction(sale.payulatam_transaction_id)
+                        response = self.env['api.payulatam'].payulatam_get_response_transaction(sale.payulatam_transaction_id)
+                        #_send_order_payu_latam_approved
                         _logger.error('++++++++++++++++++++++++++ respuesta cron payu latam +++++++++++++++++++++++++++++++++++++++')
                         _logger.error(response)
-                        
+                        if response['code'] != 'SUCCESS':
+                            raise ValidationError("""Error de comunicación con Payu: %s""", (json.dumps(response)))
+                        if response['result']['payload']['state'] == 'PENDING':
+                            message = """<b><span style='color:orange;'>PayU Latam - Transacción en efectivo pendiente por aprobación</span></b><br/>
+                            <b>Respuesta:</b> %s
+                            """, (json.dumps(response['result']['payload'])) 
+                            sale.message_post(body=message)
+                        if response['result']['payload']['state'] == 'DECLINED':
+                            message = """<b><span style='color:red;'>PayU Latam - Transacción en efectivo declinada</span></b><br/>
+                            <b>Respuesta:</b> %s
+                            """, (json.dumps(response['result']['payload']))
+                            sale.message_post(body=message)
+                            sale._send_order_payu_latam_rejected()
+                            sale.action_cancel()
+                        if response['result']['payload']['state'] == 'EXPIRED':
+                            message = """<b><span style='color:red;'>PayU Latam - Transacción en efectivo expirada</span></b><br/>
+                            <b>Respuesta:</b> %s
+                            """, (json.dumps(response['result']['payload']))
+                            sale.message_post(body=message)
+                            sale._send_order_payu_latam_rejected()
+                            sale.action_cancel()
+                        if response['result']['payload']['state'] == 'APPROVED':
+                            message = """<b><span style='color:green;'>PayU Latam - Transacción en efectivo aprobada</span></b><br/>
+                            <b>Respuesta:</b> %s
+                            """, (json.dumps(response['result']['payload']))
+                            sale.message_post(body=message)
+                            sale._send_order_payu_latam_approved()
+                if sale.payment_method_type == 'PSE':
+                    _logger.error(date_difference.seconds)
+                    if date_difference.seconds > 600:
+                        """ si existe una transacción """
+                        response = self.env['api.payulatam'].payulatam_get_response_transaction(sale.payulatam_transaction_id)
+                        #_send_order_payu_latam_approved
+                        _logger.error('++++++++++++++++++++++++++ respuesta cron payu latam +++++++++++++++++++++++++++++++++++++++')
+                        _logger.error(response)
+                        if response['code'] != 'SUCCESS':
+                            raise ValidationError("""Error de comunicación con Payu: %s""", (json.dumps(response)))
+                        if response['result']['payload']['state'] == 'PENDING':
+                            message = """<b><span style='color:orange;'>PayU Latam - Transacción PSE pendiente por aprobación</span></b><br/>
+                            <b>Respuesta:</b> %s
+                            """ % (response['result']['payload'])
+                            sale.message_post(body=message)
+                        if response['result']['payload']['state'] == 'DECLINED':
+                            message = """<b><span style='color:red;'>PayU Latam - Transacción PSE declinada</span></b><br/>
+                            <b>Respuesta:</b> %s
+                            """, (json.dumps(response['result']['payload']))
+                            sale.message_post(body=message)
+                            sale._send_order_payu_latam_rejected()
+                            sale.action_cancel()
+                        if response['result']['payload']['state'] == 'EXPIRED':
+                            message = """<b><span style='color:red;'>PayU Latam - Transacción PSE expirada</span></b><br/>
+                            <b>Respuesta:</b> %s
+                            """, (json.dumps(response['result']['payload']))
+                            sale.message_post(body=message)
+                            sale._send_order_payu_latam_rejected()
+                            sale.action_cancel()
+                        if response['result']['payload']['state'] == 'APPROVED':
+                            message = """<b><span style='color:green;'>PayU Latam - Transacción PSE aprobada</span></b><br/>
+                            <b>Respuesta:</b> %s
+                            """, (json.dumps(response['result']['payload']))
+                            sale.message_post(body=message)
+                            sale._send_order_payu_latam_approved()
                         
 
                     

@@ -181,8 +181,12 @@ class WebsiteSaleExtended(WebsiteSale):
                             document_types[str(kw["document"])],
                             expedition_date)
                         
-                        if 'hallazgo' in tusdatos_validation and tusdatos_validation['hallazgo']:
+                        #if 'hallazgo' in tusdatos_validation and tusdatos_validation['hallazgo']:
                         #'hallazgos' in tusdatos_validation and tusdatos_validation['hallazgos'] == 'alto':
+                        if 'errores' in tusdatos_validation and ('LISTA_ONU' in tusdatos_validation['errores'] \
+                                                                 or 'lista_onu' in tusdatos_validation['errores']\
+                                                                 or 'OFAC' in tusdatos_validation['errores']\
+                                                                 or 'ofac' in tusdatos_validation['errores']):
                             body_message = """
                                 <b><span style='color:red;'>TusDatos - Verificación Rechazada</span></b><br/>
                                 <b>Respuesta:</b> %s<br/>
@@ -293,6 +297,9 @@ class WebsiteSaleExtended(WebsiteSale):
         
         """ Evaluando si el producto tiene valor cero """
         if order.main_product_id.list_price == 0:
+            order.write({
+                'payment_method_type': 'Product Without Price',
+            })
             body_message = """
                 <b><span style='color:green;'>PayU Latam - Producto con precio cero</span></b><br/>
                 Se ha iniciado una transacción con Producto Precio Cero y el usuario ha sido redirigido al formulario 
@@ -331,6 +338,11 @@ class WebsiteSaleExtended(WebsiteSale):
         ''' Captura de datos del beneficiario más no guarda informacion '''
         _logger.info("**BENEFICIARY**")
         order = request.env['sale.order'].sudo().browse(order_id)
+        
+        #redirection = self.checkout_redirection(order)
+        #if redirection:
+        #    return redirection
+        
         product = order.order_line[0].product_id
         beneficiaries_number = product.product_tmpl_id.beneficiaries_number if product.product_tmpl_id.beneficiaries_number else 6
         country = request.env['res.country'].browse(int(order.partner_id.country_id))

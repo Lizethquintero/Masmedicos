@@ -356,7 +356,7 @@
                                        data-original-title="" 
                                        title="" 
                                        aria-describedby="tooltip188699"
-                                       style="color:#FFF;">Terminar Proceso de Compra
+                                       style="color:#FFF;">Volver a la página principal
                                        <i class="fa fa-chevron-right"/>
                                     </a>
                                     <input type="hidden" name="order_id" t-att-value="order_id.id"/>
@@ -575,7 +575,7 @@
                                             <br/>
                                         </div>
                                         <div style="text-align:center;">
-                                            <span style="font-size:18px;">Para continuar enviaremos un correo electrónico que le permitirá registrar el aegurado principal y sus beneficiarios. Este correo llegará tan proto recibamos la confirmación final del banco.</span>
+                                            <span style="font-size:18px;">Para continuar enviaremos un correo electrónico que te permitirá registrar el asegurado principal y sus beneficiarios. Este correo llegará tan proto recibamos la confirmación final del banco.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -723,7 +723,7 @@
                                         <t t-if="response.get('lapTransactionState') != 'APPROVED'">
                                             <div style="text-align:center;">
                                                 <span style="font-size:18px;">
-                                                    Para continuar enviaremos un correo electrónico que le permitirá registrar el aegurado principal y sus beneficiarios.
+                                                    Para continuar enviaremos un correo electrónico que le permitirá registrar el asegurado principal y sus beneficiarios.
                                                     Este correo llegará tan proto recibamos la aprobación final del banco.
                                                 </span>
                                             </div>
@@ -1368,9 +1368,9 @@
                                             </t>
                                             </select>
                                         </div>
-                                        <div class="col-lg-6 col-md-6">
+                                        <div class="col-lg-6 col-md-6" style="color: transparent">
                                           <label class="col-form-label label-optional" for="credit_card_zip">Código postal</label>
-                                            <input type="text"  name="credit_card_zip"
+                                            <input style="visibility: hidden;" type="text"  name="credit_card_zip"
                                             t-attf-class="form-control" 
                                             readonly="true" />
                                             <input type="hidden"  name="credit_card_zip_id"/>
@@ -1677,12 +1677,12 @@
                                             </select>
                                         </div>
                                         <!--+++++++Inicio Código del código postal++++++++++++++-->
-                                        <div class="col-lg-6 col-md-6">
+                                        <div class="col-lg-6 col-md-6" style="color: transparent">
                                           <label class="col-form-label label-optional" for="zip">Código postal</label>
-                                            <input type="text"  name="cash_zip"
+                                            <input style="visibility: hidden;" type="text"  name="cash_zip"
                                             t-attf-class="form-control" 
                                             readonly="true" />
-                                            <input type="hidden"  name="cash_zip_id"/>
+                                            <input style="visibility: hidden;" type="hidden"  name="cash_zip_id"/>
                                           </div>
                                       </div>
                                     <!--+++++++Fin Código del código postal++++++++++++++-->   
@@ -1945,12 +1945,12 @@
                                             </select>
                                         </div>
                                         <!--++++Inicio del código postal++++-->
-                                        <div class="col-lg-6 col-md-6" >
-                                          <label class="col-form-label label-optional" for="zip">Código postal</label>
-                                            <input type="text"  name="pse_zip"
+                                        <div class="col-lg-6 col-md-6" style="color: transparent">
+                                          <label class="col-form-label label-optional" for="zip"></label><!--<label class="col-form-label label-optional" for="zip">Código postal</label>-->
+                                            <input style="visibility: hidden;" type="text"  name="pse_zip"
                                             t-attf-class="form-control" 
                                             readonly="true" />
-                                            <input type="hidden"  name="pse_zip_id"/>
+                                            <input style="visibility: hidden;" type="hidden"  name="pse_zip_id"/>
                                           </div>
                                       </div>
                                       

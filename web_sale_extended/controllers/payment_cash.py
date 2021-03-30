@@ -89,8 +89,6 @@ class WebsiteSaleExtended(WebsiteSale):
             "transaction": transaction,
         }
         response = request.env['api.payulatam'].payulatam_cash_payment_request(cash_payment_values)
-        _logger.error('**********\n+++++++++++\n**************')
-        _logger.error(response)
         render_values = {'error': response['error']}
         if response['code'] != 'SUCCESS':
             """ Retornando error manteniendo la misma orden y dando la oportunidad de intentar de nuevo """

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 import uuid
@@ -13,7 +12,6 @@ from odoo.tools.float_utils import float_compare
 import requests
 from requests.auth import HTTPBasicAuth
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -25,22 +23,22 @@ class PayULatamApi(models.TransientModel):
     currency = fields.Char('Moneda', readonly="True", default='COP')
     language = fields.Char('Moneda', readonly="True", default='es')
     
-    def request_payulatam_api(self, endpoint: str, query: dict) -> dict:
+    def request_payulatam_api(self, endpoint: str, query: dict, report=None) -> dict:
         payulatam_api_env = self.env.user.company_id.payulatam_api_env
         if payulatam_api_env == 'prod':
+            payulatam_api_hostname = self.env.user.company_id.payulatam_api_hostname
+            payulatam_api_report_hostname = self.env.user.company_id.payulatam_api_report_hostname
             payulatam_merchant_id = self.env.user.company_id.payulatam_merchant_id
             payulatam_account_id = self.env.user.company_id.payulatam_account_id
             payulatam_api_key = self.env.user.company_id.payulatam_api_key
             payulatam_api_login = self.env.user.company_id.payulatam_api_login
         else:
+            payulatam_api_sandbox_hostname = self.env.user.company_id.payulatam_api_sandbox_hostname
+            payulatam_api_sandbox_report_hostname = self.env.user.company_id.payulatam_api_sandbox_report_hostname
             payulatam_merchant_id = self.env.user.company_id.payulatam_merchant_sandbox_id
             payulatam_account_id = self.env.user.company_id.payulatam_account_sandbox_id
             payulatam_api_key = self.env.user.company_id.payulatam_api_sandbox_key
             payulatam_api_login = self.env.user.company_id.payulatam_api_sandbox_login
-            #payulatam_merchant_id = '508029'
-            #payulatam_account_id = '512321'
-            #payulatam_api_key = '4Vj8eK4rloUd272L48hsrarnUA'
-            #payulatam_api_login = 'pRRXKOl8ikMmt9u'
         
         language = self.language if self.language else 'es'
         api_post = [
@@ -54,14 +52,21 @@ class PayULatamApi(models.TransientModel):
         ]
         if endpoint in api_post:
             headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
-            provider = 'https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi'
+            provider = ''
             if payulatam_api_env == 'prod':
-                provider = 'https://api.payulatam.com/payments-api/4.0/service.cgi'
+                provider = payulatam_api_hostname
+                if report:
+                    provider = payulatam_api_report_hostname
+            else:
+                provider = payulatam_api_sandbox_hostname
+                if report:
+                    provider = payulatam_api_sandbox_report_hostname
+                    
+            
             auth = HTTPBasicAuth('apikey', payulatam_api_key)
             headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
-            # general values for all request to api
             query.update({
-                'language': language,
+                "language": language,
                 "merchant": {
                     "apiLogin": payulatam_api_login,
                     "apiKey": payulatam_api_key
@@ -75,6 +80,7 @@ class PayULatamApi(models.TransientModel):
             if response.status_code != 200:
                 _logger.error(f'****** ERROR {response.status_code}: validation failed, {response.json()}. ******')
                 raise f'Bad Status Code, expected 200 but given {response.status_code}: validation failed, {response.json()}. ******'
+            _logger.error(response.json())
             response.close
             return response.json()
         else:
@@ -128,8 +134,6 @@ class PayULatamApi(models.TransientModel):
     def payulatam_form_generate_values_api(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         tx = self.env['payment.transaction'].search([('reference', '=', values.get('reference'))])
-        # payulatam will not allow any payment twise even if payment was failed last time.
-        # so, replace reference code if payment is not done or pending.
         if tx.state not in ['done', 'pending']:
             tx.reference = str(uuid.uuid4())
         payulatam_values = dict(
@@ -139,7 +143,7 @@ class PayULatamApi(models.TransientModel):
             description=values.get('reference'),
             referenceCode=tx.reference,
             amount=values['amount'],
-            tax='0',  # This is the transaction VAT. If VAT zero is sent the system, 19% will be applied automatically. It can contain two decimals. Eg 19000.00. In the where you do not charge VAT, it should should be set as 0.
+            tax='0',
             taxReturnBase='0',
             currency=values['currency'].name,
             buyerEmail=values['partner_email'],
@@ -285,9 +289,10 @@ class PayULatamApi(models.TransientModel):
         
     def payulatam_get_response_transaction(self, transactionID):
         command = 'TRANSACTION_RESPONSE_DETAIL'
-        query = {"command": command}
+        query = {'command': command}
+        details = {'transactionId': transactionID}
         query.update({
-            'transactionId': transactionID,
+            'details': details,
         })
-        response = self.request_payulatam_api(command, query)
+        response = self.request_payulatam_api(command, query, report=True)
         return response

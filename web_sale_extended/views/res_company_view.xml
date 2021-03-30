@@ -42,6 +42,7 @@
                         <group>
                             <group string="PayU Latam Producción" groups="base.group_no_one">
                                 <field name="payulatam_api_hostname"/>
+                                <field name="payulatam_api_report_hostname"/>
                                 <field name="payulatam_merchant_id"/>
                                 <field name="payulatam_account_id"/>
                                 <field name="payulatam_api_key"/>
@@ -51,6 +52,7 @@
                             </group>
                             <group string="PayU Latam Sandbox" groups="base.group_no_one">
                                 <field name="payulatam_api_sandbox_hostname"/>
+                                <field name="payulatam_api_sandbox_report_hostname"/>
                                 <field name="payulatam_merchant_sandbox_id"/>
                                 <field name="payulatam_account_sandbox_id"/>
                                 <field name="payulatam_api_sandbox_key"/>

@@ -28,6 +28,7 @@ class ResCompany(models.Model):
         help="Días de Expiración para el método de pago de efectivo y durante los cuales es valido el recibo de pago",
         groups='base.group_user')
     payulatam_api_hostname = fields.Char(string="PayU Latam Hostname", groups='base.group_user')
+    payulatam_api_report_hostname = fields.Char(string="PayU Latam Report Hostname", groups='base.group_user')
     payulatam_merchant_id = fields.Char(string="PayU Latam Merchant ID", groups='base.group_user')
     payulatam_account_id = fields.Char(string="PayU Latam Account ID", groups='base.group_user')
     payulatam_api_key = fields.Char(string="PayU Latam API Key", groups='base.group_user')
@@ -36,6 +37,7 @@ class ResCompany(models.Model):
     payulatam_api_response_url = fields.Char(string="PayU Latam Response URL", groups='base.group_user')
     
     payulatam_api_sandbox_hostname = fields.Char(string="PayU Latam Hostname", groups='base.group_user')
+    payulatam_api_sandbox_report_hostname = fields.Char(string="PayU Latam Report Hostname", groups='base.group_user')
     payulatam_merchant_sandbox_id = fields.Char(string="PayU Latam Merchant ID", groups='base.group_user')
     payulatam_account_sandbox_id = fields.Char(string="PayU Latam Account ID", groups='base.group_user')
     payulatam_api_sandbox_key = fields.Char(string="PayU Latam API Key", groups='base.group_user')

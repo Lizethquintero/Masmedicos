@@ -508,8 +508,6 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
         }
     });
     $("select[name='estado_civil']").on('change', function cambiarConyugues() {
-        console.log("cambio");
-
         let estado = $(this).val();
         if (estado == 'Soltero') {
             let newOptions = {
@@ -520,19 +518,14 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
             };
             for (let index = 0; index < 6; index++) {
                 let id_elemento = 'bfparentesco' + (index + 1);
-                console.log(id_elemento);
                 let elemento = "select[name='" + id_elemento + "']";
-                console.log(elemento);
                 let elemento_completo = $(elemento);
-                console.log(elemento_completo);
                 elemento_completo.empty();
                 $.each(newOptions, function(key, value) {
                     elemento_completo.append($("<option></option>")
                         .attr("value", value).text(key));
                 });
-
             }
-
         } else if (estado == 'Viudo') {
             let newOptions = {
                 Seleccione: "",
@@ -543,19 +536,14 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
             };
             for (let index = 0; index < 6; index++) {
                 let id_elemento = 'bfparentesco' + (index + 1);
-                console.log(id_elemento);
                 let elemento = "select[name='" + id_elemento + "']";
-                console.log(elemento);
                 let elemento_completo = $(elemento);
-                console.log(elemento_completo);
                 elemento_completo.empty();
                 $.each(newOptions, function(key, value) {
                     elemento_completo.append($("<option></option>")
                         .attr("value", value).text(key));
                 });
-
             }
-
         } else {
             let newOptions = {
                 Seleccione: "",
@@ -567,23 +555,18 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
             };
             for (let index = 0; index < 6; index++) {
                 let id_elemento = 'bfparentesco' + (index + 1);
-                console.log(id_elemento);
                 let elemento = "select[name='" + id_elemento + "']";
-                console.log(elemento);
                 let elemento_completo = $(elemento);
-                console.log(elemento_completo);
                 elemento_completo.empty();
                 $.each(newOptions, function(key, value) {
                     elemento_completo.append($("<option></option>")
                         .attr("value", value).text(key));
                 });
-
             }
-
         }
-
     });
-
+    
+    
 
 
        /*
@@ -1839,21 +1822,48 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
             }
         });
-
-});
-
-
-
-
-/*
-odoo.define('web_sale_extended.payment_method_process', function(require) {
-    'use strict';
     
-    $(function() {
-        $('#payment_method_tabs').tabs();
-    });
+    let estado_civil = $("select[name='estado_civil']").val();
+    if (estado_civil == 'Soltero') {
+        let newOptions = {
+            Seleccione: "",
+            Padres: "D",
+            Hijos: "H",
+            Hermanos: "M"
+        };
+        for (let index = 0; index < 6; index++) {
+            let id_elemento = 'bfparentesco' + (index + 1);
+            let elemento = "select[name='" + id_elemento + "']";
+            let elemento_completo = $(elemento);
+            elemento_completo.empty();
+            $.each(newOptions, function(key, value) {
+                elemento_completo.append($("<option></option>")
+                    .attr("value", value).text(key));
+            });
+        }
+    }
+    if (estado_civil == 'Viudo') {
+        let newOptions = {
+            Seleccione: "",
+            Padres: "D",
+            Hijos: "H",
+            Hermanos: "M",
+            Suegros: "S"
+        };
+        for (let index = 0; index < 6; index++) {
+            let id_elemento = 'bfparentesco' + (index + 1);
+            let elemento = "select[name='" + id_elemento + "']";
+            let elemento_completo = $(elemento);
+            elemento_completo.empty();
+            $.each(newOptions, function(key, value) {
+                elemento_completo.append($("<option></option>")
+                    .attr("value", value).text(key));
+            });
+        }
+    }
+
 });
-*/
+
 
 odoo.define('web_sale_extended.welcome_masmedicos', function(require) {
     'use strict';
@@ -1867,10 +1877,6 @@ odoo.define('web_sale_extended.welcome_masmedicos', function(require) {
         });
     });
 });
-
-
-
-
 
 
 odoo.define('web_sale_extended.payment_process', function(require) {
@@ -1903,7 +1909,6 @@ odoo.define('web_sale_extended.payment_process', function(require) {
             window.location.href = url;
         });
         
-        
         $('#submit_payment_rejected').on('click', function() {
             var url = '/shop/payment'
             window.location.href = url;
@@ -1918,11 +1923,6 @@ odoo.define('web_sale_extended.payment_process', function(require) {
             var url = '/shop'
             window.location.href = url;
         });
-        //$('#payment_btn_cash').on('click', function() {
-        //    alert('payulatam-payment-form-cash');
-        //    $('#payulatam-payment-form-cash').attr('action', '/shop/payment/payulatam-gateway-api/cash_process');
-        //    $('#payulatam-payment-form-cash').submit();
-        //});
         function consultarZipcodeCreditCard(ciudad){
             $.ajax({
                 data: { 'city_id': ciudad },
@@ -1959,7 +1959,6 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 }
             });
         }
-        
         $('#credit_card_city').change(function() {
             let data_select = $("#credit_card_city option:selected").val();
             consultarZipcodeCreditCard(data_select);
@@ -1972,7 +1971,6 @@ odoo.define('web_sale_extended.payment_process', function(require) {
             let data_select = $("#cash_city option:selected").val();
             consultarZipcodeCash(data_select);
         });
-        
         function consultarCiudadesCreditCard(estado, elemento) {
             console.log('3');
             $.ajax({
@@ -2120,11 +2118,8 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 }
             }
             return true;
-            
         }, "¡Upss! Fecha de Vencimiento Invalida");
 
-        
-        
         $("#payulatam-payment-form").validate({
             rules: {
                 credit_card_number: {
