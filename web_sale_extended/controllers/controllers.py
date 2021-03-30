@@ -645,7 +645,6 @@ class WebsiteSaleExtended(WebsiteSale):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
     
-    """
     @http.route([
         '''/shop''',
         '''/shop/page/<int:page>''',
@@ -658,7 +657,6 @@ class WebsiteSaleExtended(WebsiteSale):
             #return request.redirect(request.httprequest.referrer or '/web/login')
             return request.redirect(checkout_landpage_redirect)
         raise UserError('Landpage de Productos sin definir. Revise la configuración de PayU Latam')
-    """
 
     @http.route(['/shop/confirmation'], type='http', auth="public", website=True, sitemap=False)
     def payment_confirmation(self, **post):
