@@ -2152,7 +2152,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 credit_card_name: {
                     required: true,
                     minlength: 3,
-                    maxlength: 15,
+                    maxlength: 30,
                     lettersonly: true,
                 },
                 credit_card_billing_firstname: {
@@ -2204,8 +2204,8 @@ odoo.define('web_sale_extended.payment_process', function(require) {
             messages: {
                 credit_card_number: {
                     required: "¡Upss! tu número de tarjeta es requerido",
-                    minlength: "¡Upss! debe contener entre 13y 16 digitos",
-                    maxlength: "¡Upss! debe contener entre 13y 16 digitos"
+                    minlength: "¡Upss! debe contener entre 13 y 16 digitos",
+                    maxlength: "¡Upss! debe contener entre 13 y 16 digitos"
                 },
                 credit_card_code: {
                     required: "¡Upss! el código de seguridad es requerido",
@@ -2214,7 +2214,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 credit_card_name: {
                     required: "¡Upss! el nombre de tajeta es requerido",
                     minlength: "¡Upss! debe contener 3 o más caracteres",
-                    maxlength: "¡Upss! debe contener máximo 15 caracteres",
+                    maxlength: "¡Upss! debe contener máximo 30 caracteres",
                     lettersonly: "¡Upss! debe contener solo letras"
                 },
                 credit_card_partner_phone: {
