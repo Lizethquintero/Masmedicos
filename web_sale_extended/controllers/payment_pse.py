@@ -156,8 +156,8 @@ class WebsiteSaleExtended(WebsiteSale):
             return request.render("web_sale_extended.payulatam_success_process_pse", render_values)
         elif response['transactionResponse']['state'] == 'PENDING':
             order.action_payu_confirm()
-            request.session['sale_order_id'] = None
-            request.session['sale_transaction_id'] = None
+            #request.session['sale_order_id'] = None
+            #request.session['sale_transaction_id'] = None
             order.write({
                 'payulatam_order_id': response['transactionResponse']['orderId'],
                 'payulatam_transaction_id': response['transactionResponse']['transactionId'],

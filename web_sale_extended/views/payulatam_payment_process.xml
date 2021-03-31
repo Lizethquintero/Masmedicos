@@ -686,7 +686,7 @@
                                                 <font color="#39b54a">
                                                   <span style="font-size:36px;">Proceso de pago PSE Aprobado</span>
                                                 </font><br/>
-                                                <font color="#39b54a" t-if="response.get('message')">
+                                                <!--<font color="#39b54a" t-if="response.get('message')">
                                                   <span style="font-size:18px;">Mensaje de la Entidad: <t t-esc="response.get('message')"/></span>
                                                 </font><br/>
                                                 <font color="#39b54a" t-if="response.get('lapResponseCode')">
@@ -708,7 +708,7 @@
                                                 </font><br/>
                                                 <font color="#39b54a" t-if="response.get('transactionId')">
                                                   <span style="font-size:18px;">ID Transacción: <t t-esc="response.get('transactionId')"/></span>
-                                                </font><br/>
+                                                </font><br/>-->
                                             </t>
                                             <br/>
                                         </div>
@@ -716,7 +716,7 @@
                                             <div style="text-align:center;">
                                                 <span style="font-size:18px;">
                                                     Ahora debes registrar el asegurado principal y los benefiarios de tú plan 
-                                                    <t t-esc="order_id.main_product_id"/>.
+                                                    <t t-esc="order_id.main_product_id.name"/>.
                                                 </span>
                                             </div>
                                         </t>

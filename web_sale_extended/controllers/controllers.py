@@ -338,6 +338,8 @@ class WebsiteSaleExtended(WebsiteSale):
         ''' Captura de datos del beneficiario más no guarda informacion '''
         _logger.info("**BENEFICIARY**")
         order = request.env['sale.order'].sudo().browse(order_id)
+        request.session['sale_order_id'] = None
+        request.session['sale_transaction_id'] = None
         
         #redirection = self.checkout_redirection(order)
         #if redirection:
@@ -368,16 +370,25 @@ class WebsiteSaleExtended(WebsiteSale):
         _logger.info(kwargs)
 
         order = request.website.sale_get_order()
-        #redirection = self.checkout_redirection(order)
-        #if redirection:
-        #    return redirection
-
+        if not order and kwargs['order_id']:
+            order = request.env['sale.order'].sudo().browse(int(kwargs['order_id']))
+            
+        """ si la orden esta en estado confirmado hay que reenviar a landpage"""
+        if order.state == 'sale':
+            redirection = self.checkout_redirection(order)
+            if redirection:
+                return redirection
         order_detail = order.order_line[0]
+
+        
+
+        
         Partner = order.partner_id
         BeneficiaryPartner = request.env['res.partner'].sudo()
+        _logger.error('222*****************++++++++')
         Subscription = order_detail.subscription_id
         beneficiary_list = []
-
+        
         Partner.sudo().write({
             'firstname': kwargs['name'],
             'lastname': kwargs['lastname'],
@@ -645,6 +656,7 @@ class WebsiteSaleExtended(WebsiteSale):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
     
+    """
     @http.route([
         '''/shop''',
         '''/shop/page/<int:page>''',
@@ -657,6 +669,7 @@ class WebsiteSaleExtended(WebsiteSale):
             #return request.redirect(request.httprequest.referrer or '/web/login')
             return request.redirect(checkout_landpage_redirect)
         raise UserError('Landpage de Productos sin definir. Revise la configuración de PayU Latam')
+    """
 
     @http.route(['/shop/confirmation'], type='http', auth="public", website=True, sitemap=False)
     def payment_confirmation(self, **post):
