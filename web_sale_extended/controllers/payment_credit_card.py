@@ -213,7 +213,7 @@ class WebsiteSaleExtended(WebsiteSale):
                 <b>Código:</b> %s<br/>
                 <b>Error:</b> %s
             """ % (
-                response['transactionResponse']['code'],
+                response['code'],
                 response['error'], 
             )
             order.message_post(body=body_message, type="comment")
