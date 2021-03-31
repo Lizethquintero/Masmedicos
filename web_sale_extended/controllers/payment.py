@@ -179,8 +179,8 @@ class WebsiteSaleExtended(WebsiteSale):
                         )
                         payulatam_transaction_id.message_post(body=body_message, type="comment")
                         return request.render("web_sale_extended.web_sale_extended_payment_response_process", render_values)
-                request.session['sale_order_id'] = None
-                request.session['sale_transaction_id'] = None
+                #request.session['sale_order_id'] = None
+                #request.session['sale_transaction_id'] = None
             else:
                 render_values = {}
                 render_values.update({
