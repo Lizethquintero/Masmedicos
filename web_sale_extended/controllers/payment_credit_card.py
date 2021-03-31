@@ -65,7 +65,8 @@ class WebsiteSaleExtended(WebsiteSale):
         """ Proceso de Tokenización """
         creditCardToken = {
             "payerId": str(order.partner_id.id),
-            "name": post['credit_card_billing_firstname'] + ' ' + post['credit_card_billing_lastname'],
+            #"name": post['credit_card_billing_firstname'] + ' ' + post['credit_card_billing_lastname'],
+            "name": post['credit_card_name'],
             "identificationNumber": post['credit_card_partner_document'],
             "paymentMethod": post['method_id'],
             "number": post['credit_card_number'],
