@@ -1864,7 +1864,6 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
     
     
     $("#submit_beneficiaries").on('click', function(e){
-      alert('prueba');
       /*
       var calendar_datetime = $(".appointment_portal_edit_form input[name='calendar_datetime']").val();
       if (calendar_datetime === '' || calendar_datetime === null || calendar_datetime === 'undefined'){
@@ -1874,7 +1873,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
       $(".appointment_portal_edit_form").submit();
       */
       //a-submit a-submit-disable a-submit-loading
-      $("#submit_beneficiaries").hide();
+      //$("#submit_beneficiaries").hide();
       return true;
     });
 
