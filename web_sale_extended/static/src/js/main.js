@@ -1168,6 +1168,10 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
             return true;
         }, "¡Upss! número de documento repetido");
     
+        $.validator.addMethod("email2", function(value, element) {
+            return this.optional(element) || /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test(value);
+        }, "¡Upss! deben contener caracteres validos");
+    
 
     $("#beneficiary").validate({
             rules: {
@@ -1189,7 +1193,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 email: {
                     required: true,
-                    email: true
+                    email2: true
                 },
                 phone: {
                     required: true,
@@ -1303,7 +1307,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfemail1: {
                     required: true,
-                    email: true
+                    email2: true
                 },
                 bfphone1: {
                     required: true,
@@ -1386,7 +1390,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfemail2: {
                     required: true,
-                    email: true
+                    email2: true
                 },
                 bfphone2: {
                     required: true,
@@ -1469,7 +1473,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfemail3: {
                     required: true,
-                    email: true
+                    email2: true
                 },
                 bfphone3: {
                     required: true,
@@ -1552,7 +1556,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfemail4: {
                     required: true,
-                    email: true
+                    email2: true
                 },
                 bfphone4: {
                     required: true,
@@ -1635,7 +1639,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfemail5: {
                     required: true,
-                    email: true
+                    email2: true
                 },
                 bfphone5: {
                     required: true,
@@ -1718,7 +1722,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfemail6: {
                     required: true,
-                    email: true
+                    email2: true
                 },
                 bfphone6: {
                     required: true,
@@ -1795,7 +1799,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 email: {
                     required: "¡Upss! un email es requerido",
-                    email: "¡Upss! escribe un email valido"
+                    email2: "¡Upss! escribe un email valido"
                 },
                 phone: {
                     required: "¡Upss! un telefono es requerido",
@@ -1853,7 +1857,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfemail1: {
                     required: "¡Upss! un email es requerido",
-                    email: "¡Upss! escribe un email valido"
+                    email2: "¡Upss! escribe un email valido"
                 },
                 bfphone1: {
                     required: "¡Upss! un telefono es requerido",
@@ -1906,7 +1910,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfemail2: {
                     required: "¡Upss! un email es requerido",
-                    email: "¡Upss! escribe un email valido"
+                    email2: "¡Upss! escribe un email valido"
                 },
                 bfphone2: {
                     required: "¡Upss! un telefono es requerido",
@@ -1959,7 +1963,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfemail3: {
                     required: "¡Upss! tu email es requerido",
-                    email: "Escribe un email valido"
+                    email2: "Escribe un email valido"
                 },
                 bfphone3: {
                     required: "¡Upss! tu telefono es requerido",
@@ -2012,7 +2016,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfemail4: {
                     required: "¡Upss! tu email es requerido",
-                    email: "Escribe un email valido"
+                    email2: "Escribe un email valido"
                 },
                 bfphone4: {
                     required: "¡Upss! tu telefono es requerido",
@@ -2065,7 +2069,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfemail5: {
                     required: "¡Upss! tu email es requerido",
-                    email: "Escribe un email valido"
+                    email2: "Escribe un email valido"
                 },
                 bfphone5: {
                     required: "¡Upss! tu telefono es requerido",
@@ -2118,7 +2122,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfemail6: {
                     required: "¡Upss! tu email es requerido",
-                    email: "Escribe un email valido"
+                    email2: "Escribe un email valido"
                 },
                 bfphone6: {
                     required: "¡Upss! tu telefono es requerido",
@@ -2478,24 +2482,24 @@ odoo.define('web_sale_extended.payment_process', function(require) {
         }, "¡Upss! Fecha de Vencimiento Invalida");
         
         $.validator.addMethod("lettersnumberonly_creditcard", function(value, element) {
-            var document = $("select[name='credit_card_partner_document']").val();
-            if (document == '7') { //pasaporte
+            var document = $("select[name='credit_card_partner_type']").val();
+            if (document == 'PP') { //pasaporte
                 return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
             } else {
                 return this.optional(element) || /^[0-9]*$/.test(value);
             }
         }, "¡Upss! deben ser ser solo letras");
         $.validator.addMethod("lettersnumberonly_cash", function(value, element) {
-            var document = $("select[name='cash_partner_document']").val();
-            if (document == '7') { //pasaporte
+            var document = $("select[name='cash_partner_type']").val();
+            if (document == 'PP') { //pasaporte
                 return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
             } else {
                 return this.optional(element) || /^[0-9]*$/.test(value);
             }
         }, "¡Upss! deben ser ser solo letras");
         $.validator.addMethod("lettersnumberonly_pse", function(value, element) {
-            var document = $("select[name='pse_partner_document']").val();
-            if (document == '7') { //pasaporte
+            var document = $("select[name='pse_partner_type']").val();
+            if (document == 'PP') { //pasaporte
                 return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
             } else {
                 return this.optional(element) || /^[0-9]*$/.test(value);
@@ -2503,7 +2507,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
         }, "¡Upss! deben ser ser solo letras");
         $.validator.addMethod("documentrange_credit_card", function(value, element) {
             var document = $("select[name='credit_card_partner_document']").val();
-            if (document == '3') { //cédula de ciudadanía
+            if (document == 'CC') { //cédula de ciudadanía
                 if ($.isNumeric(value) && (value < 99999 || value > 999999999999)) {
                     return false;
                 } else {
@@ -2514,7 +2518,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
         }, "¡Upss! cantidad de digitos no es correcto");
         $.validator.addMethod("documentrange_cash", function(value, element) {
             var document = $("select[name='cash_partner_document']").val();
-            if (document == '3') { //cédula de ciudadanía
+            if (document == 'CC') { //cédula de ciudadanía
                 if ($.isNumeric(value) && (value < 99999 || value > 999999999999)) {
                     return false;
                 } else {
@@ -2525,7 +2529,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
         }, "¡Upss! cantidad de digitos no es correcto");
         $.validator.addMethod("documentrange_pse", function(value, element) {
             var document = $("select[name='pse_partner_document']").val();
-            if (document == '3') { //cédula de ciudadanía
+            if (document == 'CC') { //cédula de ciudadanía
                 if ($.isNumeric(value) && (value < 99999 || value > 999999999999)) {
                     return false;
                 } else {
@@ -2534,6 +2538,11 @@ odoo.define('web_sale_extended.payment_process', function(require) {
             }
             return true;
         }, "¡Upss! cantidad de digitos no es correcto");
+        
+        $.validator.addMethod("email2", function(value, element) {
+            return this.optional(element) || /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test(value);
+        }, "¡Upss! deben contener caracteres validos");
+
 
         $("#payulatam-payment-form").validate({
             rules: {
@@ -2565,7 +2574,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 },
                 credit_card_billing_email: {
                     required: true,
-                    email: true,
+                    email2: true,
                 },
                 credit_card_partner_phone: {
                     required: true,
@@ -2627,7 +2636,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
 
                 },
                 credit_card_billing_email: {
-                    email: "¡Upss! debe registrar un correo valido",
+                    email2: "¡Upss! debe registrar un correo valido",
                 },
                 credit_card_billing_firstname: {
                     required: "¡Upss! tu(s) nombre(s) es requerido",
@@ -2686,7 +2695,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 },
                 cash_billing_email: {
                     required: true,
-                    email: true,
+                    email2: true,
                 },
                 cash_partner_street: {
                     required: true,
@@ -2722,7 +2731,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 },
                 cash_billing_email: {
                     required: "¡Upss! tu email es requerido",
-                    email: "¡Upss! debe contener un correo valido"
+                    email2: "¡Upss! debe contener un correo valido"
                 },
                 cash_partner_street: {
                     required: "¡Upss! tu documento es requerido",
@@ -2763,7 +2772,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 },
                 pse_billing_email: {
                     required: true,
-                    email: true,
+                    email2: true,
                 },
                 pse_partner_street: {
                     required: true,
@@ -2791,7 +2800,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 },
                 pse_billing_email: {
                     required: "¡Upss! tu email es requerido",
-                    email: "¡Upss! debe contener un correo valido"
+                    email2: "¡Upss! debe contener un correo valido"
                 },
                 pse_partner_street: {
                     required: "¡Upss! tu documento es requerido",

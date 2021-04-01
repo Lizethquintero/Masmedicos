@@ -1274,7 +1274,7 @@
                                         <div class="col-lg-2 col-md-2">
                                             <div class="form-group">
                                                 <label class="col-form-label" for="credit_card_partner_type" style="color:#FFF !important;">.</label>
-                                                <select name="credit_card_due_day" class="form-control">
+                                                <select name="credit_card_partner_type" class="form-control">
                                                     <option value="CC">C.C.</option>
                                                     <option value="CE">CE</option>
                                                     <option value="NIT">NIT</option>
