@@ -185,6 +185,7 @@ class WebsiteSaleExtended(WebsiteSale):
                 'order_Id': response['transactionResponse']['orderId'],
                 'order_id': order,
             })
+            #order.action_cancel()
             return request.render("web_sale_extended.payulatam_rejected_process_cash", render_values)
         else:
             error = 'Transacción en estado %s: %s' % (

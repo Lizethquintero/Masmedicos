@@ -310,6 +310,20 @@ class WebsiteSaleExtended(WebsiteSale):
                 'order_Id': response['transactionResponse']['orderId'],
                 'order_id': order
             })
+            body_message = """
+                <b><span style='color:red;'>PayU Latam - Transacción de pago con tarjeta de crédito</span></b><br/>
+                <b>Orden ID:</b> %s<br/>
+                <b>Transacción ID:</b> %s<br/>
+                <b>Estado:</b> %s<br/>
+                <b>Código Respuesta:</b> %s
+            """ % (
+                response['transactionResponse']['orderId'], 
+                response['transactionResponse']['transactionId'], 
+                'RECHAZADO', 
+                response['transactionResponse']['responseCode']
+            )
+            order.message_post(body=body_message, type="comment")
+            #order.action_cancel()
             return request.render("web_sale_extended.payulatam_rejected_process", render_values)
         else:
             error = 'Transacción en estado %s: %s' % (

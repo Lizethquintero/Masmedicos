@@ -312,6 +312,10 @@ class SaleOrder(models.Model):
                             sale._send_order_payu_latam_rejected()
                             sale.action_cancel()
                         if response['result']['payload']['state'] == 'APPROVED':
+                            order.write({
+                                'payulatam_state': 'TRANSACCIÓN EN EFECTIVO APROBADA',
+                            })
+                            order.action_payu_approved()
                             message = """<b><span style='color:green;'>PayU Latam - Transacción en efectivo aprobada</span></b><br/>
                             <b>Respuesta:</b> %s
                             """ % (response['result']['payload'])
@@ -347,6 +351,10 @@ class SaleOrder(models.Model):
                             sale._send_order_payu_latam_rejected()
                             sale.action_cancel()
                         if response['result']['payload']['state'] == 'APPROVED':
+                            order.write({
+                                'payulatam_state': 'TRANSACCIÓN PSE APROBADA',
+                            })
+                            order.action_payu_approved()
                             message = """<b><span style='color:green;'>PayU Latam - Transacción PSE aprobada</span></b><br/>
                             <b>Respuesta:</b> %s
                             """ % (response['result']['payload'])

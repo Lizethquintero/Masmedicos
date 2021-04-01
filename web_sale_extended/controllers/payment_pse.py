@@ -226,6 +226,7 @@ class WebsiteSaleExtended(WebsiteSale):
                 response['transactionResponse']['responseCode']
             )
             order.message_post(body=body_message, type="comment")
+            #order.action_cancel()
             return request.render("web_sale_extended.payulatam_rejected_process_pse", render_values)
         else:
             error = 'Se recibió un estado no reconocido para el pago de PayU Latam %s: %s, set as error' % (

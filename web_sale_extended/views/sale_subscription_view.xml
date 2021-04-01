@@ -51,13 +51,13 @@
                     <field name="street" string="Dirección 1"/>
                     <field name="street2" string="Dirección 2"/>
                     <field name="city_name" string="Ciudad"/>
-                    <field name="state_id" string="Estado"/>
+                    <field name="marital_status" string="Estado Civil"/>
                     <field name="country" string="País"/>
                     <field name="partner_zip_code" string="Código Postal"/>
                     <field name="phone" string="Teléfono"/>
                     <field name="email" string="E-Mail"/>
                     <field name="localization" string="Localización"/>
-                    <field name="email" string="Código Clase PALIG"/>
+                    <field name="palig" string="Código Clase PALIG"/>
                     <field name="recurring_interval" string="Tipo de Inscripción PALIG"/>
                     <field name="salary" string="Salario"/>
                     <field name="salary_mode" string="Modo de Salario"/>

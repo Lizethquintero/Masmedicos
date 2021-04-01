@@ -7,6 +7,14 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+class ResPartnerDocumentType(models.Model):
+    _inherit = 'res.partner.document.type'
+    
+    abbreviation = fields.Char('Abreviación')
+    
+    
+
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
@@ -35,26 +43,3 @@ class ResPartner(models.Model):
     def _get_website_partner_type(self):
         for record in self:
             record.website_partner_type = record.zip + record.street
-
-    #@api.depends("birthdate_date")
-    #def _compute_age(self):
-    #    for record in self:
-    #       age = 0
-    #        if record.birthdate_date:
-    #            age = relativedelta(fields.Date.today(), record.birthdate_date).years
-    #        record.age = age
-
-
-# class web_sale_extended(models.Model):
-#     _name = 'web_sale_extended.web_sale_extended'
-#     _description = 'web_sale_extended.web_sale_extended'
-
-#     name = fields.Char()
-#     value = fields.Integer()
-#     value2 = fields.Float(compute="_value_pc", store=True)
-#     description = fields.Text()
-#
-#     @api.depends('value')
-#     def _value_pc(self):
-#         for record in self:
-#             record.value2 = float(record.value) / 100

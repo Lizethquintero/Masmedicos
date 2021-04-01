@@ -694,13 +694,13 @@
                                                 </font><br/>
                                                 <font color="#39b54a" t-if="response.get('transactionId')">
                                                   <span style="font-size:18px;">ID Transacción: <t t-esc="response.get('transactionId')"/></span>
-                                                </font><br/>
+                                                </font><br/>-->
                                             </t>
                                             <t t-if="response.get('lapTransactionState') != 'APPROVED'">
                                                 <font color="#39b54a">
                                                   <span style="font-size:36px;">Proceso de pago PSE en espera</span>
                                                 </font><br/>
-                                                <font color="#39b54a" t-if="response.get('message')">
+                                                <!--<font color="#39b54a" t-if="response.get('message')">
                                                   <span style="font-size:18px;">Mensaje de la Entidad: <t t-esc="response.get('message')"/></span>
                                                 </font><br/>
                                                 <font color="#39b54a" t-if="response.get('lapResponseCode')">
@@ -715,8 +715,8 @@
                                         <t t-if="response.get('lapTransactionState') == 'APPROVED'">
                                             <div style="text-align:center;">
                                                 <span style="font-size:18px;">
-                                                    Ahora debes registrar el asegurado principal y los benefiarios de tú plan 
-                                                    <t t-esc="order_id.main_product_id.name"/>.
+                                                    Ahora debes registrar el asegurado principal y los beneficiarios de tú 
+                                                    <t t-esc="order_detail[0].product_template_id.name"/><!--<t t-esc="order_id.main_product_id.name"/>-->.
                                                 </span>
                                             </div>
                                         </t>
@@ -743,14 +743,16 @@
                                         </a>
                                     </t>
                                     <t t-if="response.get('lapTransactionState') != 'APPROVED'">
+                                        <!--Cambio de texto del boton cuando el pago por pse es rechazado-->
                                         <a class="btn btn-primary" 
                                            id="submit_pse_end" 
                                            data-original-title="" 
                                            title="" 
                                            aria-describedby="tooltip188699"
-                                           style="color:#FFF;">Terminar Proceso de Compra
+                                           style="color:#FFF;">Intentalo de nuevo<!-- style="color:#FFF;">Terminar Proceso de Compra-->
                                            <i class="fa fa-chevron-right"/>
                                         </a>
+                                        <!--FIN Cambio de texto del boton cuando el pago por pse es rechazado-->
                                     </t>
                                     <input type="hidden" name="order_id" t-att-value="order_id.id"/>
                                   </div>
@@ -850,14 +852,16 @@
                                 </div>
                                 
                                 <div class="s_btn text-center pt16 pb16" data-name="Button">
+                                    <!--cambio de texto cuando el pago de pse es rechazado segundo comentariado-->
                                     <a class="btn btn-primary" 
                                        id="submit_pse_payment_process" 
                                        data-original-title="" 
                                        title="" 
                                        aria-describedby="tooltip188699"
-                                       style="color:#FFF;">Ir al proceso de Pago
+                                       style="color:#FFF;">Intentalo de nuevo<!-- style="color:#FFF;">Ir al proceso de Pago-->
                                        <i class="fa fa-chevron-right"/>
                                     </a>
+                                    <!--FIN cambio de texto cuando el pago de pse es rechazado segundo comentariado-->
                                     <input type="hidden" name="order_id" t-att-value="order_id.id"/>
                                   </div>
                             </div>

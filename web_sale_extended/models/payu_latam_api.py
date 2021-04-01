@@ -286,7 +286,6 @@ class PayULatamApi(models.TransientModel):
             return dict(payment_method_list)
         
         
-        
     def payulatam_get_response_transaction(self, transactionID):
         command = 'TRANSACTION_RESPONSE_DETAIL'
         query = {'command': command}

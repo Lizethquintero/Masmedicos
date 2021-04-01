@@ -31,7 +31,7 @@ class SftpReportLine(models.Model):
     sponsor_payment_url = fields.Char('Pasarela de Pagos',readonly=True)
     country = fields.Char('País',readonly=True)
     email = fields.Char('Email',readonly=True)
-    
+    marital_status = fields.Char('Estado Civil',readonly=True)
     phone = fields.Char('Teléfono Fijo',readonly=True)
     mobile = fields.Char('Teléfono',readonly=True)
     street = fields.Char('Dirección',readonly=True)
@@ -60,7 +60,7 @@ class SftpReportLine(models.Model):
     reference_initial = fields.Char('Referencia Inicial',readonly=True)
     insegurability_test = fields.Char('Prueba de Asegurabilidad',readonly=True)
     subsidiary = fields.Char('Subsidiaria',readonly=True)
-    
+    palig = fields.Char('Palig',readonly=True)
   
 
     
@@ -82,7 +82,8 @@ class SftpReportLine(models.Model):
         p.gender,
         p.identification_document,
         pro.default_code,
-        subtmpl.recurring_interval,
+        --subtmpl.recurring_interval,
+        ''::text as recurring_interval,
         '009'::varchar as sponsor_name,
         seq.sponsor_nit,
         seq.sponsor_payment_url,
@@ -104,7 +105,7 @@ class SftpReportLine(models.Model):
         ''::text as aniversary,
         sub.recurring_next_date as first_due,
         ''::text as second_identification,
-        rpdt.name as second_type_identification,
+        rpdt.code as second_type_identification,
         ''::text as insegurability_test,
         ''::text as subsidiary,
         ''::text as lifevolume,
@@ -115,7 +116,9 @@ class SftpReportLine(models.Model):
         ''::text as salary_mode,
         ''::text as salary,
         'A'::text as change_type,
-        ''::text as localization
+        ''::text as localization,
+        ''::text as palig,
+        p.marital_status as marital_status
         
         
         
@@ -133,6 +136,7 @@ class SftpReportLine(models.Model):
         left join sale_subscription_template subtmpl on subtmpl.id = sub.template_id
         
         where 1=1
+        order by sub.id desc
         );
         """
         self.env.cr.execute(query)
@@ -173,6 +177,7 @@ class SftpReportBeneficiaryLine(models.Model):
     state_id = fields.Char('Departamento',readonly=True)
     city_name = fields.Char('Ciudad',readonly=True)
     ocupation = fields.Char('Ocupación',readonly=True)
+    #palig = fields.Char('Palig',readonly=True)
     change_date = fields.Char('Ocupación',readonly=True)
     change_type = fields.Char('Ocupación',readonly=True)
     date_end = fields.Char('Ocupación',readonly=True)
@@ -231,6 +236,7 @@ class SftpReportBeneficiaryLine(models.Model):
         ''::text as salary_mode,
         ''::text as salary,
         ''::text as localization,
+        --''::text as palig,
         ''::text as change_date,
         'A'::text as change_type,
         ''::text as date_end
@@ -250,6 +256,7 @@ class SftpReportBeneficiaryLine(models.Model):
         left join sale_subscription_template subtmpl on subtmpl.id = sub.template_id
         
         where 1=1
+        order by sub.id desc
         );
         """
         self.env.cr.execute(query)

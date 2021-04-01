@@ -200,7 +200,7 @@ class WebsiteSaleExtended(WebsiteSale):
                     <b>Estado:</b> %s<br/>
                     <b>Código Respuesta:</b> %s<br/>
                 """ % (
-                    kwargs['reference_pol'],
+                    kwargs['reference_pol'], 
                     kwargs['transactionId'],
                     kwargs['lapTransactionState'],
                     kwargs['lapResponseCode'],
