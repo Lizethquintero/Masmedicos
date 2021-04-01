@@ -193,5 +193,18 @@ class WebsiteSaleExtended(WebsiteSale):
                 payulatam_transaction_id.action_cancel()
                 request.session['sale_order_id'] = None
                 request.session['sale_transaction_id'] = None
-                return request.render("web_sale_extended.web_sale_extended_payment_rejected_process", render_values)
+                body_message = """
+                    <b><span style='color:red;'>PayU Latam - Transacción de Pago PSE RECHAZADA</span></b><br/>
+                    <b>Orden ID:</b> %s<br/>
+                    <b>Transacción ID:</b> %s<br/>
+                    <b>Estado:</b> %s<br/>
+                    <b>Código Respuesta:</b> %s<br/>
+                """ % (
+                    kwargs['reference_pol'],
+                    kwargs['transactionId'],
+                    kwargs['lapTransactionState'],
+                    kwargs['lapResponseCode'],
+                )
+                payulatam_transaction_id.message_post(body=body_message, type="comment")
+                return request.render("web_sale_extended.payulatam_rejected_process_pse", render_values)
             
