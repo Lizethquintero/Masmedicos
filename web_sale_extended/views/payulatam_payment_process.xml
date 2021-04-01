@@ -716,7 +716,8 @@
                                             <div style="text-align:center;">
                                                 <span style="font-size:18px;">
                                                     Ahora debes registrar el asegurado principal y los beneficiarios de tú 
-                                                    <t t-esc="order_detail[0].product_template_id.name"/><!--<t t-esc="order_id.main_product_id.name"/>-->.
+							<!--<t t-esc="order_detail[0].product_template_id.name"/>-->
+							<t t-esc="order_id.main_product_id.name"/>.
                                                 </span>
                                             </div>
                                         </t>
