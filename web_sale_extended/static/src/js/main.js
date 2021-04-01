@@ -258,8 +258,11 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                     return true;
                 }
             }
-            return this.optional(element) || /^[0-9]*$/.test(value);
         }, "¡Upss! cantidad de digitos no es correcto");
+        
+        $.validator.addMethod("email2", function(value, element) {
+            return this.optional(element) || /^[a-zA-ZÀ-ÿ\u0024]+(\s*[a-zA-ZÀ-ÿ\u0024]*)*[a-zA-ZÀ-ÿ\u0024]/g.test(value);
+        }, "¡Upss! deben contener caracteres validos");
 
 
         $("#terminos").hide();
@@ -284,6 +287,7 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                 },
                 email: {
                     required: true,
+                    
                     email: true
                 },
                 phone: {
@@ -416,14 +420,14 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                 // },
                 email: {
                     required: "¡Upss! tu email es requerido",
-                    email: "¡Upss! escribe un email valido"
+                    email: "¡Upss! escribe un email valido",
+                    email2: "¡Upss! escribe un email valido"
                 },
                 phone: {
                     required: "¡Upss! tu telefono es requerido",
                     number: "¡Upss! este campo solo es numérico",
                     minlength: "¡Upss! debe tener 10 digitos",
                     maxlength: "¡Upss! debe tener 10 digitos"
-
                 },
                 document: {
                     required: "¡Upss! tu tipo de documento es requerido",
@@ -882,7 +886,6 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     return true;
                 }
             }
-            return this.optional(element) || /^[0-9]*$/.test(value);
         }, "¡Upss! cantidad de digitos no es correcto");
     $.validator.addMethod("documentrange1", function(value, element) {
             var document = $("select[name='bfnumero_documento1']").val();
@@ -893,7 +896,6 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     return true;
                 }
             }
-            return this.optional(element) || /^[0-9]*$/.test(value);
         }, "¡Upss! cantidad de digitos no es correcto");
     $.validator.addMethod("documentrange2", function(value, element) {
             var document = $("select[name='bfnumero_documento2']").val();
@@ -915,7 +917,6 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     return true;
                 }
             }
-            return this.optional(element) || /^[0-9]*$/.test(value);
         }, "¡Upss! cantidad de digitos no es correcto");
     $.validator.addMethod("documentrange4", function(value, element) {
             var document = $("select[name='bfnumero_documento4']").val();
@@ -926,7 +927,6 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     return true;
                 }
             }
-            return this.optional(element) || /^[0-9]*$/.test(value);
         }, "¡Upss! cantidad de digitos no es correcto");
     $.validator.addMethod("documentrange5", function(value, element) {
             var document = $("select[name='bfnumero_documento5']").val();
@@ -937,7 +937,6 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     return true;
                 }
             }
-            return this.optional(element) || /^[0-9]*$/.test(value);
         }, "¡Upss! cantidad de digitos no es correcto");
     $.validator.addMethod("documentrange6", function(value, element) {
             var document = $("select[name='bfnumero_documento6']").val();
@@ -948,17 +947,63 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     return true;
                 }
             }
-            return this.optional(element) || /^[0-9]*$/.test(value);
         }, "¡Upss! cantidad de digitos no es correcto");
-    $.validator.addMethod("uniquedocument", function(value, element) {
-            var numero_documento = $("select[name='numero_documento']").val();
-            var bfnumero_documento1 = $("select[name='bfnumero_documento1']").val();
-            var bfnumero_documento2 = $("select[name='bfnumero_documento2']").val();
-            var bfnumero_documento3 = $("select[name='bfnumero_documento3']").val();
-            var bfnumero_documento4 = $("select[name='bfnumero_documento4']").val();
-            var bfnumero_documento5 = $("select[name='bfnumero_documento5']").val();
-            var bfnumero_documento6 = $("select[name='bfnumero_documento6']").val();
-            if (value == numero_documento || value == bfnumero_documento1 || value == bfnumero_documento2 || value == bfnumero_documento3 || value == bfnumero_documento4 || value == bfnumero_documento5 || value == bfnumero_documento6) { //cédula de ciudadanía
+    
+    $.validator.addMethod("uniquedocument1", function(value, element) {
+            var numero_documento = $("input[name='numero_documento']").val();
+            var document_type = $("select[name='document_type']").val();
+            var bfdocument1 = $("select[name='bfdocument1']").val();
+            if (value == numero_documento && document_type == bfdocument1) { //cédula de ciudadanía
+                return false;
+            }
+            return true;
+        }, "¡Upss! número de documento repetido");
+    
+    $.validator.addMethod("uniquedocument2", function(value, element) {
+            var numero_documento = $("input[name='numero_documento']").val();
+            var document_type = $("select[name='document_type']").val();
+            var bfdocument2 = $("select[name='bfdocument2']").val();
+            if (value == numero_documento && document_type == bfdocument2) { //cédula de ciudadanía
+                return false;
+            }
+            return true;
+        }, "¡Upss! número de documento repetido");
+    
+    $.validator.addMethod("uniquedocument3", function(value, element) {
+            var numero_documento = $("input[name='numero_documento']").val();
+            var document_type = $("select[name='document_type']").val();
+            var bfdocument3 = $("select[name='bfdocument3']").val();
+            if (value == numero_documento && document_type == bfdocument3) { //cédula de ciudadanía
+                return false;
+            }
+            return true;
+        }, "¡Upss! número de documento repetido");
+    
+    $.validator.addMethod("uniquedocument4", function(value, element) {
+            var numero_documento = $("input[name='numero_documento']").val();
+            var document_type = $("select[name='document_type']").val();
+            var bfdocument4 = $("select[name='bfdocument4']").val();
+            if (value == numero_documento && document_type == bfdocument4) { //cédula de ciudadanía
+                return false;
+            }
+            return true;
+        }, "¡Upss! número de documento repetido");
+    
+    $.validator.addMethod("uniquedocument5", function(value, element) {
+            var numero_documento = $("input[name='numero_documento']").val();
+            var document_type = $("select[name='document_type']").val();
+            var bfdocument5 = $("select[name='bfdocument5']").val();
+            if (value == numero_documento && document_type == bfdocument5) { //cédula de ciudadanía
+                return false;
+            }
+            return true;
+        }, "¡Upss! número de documento repetido");
+    
+    $.validator.addMethod("uniquedocument6", function(value, element) {
+            var numero_documento = $("input[name='numero_documento']").val();
+            var document_type = $("select[name='document_type']").val();
+            var bfdocument6 = $("select[name='bfdocument6']").val();
+            if (value == numero_documento && document_type == bfdocument6) { //cédula de ciudadanía
                 return false;
             }
             return true;
@@ -1008,10 +1053,11 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     required: true,
                     lettersnumberonly0: true,
                     documentrange: true,
-                    uniquedocument: true,
                 },
                 address: {
                     required: true,
+                    minlength: 3,
+                    maxlength: 100,
                 },
                 city: {
                     required: true,
@@ -1122,7 +1168,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     required: true,
                     lettersnumberonly1: true,
                     documentrange1: true,
-                    uniquedocument: true,
+                    uniquedocument1: true,
                 },
                 bfaddress1: {
                     required: true,
@@ -1205,7 +1251,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     required: true,
                     lettersnumberonly2: true,
                     documentrange2: true,
-                    uniquedocument: true,
+                    uniquedocument2: true,
                 },
                 bfaddress2: {
                     required: true,
@@ -1288,7 +1334,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     required: true,
                     lettersnumberonly3: true,
                     documentrange3: true,
-                    uniquedocument: true,
+                    uniquedocument3: true,
                 },
                 bfaddress3: {
                     required: true,
@@ -1371,7 +1417,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     required: true,
                     lettersnumberonly4: true,
                     documentrange4: true,
-                    uniquedocument: true,
+                    uniquedocument4: true,
                 },
                 bfaddress4: {
                     required: true,
@@ -1454,7 +1500,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     required: true,
                     lettersnumberonly5: true,
                     documentrange5: true,
-                    uniquedocument: true,
+                    uniquedocument5: true,
                 },
                 bfaddress5: {
                     required: true,
@@ -1537,7 +1583,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     required: true,
                     lettersnumberonly6: true,
                     documentrange6: true,
-                    uniquedocument: true,
+                    uniquedocument6: true,
                 },
                 bfaddress6: {
                     required: true,
@@ -1615,6 +1661,8 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 address: {
                     required: "¡Upss! una dirección es requerida",
+                    minlength: "¡Upss! una dirección contiene más de 3 caracteres",
+                    maxlength: "¡Upss! tu dirección no puede tener más de 100 caracteres",
                 },
                 city: {
                     required: "¡Upss! una ciudad es requerida",
@@ -1669,7 +1717,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     required: "¡Upss! un numero de documento es requerido",
                     lettersnumberonly1: "¡Upss! solo números (y letras para pasaporte)",
                     documentrange1: "¡Upss! cantidad de digitos no es correcto",
-                    uniquedocument: "¡Upss! número de documento repetido",
+                    uniquedocument1: "¡Upss! número de documento repetido",
                 },
                 bfaddress1: {
                     required: "¡Upss! una dirección es requerida",
@@ -1722,7 +1770,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     required: "¡Upss! un numero de documento es requerido",
                     lettersnumberonly2: "¡Upss! solo números (y letras para pasaporte)",
                     documentrange2: "¡Upss! cantidad de digitos no es correcto",
-                    uniquedocument: "¡Upss! número de documento repetido",
+                    uniquedocument2: "¡Upss! número de documento repetido",
                 },
                 bfaddress2: {
                     required: "¡Upss! una dirección es requerida",
@@ -1775,7 +1823,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     required: "¡Upss! tu numero de documento es requerido",
                     lettersnumberonly3: "¡Upss! solo números (y letras para pasaporte)",
                     documentrange3: "¡Upss! cantidad de digitos no es correcto",
-                    uniquedocument: "¡Upss! número de documento repetido",
+                    uniquedocument3: "¡Upss! número de documento repetido",
                 },
                 bfaddress3: {
                     required: "¡Upss! tu dirección es requerido",
@@ -1828,7 +1876,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     required: "¡Upss! tu numero de documento es requerido",
                     lettersnumberonly4: "¡Upss! solo números (y letras para pasaporte)",
                     documentrange4: "¡Upss! cantidad de digitos no es correcto",
-                    uniquedocument: "¡Upss! número de documento repetido",
+                    uniquedocument4: "¡Upss! número de documento repetido",
                 },
                 bfaddress4: {
                     required: "¡Upss! tu dirección es requerido",
@@ -1881,7 +1929,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     required: "¡Upss! tu numero de documento es requerido",
                     lettersnumberonly5: "¡Upss! solo números (y letras para pasaporte)",
                     documentrange5: "¡Upss! cantidad de digitos no es correcto",
-                    uniquedocument: "¡Upss! número de documento repetido",
+                    uniquedocument5: "¡Upss! número de documento repetido",
                 },
                 bfaddress5: {
                     required: "¡Upss! tu dirección es requerido",
@@ -1934,7 +1982,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     required: "¡Upss! tu numero de documento es requerido",
                     lettersnumberonly6: "¡Upss! solo números (y letras para pasaporte)",
                     documentrange6: "¡Upss! cantidad de digitos no es correcto",
-                    uniquedocument: "¡Upss! número de documento repetido",
+                    uniquedocument6: "¡Upss! número de documento repetido",
                 },
                 bfaddress6: {
                     required: "¡Upss! tu dirección es requerido",
@@ -2301,7 +2349,6 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                     return true;
                 }
             }
-            return this.optional(element) || /^[0-9]*$/.test(value);
         }, "¡Upss! cantidad de digitos no es correcto");
         $.validator.addMethod("documentrange_cash", function(value, element) {
             var document = $("select[name='cash_partner_document']").val();
@@ -2312,7 +2359,6 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                     return true;
                 }
             }
-            return this.optional(element) || /^[0-9]*$/.test(value);
         }, "¡Upss! cantidad de digitos no es correcto");
         $.validator.addMethod("documentrange_pse", function(value, element) {
             var document = $("select[name='pse_partner_document']").val();
@@ -2323,7 +2369,6 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                     return true;
                 }
             }
-            return this.optional(element) || /^[0-9]*$/.test(value);
         }, "¡Upss! cantidad de digitos no es correcto");
 
         $("#payulatam-payment-form").validate({
@@ -2373,6 +2418,8 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 },
                 credit_card_partner_street: {
                     required: true,
+                    minlength: 3,
+                    maxlength: 100,
                 },
                 credit_card_city: {
                     required: true,
@@ -2434,6 +2481,8 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 },
                 credit_card_partner_street: {
                     required: "¡Upss! tu dirección es requerida",
+                    minlength: "¡Upss! una dirección contiene más de 3 caracteres",
+                    maxlength: "¡Upss! tu dirección no puede tener más de 100 caracteres",
                 },
                 credit_card_city: {
                     required: "¡Upss! tu ciudad es requerida",
@@ -2477,6 +2526,8 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 },
                 cash_partner_street: {
                     required: true,
+                    minlength: 3,
+                    maxlength: 100,
                 },
                 cash_country_id: {
                     required: true,
@@ -2511,6 +2562,8 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 },
                 cash_partner_street: {
                     required: "¡Upss! tu documento es requerido",
+                    minlength: "¡Upss! una dirección contiene más de 3 caracteres",
+                    maxlength: "¡Upss! tu dirección no puede tener más de 100 caracteres",
                 },
                 cash_country_id: {
                     required: "¡Upss! debes seleccionar un país",
@@ -2550,6 +2603,8 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 },
                 pse_partner_street: {
                     required: true,
+                    minlength: 3,
+                    maxlength: 100,
                 },
             },
             messages: {
@@ -2576,6 +2631,8 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 },
                 pse_partner_street: {
                     required: "¡Upss! tu documento es requerido",
+                    minlength: "¡Upss! una dirección contiene más de 3 caracteres",
+                    maxlength: "¡Upss! tu dirección no puede tener más de 100 caracteres",
                 },
             }
         });
