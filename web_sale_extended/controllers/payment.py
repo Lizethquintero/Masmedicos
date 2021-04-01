@@ -96,8 +96,12 @@ class WebsiteSaleExtended(WebsiteSale):
         _logger.error('**********************545+++++++++++++++++++++++++++++++++++++')
         _logger.error(kwargs)
         order = request.website.sale_get_order()
-        _logger.error(order)
-        _logger.error(order)
+        if not order and kwargs['transactionId']:
+            order = request.env['sale.order'].sudo().search([('payulatam_transaction_id', '=', kwargs['transactionId'])])
+        if not order:
+            redirection = self.checkout_redirection(order)
+            if redirection:
+                return redirection
         #redirection = self.checkout_redirection(order)
         #if redirection:
         #    return redirection
@@ -120,7 +124,7 @@ class WebsiteSaleExtended(WebsiteSale):
                     render_values.update({
                         'order_id': order,
                         'response': dict(kwargs),
-                        'order_detail': order.order_line,
+                        'order_detail': order.order_line[0],
                     })
                     """ Mensaje en la orden de venta con la respuesta de PayU """
                     body_message = """
