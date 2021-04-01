@@ -96,8 +96,9 @@ class WebsiteSaleExtended(WebsiteSale):
         _logger.error('**********************545+++++++++++++++++++++++++++++++++++++')
         _logger.error(kwargs)
         order = request.website.sale_get_order()
-        if not order and kwargs['transactionId']:
+        if not order and ('transactionId' in kwargs and kwargs['transactionId']):
             order = request.env['sale.order'].sudo().search([('payulatam_transaction_id', '=', kwargs['transactionId'])])
+            _logger.error(order)
         if not order:
             redirection = self.checkout_redirection(order)
             if redirection:
