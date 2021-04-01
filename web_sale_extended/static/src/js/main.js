@@ -262,7 +262,7 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
         }, "¡Upss! cantidad de digitos no es correcto");
         
         $.validator.addMethod("email2", function(value, element) {
-            return this.optional(element) || /^[a-zA-ZÀ-ÿ\u0024]+(\s*[a-zA-ZÀ-ÿ\u0024]*)*[a-zA-ZÀ-ÿ\u0024]/g.test(value);
+            return this.optional(element) || /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test(value);
         }, "¡Upss! deben contener caracteres validos");
 
 
@@ -288,8 +288,7 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                 },
                 email: {
                     required: true,
-                    
-                    email: true
+                    email2: true
                 },
                 phone: {
                     required: true,
@@ -958,7 +957,33 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
             var numero_documento = $("input[name='numero_documento']").val();
             var document_type = $("select[name='document_type']").val();
             var bfdocument1 = $("select[name='bfdocument1']").val();
-            if (value == numero_documento && document_type == bfdocument1) { //cédula de ciudadanía
+            
+            var bfnumero_documento2 = $("input[name='bfnumero_documento2']").val();
+            var bfdocument2 = $("select[name='bfdocument2']").val();
+            var bfnumero_documento3 = $("input[name='bfnumero_documento3']").val();
+            var bfdocument3 = $("select[name='bfdocument3']").val();
+            var bfnumero_documento4 = $("input[name='bfnumero_documento4']").val();
+            var bfdocument4 = $("select[name='bfdocument4']").val();
+            var bfnumero_documento5 = $("input[name='bfnumero_documento5']").val();
+            var bfdocument5 = $("select[name='bfdocument5']").val();
+            var bfnumero_documento6 = $("input[name='bfnumero_documento6']").val();
+            var bfdocument6 = $("select[name='bfdocument6']").val();
+            if (value == numero_documento && document_type == bfdocument1) {
+                return false;
+            }
+            if (value == bfnumero_documento2 && bfdocument1 == bfdocument2) {
+                return false;
+            }
+            if (value == bfnumero_documento3 && bfdocument1 == bfdocument3) {
+                return false;
+            }
+            if (value == bfnumero_documento4 && bfdocument1 == bfdocument4) {
+                return false;
+            }
+            if (value == bfnumero_documento5 && bfdocument1 == bfdocument5) {
+                return false;
+            }
+            if (value == bfnumero_documento6 && bfdocument1 == bfdocument6) {
                 return false;
             }
             return true;
@@ -968,7 +993,33 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
             var numero_documento = $("input[name='numero_documento']").val();
             var document_type = $("select[name='document_type']").val();
             var bfdocument2 = $("select[name='bfdocument2']").val();
-            if (value == numero_documento && document_type == bfdocument2) { //cédula de ciudadanía
+        
+            var bfnumero_documento1 = $("input[name='bfnumero_documento1']").val();
+            var bfdocument1 = $("select[name='bfdocument1']").val();
+            var bfnumero_documento3 = $("input[name='bfnumero_documento3']").val();
+            var bfdocument3 = $("select[name='bfdocument3']").val();
+            var bfnumero_documento4 = $("input[name='bfnumero_documento4']").val();
+            var bfdocument4 = $("select[name='bfdocument4']").val();
+            var bfnumero_documento5 = $("input[name='bfnumero_documento5']").val();
+            var bfdocument5 = $("select[name='bfdocument5']").val();
+            var bfnumero_documento6 = $("input[name='bfnumero_documento6']").val();
+            var bfdocument6 = $("select[name='bfdocument6']").val();
+            if (value == numero_documento && document_type == bfdocument2) {
+                return false;
+            }
+            if (value == bfnumero_documento1 && bfdocument2 == bfdocument1) {
+                return false;
+            }
+            if (value == bfnumero_documento3 && bfdocument2 == bfdocument3) {
+                return false;
+            }
+            if (value == bfnumero_documento4 && bfdocument2 == bfdocument4) {
+                return false;
+            }
+            if (value == bfnumero_documento5 && bfdocument2 == bfdocument5) {
+                return false;
+            }
+            if (value == bfnumero_documento6 && bfdocument2 == bfdocument6) {
                 return false;
             }
             return true;
@@ -978,7 +1029,33 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
             var numero_documento = $("input[name='numero_documento']").val();
             var document_type = $("select[name='document_type']").val();
             var bfdocument3 = $("select[name='bfdocument3']").val();
+        
+            var bfnumero_documento1 = $("input[name='bfnumero_documento1']").val();
+            var bfdocument1 = $("select[name='bfdocument1']").val();
+            var bfnumero_documento2 = $("input[name='bfnumero_documento2']").val();
+            var bfdocument2 = $("select[name='bfdocument2']").val();
+            var bfnumero_documento4 = $("input[name='bfnumero_documento4']").val();
+            var bfdocument4 = $("select[name='bfdocument4']").val();
+            var bfnumero_documento5 = $("input[name='bfnumero_documento5']").val();
+            var bfdocument5 = $("select[name='bfdocument5']").val();
+            var bfnumero_documento6 = $("input[name='bfnumero_documento6']").val();
+            var bfdocument6 = $("select[name='bfdocument6']").val();
             if (value == numero_documento && document_type == bfdocument3) { //cédula de ciudadanía
+                return false;
+            }
+            if (value == bfnumero_documento1 && bfdocument3 == bfdocument1) {
+                return false;
+            }
+            if (value == bfnumero_documento2 && bfdocument3 == bfdocument2) {
+                return false;
+            }
+            if (value == bfnumero_documento4 && bfdocument3 == bfdocument4) {
+                return false;
+            }
+            if (value == bfnumero_documento5 && bfdocument3 == bfdocument5) {
+                return false;
+            }
+            if (value == bfnumero_documento6 && bfdocument3 == bfdocument6) {
                 return false;
             }
             return true;
@@ -988,7 +1065,33 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
             var numero_documento = $("input[name='numero_documento']").val();
             var document_type = $("select[name='document_type']").val();
             var bfdocument4 = $("select[name='bfdocument4']").val();
+        
+            var bfnumero_documento1 = $("input[name='bfnumero_documento1']").val();
+            var bfdocument1 = $("select[name='bfdocument1']").val();
+            var bfnumero_documento2 = $("input[name='bfnumero_documento2']").val();
+            var bfdocument2 = $("select[name='bfdocument2']").val();
+            var bfnumero_documento3 = $("input[name='bfnumero_documento3']").val();
+            var bfdocument3 = $("select[name='bfdocument3']").val();
+            var bfnumero_documento5 = $("input[name='bfnumero_documento5']").val();
+            var bfdocument5 = $("select[name='bfdocument5']").val();
+            var bfnumero_documento6 = $("input[name='bfnumero_documento6']").val();
+            var bfdocument6 = $("select[name='bfdocument6']").val();
             if (value == numero_documento && document_type == bfdocument4) { //cédula de ciudadanía
+                return false;
+            }
+            if (value == bfnumero_documento1 && bfdocument4 == bfdocument1) {
+                return false;
+            }
+            if (value == bfnumero_documento2 && bfdocument4 == bfdocument2) {
+                return false;
+            }
+            if (value == bfnumero_documento3 && bfdocument4 == bfdocument3) {
+                return false;
+            }
+            if (value == bfnumero_documento5 && bfdocument4 == bfdocument5) {
+                return false;
+            }
+            if (value == bfnumero_documento6 && bfdocument4 == bfdocument6) {
                 return false;
             }
             return true;
@@ -998,7 +1101,33 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
             var numero_documento = $("input[name='numero_documento']").val();
             var document_type = $("select[name='document_type']").val();
             var bfdocument5 = $("select[name='bfdocument5']").val();
+        
+            var bfnumero_documento1 = $("input[name='bfnumero_documento1']").val();
+            var bfdocument1 = $("select[name='bfdocument1']").val();
+            var bfnumero_documento2 = $("input[name='bfnumero_documento2']").val();
+            var bfdocument2 = $("select[name='bfdocument2']").val();
+            var bfnumero_documento3 = $("input[name='bfnumero_documento3']").val();
+            var bfdocument3 = $("select[name='bfdocument3']").val();
+            var bfnumero_documento4 = $("input[name='bfnumero_documento4']").val();
+            var bfdocument4 = $("select[name='bfdocument4']").val();
+            var bfnumero_documento6 = $("input[name='bfnumero_documento6']").val();
+            var bfdocument6 = $("select[name='bfdocument6']").val();
             if (value == numero_documento && document_type == bfdocument5) { //cédula de ciudadanía
+                return false;
+            }
+            if (value == bfnumero_documento1 && bfdocument5 == bfdocument1) {
+                return false;
+            }
+            if (value == bfnumero_documento2 && bfdocument5 == bfdocument2) {
+                return false;
+            }
+            if (value == bfnumero_documento3 && bfdocument5 == bfdocument3) {
+                return false;
+            }
+            if (value == bfnumero_documento4 && bfdocument5 == bfdocument4) {
+                return false;
+            }
+            if (value == bfnumero_documento6 && bfdocument5 == bfdocument6) {
                 return false;
             }
             return true;
@@ -1008,7 +1137,32 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
             var numero_documento = $("input[name='numero_documento']").val();
             var document_type = $("select[name='document_type']").val();
             var bfdocument6 = $("select[name='bfdocument6']").val();
+            var bfnumero_documento1 = $("input[name='bfnumero_documento1']").val();
+            var bfdocument1 = $("select[name='bfdocument1']").val();
+            var bfnumero_documento2 = $("input[name='bfnumero_documento2']").val();
+            var bfdocument2 = $("select[name='bfdocument2']").val();
+            var bfnumero_documento3 = $("input[name='bfnumero_documento3']").val();
+            var bfdocument3 = $("select[name='bfdocument3']").val();
+            var bfnumero_documento4 = $("input[name='bfnumero_documento4']").val();
+            var bfdocument4 = $("select[name='bfdocument4']").val();
+            var bfnumero_documento5 = $("input[name='bfnumero_documento5']").val();
+            var bfdocument5 = $("select[name='bfdocument5']").val();
             if (value == numero_documento && document_type == bfdocument6) { //cédula de ciudadanía
+                return false;
+            }
+            if (value == bfnumero_documento1 && bfdocument6 == bfdocument1) {
+                return false;
+            }
+            if (value == bfnumero_documento2 && bfdocument6 == bfdocument2) {
+                return false;
+            }
+            if (value == bfnumero_documento3 && bfdocument6 == bfdocument3) {
+                return false;
+            }
+            if (value == bfnumero_documento4 && bfdocument6 == bfdocument4) {
+                return false;
+            }
+            if (value == bfnumero_documento5 && bfdocument6 == bfdocument5) {
                 return false;
             }
             return true;
@@ -2173,7 +2327,6 @@ odoo.define('web_sale_extended.payment_process', function(require) {
             consultarZipcodeCash(data_select);
         });
         function consultarCiudadesCreditCard(estado, elemento) {
-            console.log('3');
             $.ajax({
                 data: { 'departamento': estado },
                 url: "/search/cities",
@@ -2187,6 +2340,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                         $('#credit_card_city').append($("<option></option>")
                             .attr("value", obj.city_id).text(obj.city));
                     });
+                    $("select[name='credit_card_city']").val($("input[name='partner_city_id']").val());
                     $('#credit_card_city').selectpicker();
                     let data_select = $("#credit_card_city option:selected").val();
                     consultarZipcodeCreditCard(data_select);
@@ -2194,7 +2348,6 @@ odoo.define('web_sale_extended.payment_process', function(require) {
             });
         }
         function consultarCiudadesPSE(estado, elemento) {
-            console.log('2');
             $.ajax({
                 data: { 'departamento': estado },
                 url: "/search/cities",
@@ -2208,6 +2361,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                         $('#pse_city').append($("<option></option>")
                             .attr("value", obj.city_id).text(obj.city));
                     });
+                    $("select[name='pse_city']").val($("input[name='partner_city_id']").val());
                     $('#pse_city').selectpicker();
                     let data_select = $("#pse_city option:selected").val();
                     consultarZipcodePSE(data_select);
@@ -2228,6 +2382,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                         $('#cash_city').append($("<option></option>")
                             .attr("value", obj.city_id).text(obj.city));
                     });
+                    $("select[name='cash_city']").val($("input[name='partner_city_id']").val());
                     $('#cash_city').selectpicker();
                     let data_select = $("#cash_city option:selected").val();
                     consultarZipcodeCash(data_select);
@@ -2278,22 +2433,23 @@ odoo.define('web_sale_extended.payment_process', function(require) {
         var partner_country_id = $("input[name='partner_country_id']").val();
         var partner_state_id = $("input[name='partner_state_id']").val();
         var partner_city_id = $("input[name='partner_city_id']").val();
+
         //$("input[select='partner_country_id'] option:selected").val(partner_country_id);
         $("select[name='credit_card_country_id']").val(partner_country_id);
         $("select[name='credit_card_state_id']").val(partner_state_id);
-        $("select[name='credit_card_city_id']").val(partner_state_id);
+        $("select[name='credit_card_city']").val(partner_city_id);
         $("select[name='pse_country_id']").val(partner_country_id);
         $("select[name='pse_state_id']").val(partner_state_id);
-        $("select[name='pse_city_id']").val(partner_state_id);
+        $("select[name='pse_city']").val(partner_city_id);
         $("select[name='cash_country_id']").val(partner_country_id);
         $("select[name='cash_state_id']").val(partner_state_id);
-        $("select[name='cash_city']").val(partner_state_id);
+        $("select[name='cash_city']").val(partner_city_id);
         $('#credit_card_country_id').selectpicker('refresh')
         $('#credit_card_state_id').selectpicker('refresh')
-        $('#credit_card_city_id').selectpicker('refresh')
+        $('#credit_card_city').selectpicker('refresh')
         $('#pse_country_id').selectpicker('refresh')
         $('#pse_state_id').selectpicker('refresh')
-        $('#pse_city_id').selectpicker('refresh')
+        $('#pse_city').selectpicker('refresh')
         $('#cash_country_id').selectpicker('refresh')
         $('#cash_state_id').selectpicker('refresh')
         $('#cash_city').selectpicker('refresh')
