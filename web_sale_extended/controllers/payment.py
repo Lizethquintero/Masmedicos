@@ -120,7 +120,7 @@ class WebsiteSaleExtended(WebsiteSale):
                     render_values.update({
                         'order_id': order,
                         'response': dict(kwargs),
-                        'order_detail': order.order_line[0],
+                        'order_detail': order.order_line,
                     })
                     """ Mensaje en la orden de venta con la respuesta de PayU """
                     body_message = """
