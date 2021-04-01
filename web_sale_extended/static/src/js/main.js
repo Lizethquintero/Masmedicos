@@ -258,6 +258,7 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                     return true;
                 }
             }
+            return true;
         }, "¡Upss! cantidad de digitos no es correcto");
         
         $.validator.addMethod("email2", function(value, element) {
@@ -896,6 +897,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     return true;
                 }
             }
+            return true;
         }, "¡Upss! cantidad de digitos no es correcto");
     $.validator.addMethod("documentrange2", function(value, element) {
             var document = $("select[name='bfnumero_documento2']").val();
@@ -906,7 +908,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     return true;
                 }
             }
-            return this.optional(element) || /^[0-9]*$/.test(value);
+            return true;
         }, "¡Upss! cantidad de digitos no es correcto");
     $.validator.addMethod("documentrange3", function(value, element) {
             var document = $("select[name='bfnumero_documento3']").val();
@@ -917,6 +919,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     return true;
                 }
             }
+            return true;
         }, "¡Upss! cantidad de digitos no es correcto");
     $.validator.addMethod("documentrange4", function(value, element) {
             var document = $("select[name='bfnumero_documento4']").val();
@@ -927,6 +930,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     return true;
                 }
             }
+            return true;
         }, "¡Upss! cantidad de digitos no es correcto");
     $.validator.addMethod("documentrange5", function(value, element) {
             var document = $("select[name='bfnumero_documento5']").val();
@@ -947,6 +951,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     return true;
                 }
             }
+            return true;
         }, "¡Upss! cantidad de digitos no es correcto");
     
     $.validator.addMethod("uniquedocument1", function(value, element) {
@@ -2349,6 +2354,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                     return true;
                 }
             }
+            return true;
         }, "¡Upss! cantidad de digitos no es correcto");
         $.validator.addMethod("documentrange_cash", function(value, element) {
             var document = $("select[name='cash_partner_document']").val();
@@ -2359,6 +2365,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                     return true;
                 }
             }
+            return true;
         }, "¡Upss! cantidad de digitos no es correcto");
         $.validator.addMethod("documentrange_pse", function(value, element) {
             var document = $("select[name='pse_partner_document']").val();
@@ -2369,6 +2376,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                     return true;
                 }
             }
+            return true;
         }, "¡Upss! cantidad de digitos no es correcto");
 
         $("#payulatam-payment-form").validate({
