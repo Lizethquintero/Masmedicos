@@ -266,8 +266,8 @@ class WebsiteSaleExtended(WebsiteSale):
             order.action_payu_confirm()
             request.session['sale_order_id'] = None
             request.session['sale_transaction_id'] = None
-            error = 'Transacción en estado %s: %s' % (
-                response['transactionResponse']['transactionId'],response['status']
+            error = 'Transacción %s en estado : %s' % (
+                response['transactionResponse']['transactionId'],response['transactionResponse']['pendingReason']
             )
             render_values = {'error': error}
             render_values.update({
