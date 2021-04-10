@@ -234,7 +234,7 @@
                                         <label class="col-form-label" for="state_id">Departamento</label>
                                         <select class="selectpicker" data-size="4" id="state_id" data-live-search="true" name="state_id" 
                                         t-attf-class="form-control #{error.get('state_id') and 'is-invalid' or ''}" data-init="1">
-                                            <!--<option value="">Departamento</option>-->
+                                            <option value="">Seleccione el Departamento </option>
                                             <t t-foreach="country_states" t-as="s">
                                                 <option t-att-value="s.id" 
                                                         t-att-selected="s.id == ('state_id' in checkout and country and checkout['state_id'] != '' 
@@ -286,11 +286,13 @@
                                                 t-att-value="'city' in checkout and checkout['city']"
                                                 t-att-style="(not country or not country.state_ids) and 'display: none'"
                                                 >
-                                            <option value="">Ciudad...</option>
+                                            <!--++++++Modificación de selecctor de ciudad+++++-->
+                                            <option value="">Seleccione la Ciudad</option><!--<option value="Seleccione la ciudad"> </option>-->  <!--<option value="">Ciudad...</option>-->
                                             <t t-foreach="cities" t-as="c">
                                                 <option t-att-value="c.city_id.name" t-att-selected="c.name">
                                                     <t t-esc="c.name" /> <t t-esc="c.city_id.name" /> <t t-esc="c.city_id.state_id.name" /> <t t-esc="c.city_id.state_id.country_id.name" />
                                                 </option>
+                                            <!--++++++Modificación de selecctor de ciudad+++++-->
                                             </t>
                                         </select>
                                     </div>

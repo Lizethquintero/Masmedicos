@@ -125,7 +125,7 @@
                             </p>
                             <p>
                                 <font style="">
-                                <span style="font-size: 14px; white-space: pre-wrap;">Póliza de seguros de accidentes Más Médicos <t t-esc="order_detail.product_template_id[0].name"/> para <t t-esc="partner.firstname"/> <t t-esc="partner.lastname"/> <!--No. <t t-esc="order_detail.order_id.id"/>-->.</span>
+                                <span style="font-size: 14px; white-space: normal;">Póliza de seguros de accidentes Más Médicos <t t-esc="order_detail.product_template_id[0].name"/> para <t t-esc="partner.firstname"/> <t t-esc="partner.othernames"/> <t t-esc="partner.lastname"/> <t t-esc="partner.lastname2"/><!--No. <t t-esc="order_detail.order_id.id"/>-->.</span>
                                 </font>
                                 <br/>
                             </p>

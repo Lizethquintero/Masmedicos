@@ -135,6 +135,138 @@
          </t>
      </template>
     
+    
+    
+    
+    <!-- Plantilla pendiente de aprobación con tarjeta crédito -->
+     <template id="payulatam_success_process_pending" name="PayU Latam Payment Process Pending">
+         <t t-set="no_footer" t-value="1"/>
+            <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container oe_website_sale py-2">
+                <div class="row">
+                 
+                    <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
+                        <div class="card">
+                            <div class="card-body p-xl-0">
+                                <div class="col-lg-auto d-print-none">
+                                    <div class="card bg-white mb-4 sticky-top" id="sidebar_content">
+                                        <div class="card-body text-center pb-2 pt-3">
+                                            <h2 class="mb-0"><b data-id="total_amount">
+                                                $ <span class="oe_currency_value"><t t-esc="order_id.amount_total" 
+                                                    t-options='{"widget": "float", "precision": 2}'/></span></b> 
+                                            </h2>
+                                        </div>
+                                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                                            <li class="list-group-item flex-grow-1">
+                                                <a role="button" 
+                                                   id="o_sale_portal_paynow" 
+                                                   data-toggle="modal" 
+                                                   data-target="#modalaccept" 
+                                                   href="#" 
+                                                   class="btn-block mb8 btn btn-primary disabled">
+                                                    <i class="fa fa-check"></i> Pago Dirigido al Banco
+                                                </a>
+                                                <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                                    <div class="btn-group flex-grow-1 mr-1 mb-1">
+                                                        <a class="btn btn-secondary btn-block o_download_btn" 
+                                                           title="Descargar" 
+                                                           href="">
+                                                            <i class="fa fa-download"></i> Descargar
+                                                        </a>
+                                                    </div>
+                                                    <div class="btn-group flex-grow-1 mb-1">
+                                                        <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print" 
+                                                            id="print_invoice_report" 
+                                                            title="Imprimir" 
+                                                            target="_blank" 
+                                                            href="">
+                                                            <i class="fa fa-print"></i> Imprimir
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="navspy list-group-item pl-0 flex-grow-1" role="complementary">
+                                                <ul class="nav flex-column bs-sidenav"></ul>
+                                            </li>
+                                        </ul>
+                                        <div class="card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block">
+                                            Con tecnología de 
+                                            <a target="_blank" 
+                                               href="" 
+                                               title="odoo">
+                                                <img src="/web_sale_extended/static/src/img/PayU.png" alt="Logo de Odoo" height="15"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="quote_content" class="col-12 col-xl order-xl-1 oe_cart">
+                        <section class="s_text_block pt0 pb0" data-name="Text block">
+                            <input type="hidden" name="bank_url" id="bank_url" t-att-value="bank_url"/>
+                            <div class="col-lg-12 pt0 pb0">
+                                <div class="s_alert clearfix w-100 s_alert_md" data-name="Alert" style="border:none;">
+                                    <i class="fa-2x s_alert_icon"></i>
+                                    <div class="s_alert_content">
+                                        <p></p>
+                                        <div style="text-align:center;">
+                                            <font color="#39b54a">
+                                            </font>
+                                            <img class="img-fluid o_we_custom_image" 
+                                                 src="/web/image/1109/Img_success%282%29.png?access_token=a79d70ef-5174-4077-b854-a03eff98c0be" 
+                                                 style="width:auto;"/><br/>
+                                            <font color="#FF7800">
+                                              <span style="font-size:36px;">Estamos procesando tu pago con tarjeta de crédito gracias a la tecnología de PayU</span>
+                                            </font><br/>
+                                            <!--<font color="#39b54a" t-if="state">
+                                              <span style="font-size:18px;">Estado: <t t-esc="state"/></span>
+                                            </font><br/>-->
+                                            <!--<font color="#39b54a" t-if="error">
+                                              <span style="font-size:18px;">Descripción: <t t-esc="error"/></span>
+                                            </font><br/>
+                                            <font color="#39b54a" t-if="responseCode">
+                                              <span style="font-size:18px;">Código Respuesta: <t t-esc="responseCode"/></span>
+                                            </font><br/>
+                                            <font color="#39b54a" t-if="transactionId">
+                                              <span style="font-size:18px;">ID Transacción: <t t-esc="transactionId"/></span>
+                                            </font><br/>
+                                            <font color="#39b54a" t-if="order_Id">
+                                              <span style="font-size:18px;">ID Orden: <t t-esc="order_Id"/></span>
+                                            </font>-->
+                                            <br/>
+                                        </div>
+                                        <div style="text-align:center;">
+                                            <span style="font-size:18px;">Para continuar enviaremos un correo electrónico que te permitirá registrar el asegurado principal y sus beneficiarios. Este correo llegará tan proto recibamos la confirmación final del banco.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="s_btn text-center pt16 pb16" data-name="Button">
+                                    <a class="btn btn-primary" 
+                                       id="submit_credit_card_end" 
+                                       data-original-title="" 
+                                       title="" 
+                                       aria-describedby="tooltip188699"
+                                       style="color:#FFF;">Volver a la página de Inicio
+                                       <i class="fa fa-chevron-right"/>
+                                    </a>
+                                    <input type="hidden" name="order_id" t-att-value="order_id.id"/>
+                                  </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                </div>
+            </div>
+         </t> 
+     </template>
+    
+    
+    
+    
+    
     <!-- Plantilla enviada luego del pago rechazado con tarjeta de crédito de payu -->
     <template id="payulatam_rejected_process" name="PayU Latam Payment Rejected">     
          <t t-set="no_footer" t-value="1"/>
@@ -335,9 +467,9 @@
                                             <font color="#39b54a" t-if="transactionId">
                                               <span style="font-size:18px;">ID Transacción: <t t-esc="transactionId"/></span>
                                             </font><br/>-->
-                                            <font color="#39b54a" t-if="order_Id">
+                                            <!--<font color="#39b54a" t-if="order_Id">
                                               <span style="font-size:18px;">ID Orden: <t t-esc="order_Id"/></span>
-                                            </font>
+                                            </font>-->
                                             <br/>
                                         </div>
                                         <div style="text-align:center;">
@@ -370,7 +502,7 @@
          </t>
      </template>
     
-    <!-- Plantilla enviada luego del pago rechazado con metodo efectivo de payu -->
+    <!--Plantilla enviada luego del pago rechazado con metodo efectivo de payu-->
     <template id="payulatam_rejected_process_cash" name="PayU Latam Payment Process Cash">
          <t t-set="no_footer" t-value="1"/>
             <t t-call="website.layout">
@@ -586,7 +718,7 @@
                                        data-original-title="" 
                                        title="" 
                                        aria-describedby="tooltip188699"
-                                       style="color:#FFF;">Terminar
+                                       style="color:#FFF;">Volver a la página de Inicio
                                        <i class="fa fa-chevron-right"/>
                                     </a>
                                     <input type="hidden" name="order_id" t-att-value="order_id.id"/>
@@ -750,7 +882,7 @@
                                            data-original-title="" 
                                            title="" 
                                            aria-describedby="tooltip188699"
-                                           style="color:#FFF;">Intentalo de nuevo<!-- style="color:#FFF;">Terminar Proceso de Compra-->
+                                           style="color:#FFF;">Volver a la página de Inicio<!-- style="color:#FFF;">Intentalo de nuevo-->
                                            <i class="fa fa-chevron-right"/>
                                         </a>
                                         <!--FIN Cambio de texto del boton cuando el pago por pse es rechazado-->
@@ -846,23 +978,25 @@
                                             </font>-->
                                             <br/>
                                         </div>
+                                        <!---+++++++Comienzo de mensaje PSE de pago rechazado+++++++-->
                                         <div style="text-align:center;">
-                                            <span style="font-size:18px;">Por favor vuelva a intentar</span>
+                                            <span style="font-size:18px;">Por favor vuelve a intentarlo</span>
                                         </div>
+                                        <!---+++++++Fin de mensaje PSE de pago rechazado+++++++-->
                                     </div>
                                 </div>
                                 
                                 <div class="s_btn text-center pt16 pb16" data-name="Button">
-                                    <!--cambio de texto cuando el pago de pse es rechazado segundo comentariado-->
+                                    <!--cambio de texto del boton cuando el pago de pse es rechazado segundo comentariado-->
                                     <a class="btn btn-primary" 
                                        id="submit_pse_payment_process" 
                                        data-original-title="" 
                                        title="" 
                                        aria-describedby="tooltip188699"
-                                       style="color:#FFF;">Intentalo de nuevo<!-- style="color:#FFF;">Ir al proceso de Pago-->
+                                       style="color:#FFF;">Volver a la Página de inicio<!-- style="color:#FFF;">Intentalo de nuevo-->
                                        <i class="fa fa-chevron-right"/>
                                     </a>
-                                    <!--FIN cambio de texto cuando el pago de pse es rechazado segundo comentariado-->
+                                    <!--FIN cambio de texto del boton cuando el pago de pse es rechazado segundo comentariado-->
                                     <input type="hidden" name="order_id" t-att-value="order_id.id"/>
                                   </div>
                             </div>
@@ -1000,6 +1134,8 @@
                                            t-att-value="order.partner_id.zip_id.city_id.state_id.id"/>
                                     <input type="hidden" id="partner_city_id" name="partner_city_id" 
                                            t-att-value="order.partner_id.zip_id.city_id.id"/>
+                                    <input type="hidden" id="partner_document_type" name="partner_document_type" 
+                                           t-att-value="order.partner_id.document_type_id.id"/>
                                     
                                   <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                                     <form id="payulatam-payment-form" action="/shop/payment/payulatam-gateway-api" method="post" class="checkout_autoformat">

@@ -69,7 +69,7 @@ class WebsiteSaleExtended(WebsiteSale):
         order_api = {
             "accountId": accountId,
             "referenceCode": referenceCode,
-            "description": descriptionPay,
+            "description": 'PPS-' + descriptionPay,
             "language": "es",
             "signature": signature,
             "notifyUrl": payulatam_response_url,

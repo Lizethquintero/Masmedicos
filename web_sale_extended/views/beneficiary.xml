@@ -35,17 +35,21 @@
                         
                         <div class="row">
                             <div class="col-lg-3">
+                                <!--+++++++Prueba del style white-space++++++-->
                                 <div class="form-group">
                                     <label class="col-form-label" for="name">Primer Nombre*</label>
                                     <input class="form-control" type="text" name="name" t-att-value="partner.firstname"/>
                                 </div>
+                                <!--+++++++ FIN Prueba del style white-space++++++-->
                             </div>
 
                             <div class="col-lg-3">
+                                <!--+++++++Prueba del style white-space++++++-->
                                 <div class="form-group">
                                     <label class="col-form-label" for="othername">Segundo Nombre</label>
                                     <input class="form-control" type="text" name="othername" t-att-value="partner.othernames"  />
                                 </div>
+                                <!--+++++++ FIN Prueba del style white-space++++++-->
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">

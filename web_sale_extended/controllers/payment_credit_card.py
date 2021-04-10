@@ -135,7 +135,7 @@ class WebsiteSaleExtended(WebsiteSale):
         order_api = {
             "accountId": accountId,
             "referenceCode": referenceCode,
-            "description": 'PPS-' + descriptionPay,
+            "description": 'PPS - ' + descriptionPay,
             "language": "es",
             "signature": signature,
             "notifyUrl":payulatam_response_url,
@@ -161,7 +161,7 @@ class WebsiteSaleExtended(WebsiteSale):
             #"billingAddress": post['credit_card_partner_street']
         }
         
-        without_token = 0
+        without_token = 1
         if without_token:
             credit_card = {
                 "number": post['credit_card_number'],
@@ -264,8 +264,6 @@ class WebsiteSaleExtended(WebsiteSale):
                 'payulatam_datetime': fields.datetime.now(),
             })
             order.action_payu_confirm()
-            request.session['sale_order_id'] = None
-            request.session['sale_transaction_id'] = None
             error = 'Transacción %s en estado : %s' % (
                 response['transactionResponse']['transactionId'],response['transactionResponse']['pendingReason']
             )
@@ -290,7 +288,9 @@ class WebsiteSaleExtended(WebsiteSale):
                 response['transactionResponse']['responseCode']
             )
             order.message_post(body=body_message, type="comment")
-            return request.render("web_sale_extended.payulatam_success_process", render_values)
+            request.session['sale_order_id'] = None
+            request.session['sale_transaction_id'] = None
+            return request.render("web_sale_extended.payulatam_success_process_pending", render_values)
         elif response['transactionResponse']['state'] in ['EXPIRED', 'DECLINED']:
             order.write({
                 'payulatam_order_id': response['transactionResponse']['orderId'],

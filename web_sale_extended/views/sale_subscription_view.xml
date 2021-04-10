@@ -45,8 +45,8 @@
                     <field name="date_start" string="Fecha Efectiva"/>
                     <field name="gender" string="Sexo"/>
                     <field name="identification_document" string="Número de Seguro Social / Cédula"/>
-                    <field name="date_start" string="Fecha de Empleo"/>
-                    <field name="date_start" string="Fecha de Cambio"/>
+                    <field name="date_start2" string="Fecha de Empleo"/>
+                    <field name="date_start3" string="Fecha de Cambio"/>
                     <field name="change_type" string="Tipo de Cambio"/>
                     <field name="street" string="Dirección 1"/>
                     <field name="street2" string="Dirección 2"/>
@@ -54,7 +54,7 @@
                     <field name="marital_status" string="Estado Civil"/>
                     <field name="country" string="País"/>
                     <field name="partner_zip_code" string="Código Postal"/>
-                    <field name="phone" string="Teléfono"/>
+                    <field name="mobile" string="Teléfono"/>
                     <field name="email" string="E-Mail"/>
                     <field name="localization" string="Localización"/>
                     <field name="palig" string="Código Clase PALIG"/>
@@ -63,7 +63,7 @@
                     <field name="salary_mode" string="Modo de Salario"/>
                     <field name="lifevolume" string="Lifevolume"/>
                     <field name="addvolume" string="Addvolume"/>
-                    <field name="email" string="Dirección de Correo 1"/>
+                    <field name="email1" string="Dirección de Correo 1"/>
                     <field name="email2" string="Dirección de Correo 2"/>
                     <field name="email_city" string="Ciudad de correo"/>
                     <field name="email_state" string="Estado de correo"/>
@@ -74,7 +74,7 @@
                     <field name="first_due" string="Primer Vencimiento"/>
                     <field name="aniversary" string="Aniversario"/>
                     <field name="sponsor_name" string="Compañía"/>
-                    <field name="country" string="País"/>
+                    <field name="country2" string="País 2"/>
                     <field name="second_identification" string="Segunda Indentificación"/>
                     <field name="second_type_identification" string="Tipo Segunda Identificación"/>
                     <field name="ocupation" string="Ocupación"/>
@@ -83,7 +83,7 @@
                     <field name="insegurability_test" string="Prueba de Asegurabilidad"/>
                     <field name="subsidiary" string="Subsidiaria"/>
                     <field name="phone" string="Teléfono Fijo"/>
-                    <field name="ocupation" string="Ocupación"/>
+                    <field name="ocupation2" string="Ocupación"/>
                     
                     <!--<field name="sponsor_nit" string=""/>
                     <field name="sponsor_payment_url" string=""/>
@@ -118,22 +118,22 @@
                     <field name="gender" string="Sexo"/>
                     <field name="identification_document" string="Número de Seguro Social / Cédula"/>
                     <field name="relationship" string="Relación"/>
-                    <field name="id" string="Código de Dependiente"/>
+                    <field name="clerk_code" string="Código de Dependiente"/>
                     <field name="change_date" string="Fecha de Cambio"/>
                     <field name="change_type" string="Tipo de Cambio"/>
                     <field name="date_end" string="Fecha Terminación"/>
                     <field name="default_code" string="Código de Plan"/>
                     <field name="recurring_interval" string="Tipo de Inscripción"/>
-                    <field name="date_start" string="Inicial de Referencia / Título"/>
+                    <field name="date_start2" string="Inicial de Referencia / Título"/>
                     <field name="insegurability_test" string="Prueba de Asegurabilidad"/>
                     <field name="sponsor_name" string="Compañía"/>
                     <field name="country" string="País"/>
                     <field name="email" string="Correo Electrónico"/>
-                    <field name="phone" string="Teléfono Móvil"/>
-                    <field name="birthdate_date" string="Fecha de Nacimiento"/>
+                    <field name="mobile" string="Teléfono Móvil"/>
+                    <field name="birthdate_date2" string="Fecha de Nacimiento"/>
                     <field name="street" string="Dirección de Residencia"/>
                     <field name="phone" string="Teléfono Fijo"/>
-                    <field name="country" string="País"/>
+                    <field name="country2" string="País"/>
                     <field name="state_id" string="Estado"/>
                     <field name="city_name" string="Ciudad"/>
                     <field name="ocupation" string="Ocupación"/>

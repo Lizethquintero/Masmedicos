@@ -338,8 +338,8 @@ class WebsiteSaleExtended(WebsiteSale):
         ''' Captura de datos del beneficiario más no guarda informacion '''
         _logger.info("**BENEFICIARY**")
         order = request.env['sale.order'].sudo().browse(order_id)
-        request.session['sale_order_id'] = None
-        request.session['sale_transaction_id'] = None
+        #request.session['sale_order_id'] = None
+        #request.session['sale_transaction_id'] = None
         
         #redirection = self.checkout_redirection(order)
         #if redirection:
@@ -385,6 +385,9 @@ class WebsiteSaleExtended(WebsiteSale):
         
         Partner = order.partner_id
         BeneficiaryPartner = request.env['res.partner'].sudo()
+        _logger.error(Partner)
+        _logger.error(order_detail)
+        _logger.error(order_detail.subscription_id)
         _logger.error('222*****************++++++++')
         Subscription = order_detail.subscription_id
         beneficiary_list = []
@@ -396,22 +399,27 @@ class WebsiteSaleExtended(WebsiteSale):
             'othernames': kwargs['othername'],
             'email': kwargs['email'],
             'mobile': kwargs['phone'],
+            'phone': kwargs['fijo'],
             #'document_type_id': kwargs[document_type],
             'identification_document': kwargs['numero_documento'],
             'company_type': 'person',
             'active': True,
             'beneficiary_number': 1,
+            'ocupation': kwargs['ocupation'],
             'birthdate_date' : kwargs['date'],
             'gender' : kwargs['sex'],
             'marital_status' : kwargs['estado_civil'],
             #'parent_id': InsurerPartner
-            'expedition_date' : kwargs['expedition_date']
+            'expedition_date' : kwargs['expedition_date'],
+            'subscription_id': Subscription.id
         })
+        
         beneficiary_list.append((4, Partner.id))
         order.write({
             'beneficiary0_id': Partner.id
         })
-
+        
+        cont_d, cont_h, cont_c, cont_m, cont_s = 0,0,0,0,0
         for i in range(int(kwargs['beneficiario'])):
             firtst_name = "bfirstname"+str(i+1)
             other_name = "bfothername"+str(i+1)
@@ -423,6 +431,7 @@ class WebsiteSaleExtended(WebsiteSale):
             country_id =  "bfcountry_id"+str(i+1)
             state_id = "bfdeparment"+str(i+1)
             city = "bfcity"+str(i+1)
+            zip_id = "bfcity"+str(i+1)
             birthdate = "bfdate"+str(i+1)
             ocupation = "bfocupacion"+str(i+1)
             gender = "bfsex"+str(i+1)
@@ -430,6 +439,23 @@ class WebsiteSaleExtended(WebsiteSale):
             address_beneficiary = "bfaddress"+str(i+1)
             phone = "bffijo"+str(i+1)
             mobile = "bfphone"+str(i+1)
+
+            clerk_code = ''
+            if kwargs[relationship] == 'C':
+                cont_c+=1
+                clerk_code = 'C' + str(cont_c)
+            elif kwargs[relationship] == 'D':
+                cont_d+=1
+                clerk_code = 'D' + str(cont_d)
+            elif kwargs[relationship] == 'H':
+                cont_h+=1
+                clerk_code = 'H' + str(cont_h)
+            elif kwargs[relationship] == 'M':
+                cont_m+=1
+                clerk_code = 'M' + str(cont_m)
+            elif kwargs[relationship] == 'S':
+                cont_s+=1
+                clerk_code = 'S' + str(cont_s)
 
 
             if kwargs[other_name] == '':
@@ -450,6 +476,7 @@ class WebsiteSaleExtended(WebsiteSale):
                 'parent_id': Partner.id,
                 'country_id': int(kwargs[country_id]),
                 'state_id': int(kwargs[state_id]),
+                #'zip_id': int(kwargs[zip_id]),
                 'city': kwargs[city],
                 'birthdate_date': kwargs[birthdate],
                 #'marital_status': kwargs[marital_status],
@@ -458,6 +485,8 @@ class WebsiteSaleExtended(WebsiteSale):
                 'relationship': kwargs[relationship],
                 'address_beneficiary': kwargs[address_beneficiary],
                 'beneficiary_number': i+2,
+                'clerk_code': clerk_code,
+                'subscription_id': Subscription.id,
             })
             beneficiary_list.append((4, NewBeneficiaryPartner.id))
             if i == 0:
@@ -485,15 +514,24 @@ class WebsiteSaleExtended(WebsiteSale):
                     'beneficiary6_id': NewBeneficiaryPartner.id
                 })
                 
-        Subscription.write({
-            'subscription_partner_ids': beneficiary_list,
-        })
+        
         kwargs['order_detail'] = order_detail
         kwargs['partner'] = Partner
         
         """ Confirmando Orden de Venta luego del proceso exitoso de beneficiarios """
         order.action_confirm()
         order._send_order_confirmation_mail()
+        
+        
+        _logger.error("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+        _logger.error(beneficiary_list)
+        order.subscription_id.write({
+            'subscription_partner_ids': beneficiary_list,
+        })
+        _logger.error(Subscription.subscription_partner_ids)
+        _logger.error(Subscription)
+        request.session['sale_order_id'] = None
+        request.session['sale_transaction_id'] = None
         return request.render("web_sale_extended.beneficiary_detail", kwargs)
 
 
@@ -656,7 +694,6 @@ class WebsiteSaleExtended(WebsiteSale):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
     
-    
     @http.route([
         '''/shop''',
         '''/shop/page/<int:page>''',
@@ -669,7 +706,6 @@ class WebsiteSaleExtended(WebsiteSale):
             #return request.redirect(request.httprequest.referrer or '/web/login')
             return request.redirect(checkout_landpage_redirect)
         raise UserError('Landpage de Productos sin definir. Revise la configuración de PayU Latam')
-    
 
     @http.route(['/shop/confirmation'], type='http', auth="public", website=True, sitemap=False)
     def payment_confirmation(self, **post):

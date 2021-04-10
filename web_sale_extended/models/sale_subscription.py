@@ -31,7 +31,7 @@ class SaleSubscription(models.Model):
         res = super(SaleSubscription, self).create(vals)
         sequence_id = res.recurring_invoice_line_ids[0].product_id.product_tmpl_id.categ_id.sequence_id
         res.write({
-            'policy_number': sequence_id.number_next_actual,
+            'policy_number': str(sequence_id.number_next_actual).zfill(10),
         })
         sequence_id.write({
             'number_next_actual': int(sequence_id.number_next_actual) + 1,

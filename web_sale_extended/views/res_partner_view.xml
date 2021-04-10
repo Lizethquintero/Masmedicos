@@ -60,6 +60,7 @@
                     <field name='address_beneficiary' />
                     <field name='expedition_date' />
                     <field name='marital_status' />
+                    <field name='clerk_code' />
                 </field>
             </field>
         </record>

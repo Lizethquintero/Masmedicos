@@ -34,9 +34,17 @@ class ResPartner(models.Model):
         [ ("Soltero", "Soltero"), ("Casado", "Casado"), ("Unión Libre", "Unión Libre"), ("Divorciado", "Divorciado"), ("Viudo", "Viudo")]
     )
     address_beneficiary = fields.Char('Dirección del Beneficiario')
-
     subscription_id = fields.Many2one('sale.subscription', 'ID de Subscripción')
     beneficiary_number = fields.Integer('Número de Beneficiario')
+    clerk_code = fields.Char('Código de Empleado')
+    
+    """
+    def _compute_clerk_code(self):
+        partners = self.env['res.partner'].search([('subscription_id', '=', self.subscription_id)])
+        marital_status = self.marital_status
+        for partner in partners:
+    """
+            
 
 
     @api.depends('zip','city_id')
