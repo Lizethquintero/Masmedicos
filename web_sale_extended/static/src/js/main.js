@@ -252,7 +252,7 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
         $.validator.addMethod("documentrange", function(value, element) {
             var document = $("select[name='document']").val();
             if (document == '3') { //cédula de ciudadanía
-                if ($.isNumeric(value) && (value < 99999 || value > 999999999999)) {
+                if ($.isNumeric(value) && (value < 99999 || value > 9999999999)) {
                     return false;
                 } else {
                     return true;
@@ -880,7 +880,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
     $.validator.addMethod("documentrange", function(value, element) {
             var document = $("select[name='numero_documento']").val();
             if (document == '3') { //cédula de ciudadanía
-                if ($.isNumeric(value) && (value < 99999 || value > 999999999999)) {
+                if ($.isNumeric(value) && (value < 99999 || value > 9999999999)) {
                     return false;
                 } else {
                     return true;
@@ -888,9 +888,9 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
             }
         }, "¡Upss! cantidad de digitos no es correcto");
     $.validator.addMethod("documentrange1", function(value, element) {
-            var document = $("select[name='bfnumero_documento1']").val();
+            var document = $("select[name='bfdocument1']").val();
             if (document == '3') { //cédula de ciudadanía
-                if ($.isNumeric(value) && (value < 99999 || value > 999999999999)) {
+                if ($.isNumeric(value) && (value < 99999 || value > 9999999999)) {
                     return false;
                 } else {
                     return true;
@@ -899,9 +899,9 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
             return true;
         }, "¡Upss! cantidad de digitos no es correcto");
     $.validator.addMethod("documentrange2", function(value, element) {
-            var document = $("select[name='bfnumero_documento2']").val();
+            var document = $("select[name='bfdocument2']").val();
             if (document == '3') { //cédula de ciudadanía
-                if ($.isNumeric(value) && (value < 99999 || value > 999999999999)) {
+                if ($.isNumeric(value) && (value < 99999 || value > 9999999999)) {
                     return false;
                 } else {
                     return true;
@@ -910,9 +910,9 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
             return true;
         }, "¡Upss! cantidad de digitos no es correcto");
     $.validator.addMethod("documentrange3", function(value, element) {
-            var document = $("select[name='bfnumero_documento3']").val();
+            var document = $("select[name='bfdocument3']").val();
             if (document == '3') { //cédula de ciudadanía
-                if ($.isNumeric(value) && (value < 99999 || value > 999999999999)) {
+                if ($.isNumeric(value) && (value < 99999 || value > 9999999999)) {
                     return false;
                 } else {
                     return true;
@@ -921,9 +921,9 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
             return true;
         }, "¡Upss! cantidad de digitos no es correcto");
     $.validator.addMethod("documentrange4", function(value, element) {
-            var document = $("select[name='bfnumero_documento4']").val();
+            var document = $("select[name='bfdocument4']").val();
             if (document == '3') { //cédula de ciudadanía
-                if ($.isNumeric(value) && (value < 99999 || value > 999999999999)) {
+                if ($.isNumeric(value) && (value < 99999 || value > 9999999999)) {
                     return false;
                 } else {
                     return true;
@@ -932,9 +932,9 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
             return true;
         }, "¡Upss! cantidad de digitos no es correcto");
     $.validator.addMethod("documentrange5", function(value, element) {
-            var document = $("select[name='bfnumero_documento5']").val();
+            var document = $("select[name='bfdocument5']").val();
             if (document == '3') { //cédula de ciudadanía
-                if ($.isNumeric(value) && (value < 99999 || value > 999999999999)) {
+                if ($.isNumeric(value) && (value < 99999 || value > 9999999999)) {
                     return false;
                 } else {
                     return true;
@@ -943,9 +943,9 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
             return true;
         }, "¡Upss! cantidad de digitos no es correcto");
     $.validator.addMethod("documentrange6", function(value, element) {
-            var document = $("select[name='bfnumero_documento6']").val();
+            var document = $("select[name='bfdocument6']").val();
             if (document == '3') { //cédula de ciudadanía
-                if ($.isNumeric(value) && (value < 99999 || value > 999999999999)) {
+                if ($.isNumeric(value) && (value < 99999 || value > 9999999999)) {
                     return false;
                 } else {
                     return true;
@@ -2552,7 +2552,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
         $.validator.addMethod("documentrange_credit_card", function(value, element) {
             var document = $("select[name='credit_card_partner_document']").val();
             if (document == 'CC') { //cédula de ciudadanía
-                if ($.isNumeric(value) && (value < 99999 || value > 999999999999)) {
+                if ($.isNumeric(value) && (value < 99999 || value > 9999999999)) {
                     return false;
                 } else {
                     return true;
@@ -2563,7 +2563,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
         $.validator.addMethod("documentrange_cash", function(value, element) {
             var document = $("select[name='cash_partner_document']").val();
             if (document == 'CC') { //cédula de ciudadanía
-                if ($.isNumeric(value) && (value < 99999 || value > 999999999999)) {
+                if ($.isNumeric(value) && (value < 99999 || value > 9999999999)) {
                     return false;
                 } else {
                     return true;
@@ -2574,7 +2574,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
         $.validator.addMethod("documentrange_pse", function(value, element) {
             var document = $("select[name='pse_partner_document']").val();
             if (document == 'CC') { //cédula de ciudadanía
-                if ($.isNumeric(value) && (value < 99999 || value > 999999999999)) {
+                if ($.isNumeric(value) && (value < 99999 || value > 9999999999)) {
                     return false;
                 } else {
                     return true;
