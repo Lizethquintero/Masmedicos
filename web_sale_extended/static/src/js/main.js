@@ -243,7 +243,7 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
         
         $.validator.addMethod("lettersnumberonly", function(value, element) {
             var document = $("select[name='document']").val();
-            if (document == '7') { //pasaporte
+            if (document == '7' || document == '8') { //pasaporte y documento de identificación extrangera
                 return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
             }
             return this.optional(element) || /^[0-9]*$/.test(value);
@@ -704,7 +704,6 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
 
     });
 
-
     $("#posicion_fiscal_help_icon").on('click', function posicion_fiscal_help() {
         $("#posicion_fiscal_help").toggle();
     });
@@ -713,17 +712,10 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
         $("#posicion_fiscal_help").show();
     });
 
-
-
-
-
     // $('#exampleModal').modal();
     // $('#exampleModal').on('shown.bs.modal', function() {
     // $('#myInput').trigger('focus')
     // });
-
-
-
 
     /* document.getElementById('cant_beneficiarios').addEventListener('change', function() {
          let cantidad_beneficiarios = parseInt(this.value);
@@ -823,7 +815,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
     
     $.validator.addMethod("lettersnumberonly0", function(value, element) {
             var document = $("select[name='document_type']").val();
-            if (document == '7') { //pasaporte
+            if (document == '7' || document == '8') { //pasaporte y documento de identificación extrangera
                 return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
             } else {
                 return this.optional(element) || /^[0-9]*$/.test(value);
@@ -831,7 +823,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
         }, "¡Upss! deben ser ser solo letras");
     $.validator.addMethod("lettersnumberonly1", function(value, element) {
             var document = $("select[name='bfdocument1']").val();
-            if (document == '7') { //pasaporte
+            if (document == '7' || document == '8') { //pasaporte y documento de identificación extrangera
                 return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
             } else {
                 return this.optional(element) || /^[0-9]*$/.test(value);
@@ -839,7 +831,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
         }, "¡Upss! deben ser ser solo letras");
     $.validator.addMethod("lettersnumberonly2", function(value, element) {
             var document = $("select[name='bfdocument2']").val();
-            if (document == '7') { //pasaporte
+            if (document == '7' || document == '8') { //pasaporte y documento de identificación extrangera
                 return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
             } else {
                 return this.optional(element) || /^[0-9]*$/.test(value);
@@ -847,7 +839,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
         }, "¡Upss! deben ser ser solo letras");
     $.validator.addMethod("lettersnumberonly3", function(value, element) {
             var document = $("select[name='bfdocument3']").val();
-            if (document == '7') { //pasaporte
+            if (document == '7' || document == '8') { //pasaporte y documento de identificación extrangera
                 return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
             } else {
                 return this.optional(element) || /^[0-9]*$/.test(value);
@@ -855,7 +847,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
         }, "¡Upss! deben ser ser solo letras");
     $.validator.addMethod("lettersnumberonly4", function(value, element) {
             var document = $("select[name='bfdocument4']").val();
-            if (document == '7') { //pasaporte
+            if (document == '7' || document == '8') { //pasaporte y documento de identificación extrangera
                 return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
             } else {
                 return this.optional(element) || /^[0-9]*$/.test(value);
@@ -863,7 +855,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
         }, "¡Upss! deben ser ser solo letras");
     $.validator.addMethod("lettersnumberonly5", function(value, element) {
             var document = $("select[name='bfdocument5']").val();
-            if (document == '7') { //pasaporte
+            if (document == '7' || document == '8') { //pasaporte y documento de identificación extrangera
                 return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
             } else {
                 return this.optional(element) || /^[0-9]*$/.test(value);
@@ -871,7 +863,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
         }, "¡Upss! deben ser ser solo letras");
     $.validator.addMethod("lettersnumberonly6", function(value, element) {
             var document = $("select[name='bfdocument6']").val();
-            if (document == '7') { //pasaporte
+            if (document == '7' || document == '8') { //pasaporte y documento de identificación extrangera
                 return this.optional(element) || /^[A-Za-z0-9]*$/g.test(value);
             } else {
                 return this.optional(element) || /^[0-9]*$/.test(value);
@@ -1279,7 +1271,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     },
                     min: {
                         depends: function(elem) {
-                            let birthdate_date_form = $("input[name='birthdate_date']").val();
+                            let birthdate_date_form = $("input[name='date']").val();
                             let expedition_date_form = $("input[name='expedition_date']").val();
                             let birthdate_date = new Date(birthdate_date_form);
                             let expedition_date = new Date(expedition_date_form);
@@ -1302,9 +1294,11 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     lettersonly: true,
                 },
                 bfothername1: {
+                    minlength: 3,
                     lettersonly: true,
                 },
                 bflastname12: {
+                    minlength: 3,
                     lettersonly: true,
                 },
                 bfemail1: {
@@ -1386,9 +1380,11 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     lettersonly: true,
                 },
                 bfothername2: {
+                    minlength: 3,
                     lettersonly: true,
                 },
                 bflastname22: {
+                    minlength: 3,
                     lettersonly: true,
                 },
                 bfemail2: {
@@ -1470,9 +1466,11 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     lettersonly: true,
                 },
                 bfothername3: {
+                    minlength: 3,
                     lettersonly: true,
                 },
-                bflastname33: {
+                bflastname32: {
+                    minlength: 3,
                     lettersonly: true,
                 },
                 bfemail3: {
@@ -1554,9 +1552,11 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     lettersonly: true,
                 },
                 bfothername4: {
+                    minlength: 3,
                     lettersonly: true,
                 },
-                bflastname44: {
+                bflastname42: {
+                    minlength: 3,
                     lettersonly: true,
                 },
                 bfemail4: {
@@ -1638,9 +1638,11 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     lettersonly: true,
                 },
                 bfothername5: {
+                    minlength: 3,
                     lettersonly: true,
                 },
-                bflastname55: {
+                bflastname52: {
+                    minlength: 3,
                     lettersonly: true,
                 },
                 bfemail5: {
@@ -1722,9 +1724,11 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     lettersonly: true,
                 },
                 bfothername6: {
+                    minlength: 3,
                     lettersonly: true,
                 },
-                bflastname66: {
+                bflastname62: {
+                    minlength: 3,
                     lettersonly: true,
                 },
                 bfemail6: {
@@ -2487,19 +2491,19 @@ odoo.define('web_sale_extended.payment_process', function(require) {
         if ($('#partner_document_type').val() == '3') {
             $("select[name='credit_card_partner_type']").val('CC');
             $("select[name='cash_partner_type']").val('CC');
-            $("select[name='pse_card_partner_type']").val('CC');
+            $("select[name='pse_partner_type']").val('CC');
         } else if ($('#partner_document_type').val() == '7') {
             $("select[name='credit_card_partner_type']").val('PP');
             $("select[name='cash_partner_type']").val('PP');
-            $("select[name='pse_card_partner_type']").val('PP');
+            $("select[name='pse_partner_type']").val('PP');
         } else if ($('#partner_document_type').val() == '5') {
             $("select[name='credit_card_partner_type']").val('CE');
             $("select[name='cash_partner_type']").val('CE');
-            $("select[name='pse_card_partner_type']").val('CE');
+            $("select[name='pse_partner_type']").val('CE');
         } else if ($('#partner_document_type').val() == '8') {
             $("select[name='credit_card_partner_type']").val('DE');
             $("select[name='cash_partner_type']").val('DE');
-            $("select[name='pse_card_partner_type']").val('DE');
+            $("select[name='pse_partner_type']").val('DE');
         }
         
         var credit_city = "select[name='credit_card_city']";
