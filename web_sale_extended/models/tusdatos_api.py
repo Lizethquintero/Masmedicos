@@ -154,12 +154,10 @@ class TusDatosAPI(models.TransientModel):
         query_type = '-' in process_id
 
         if query_type:
-            _logger.error('results')
             endpoint = 'results'
             results_query = {'jobid': process_id}
             validation = self.request_tusdatos_api(endpoint, results_query)
         else:
-            _logger.error('report_json')
             endpoint = 'report_json'
             results_query = {'id': process_id}
             validation = self.request_tusdatos_api(endpoint, results_query)
@@ -169,14 +167,14 @@ class TusDatosAPI(models.TransientModel):
             if 'estado' in validation and validation['estado'] == 'error, tarea no valida':
                 _logger.error("****** ERROR: tarea no valida. ******")
             else:
-                _logger.error("****** REALIZANDO VALIDACIÓN EN LISTAS. ******")
                 if endpoint == 'results':
-                    approval = not 'LISTA_ONU' in validation or 'OFAC' in validation
+                    #approval = not 'LISTA_ONU' in validation or 'OFAC' in validation
+                    approval = not ( ('LISTA_ONU' in validation or 'OFAC' in validation) and (validation['OFAC'] or validation['LISTA_ONU']) )
                 elif endpoint == 'report_json':
                     #approval = not (validation['ofac'] or validation['lista_onu'] or validation['lista_ofac'])
-                    approval = not ('ofac' in validation or 'lista_onu' in validation)
+                    #approval = not ('ofac' in validation or 'lista_onu' in validation)
+                    approval = not ( ('ofac' in validation or 'lista_onu' in validation) and (validation['ofac'] or validation['lista_onu']) )
         else:
             # TODO: add id to sale_order for queue validation process
-            _logger.error("****** ERROR: Approbation not processed. ******")
         approval_data = (approval, validation)
         return approval_data
