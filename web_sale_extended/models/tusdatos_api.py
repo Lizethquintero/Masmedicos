@@ -176,5 +176,6 @@ class TusDatosAPI(models.TransientModel):
                     approval = not ( ('ofac' in validation or 'lista_onu' in validation) and (validation['ofac'] or validation['lista_onu']) )
         else:
             # TODO: add id to sale_order for queue validation process
+            _logger.error("****** ERROR: Approbation not processed. ******")
         approval_data = (approval, validation)
         return approval_data
