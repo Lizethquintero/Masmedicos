@@ -118,3 +118,9 @@ header .navbar-brand.logo img {
     border-radius: 5px;
     
 }
+.col-sm-4 { 
+    position: relative;
+    width: 60% !important;
+    padding-right: 15px;
+    padding-left: 15px;
+}

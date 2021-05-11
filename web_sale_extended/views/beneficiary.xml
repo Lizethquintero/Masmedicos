@@ -30,6 +30,23 @@
                         </div>
                     </section>
                     <br/>
+                    
+                    
+                    <div id="div_error" class="alert alert-danger fade show" role="alert" style="background-color: #f2dede !important; border-color: #ebcccc !important; color: #a94442 !important; display: none;">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="fa fa-times" aria-hidden="false"></i>
+                      </button>
+                      <strong>Error: País diferente a Colombia</strong> Por el momento solo se presta este servicio en Colombia.
+                    </div>
+                    
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="0" id="flexCheckDefault" name="infoBuyer"/>
+                      <label class="form-check-label" for="flexCheckDefault">
+                        Comprador es igual al asegurado principal
+                      </label>
+                    </div>
+
+                    
                     <div class="card">
                         <h4>Datos del Asegurado Principal</h4>
                         
@@ -38,7 +55,7 @@
                                 <!--+++++++Prueba del style white-space++++++-->
                                 <div class="form-group">
                                     <label class="col-form-label" for="name">Primer Nombre*</label>
-                                    <input class="form-control" type="text" name="name" t-att-value="partner.firstname"/>
+                                    <input class="form-control" type="text" name="name"/>
                                 </div>
                                 <!--+++++++ FIN Prueba del style white-space++++++-->
                             </div>
@@ -47,20 +64,20 @@
                                 <!--+++++++Prueba del style white-space++++++-->
                                 <div class="form-group">
                                     <label class="col-form-label" for="othername">Segundo Nombre</label>
-                                    <input class="form-control" type="text" name="othername" t-att-value="partner.othernames"  />
+                                    <input class="form-control" type="text" name="othername"/>
                                 </div>
                                 <!--+++++++ FIN Prueba del style white-space++++++-->
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="col-form-label" for="lastname">Primer Apellido*</label>
-                                    <input class="form-control" type="text" name="lastname" t-att-value="partner.lastname" />
+                                    <input class="form-control" type="text" name="lastname"/>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="col-form-label" for="lastname2">Segundo Apellido</label>
-                                    <input class="form-control" type="text" name="lastname2" t-att-value="partner.lastname2" />
+                                    <input class="form-control" type="text" name="lastname2"/>
                                 </div>
                             </div>
 
@@ -70,9 +87,9 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="col-form-label" for="document_type">Tipo de documento*</label>
-                                    <select name="document_type" class="form-control">
+                                    <select name="document_type" class="form-control" id="document_type">
                                         <t t-foreach="document_types" t-as="dt">
-                                                <option t-att-value="dt.id" t-att-selected="dt.id == partner.document_type_id.id">
+                                                <option t-att-value="dt.id">
                                                     <t t-esc="dt.name" /> 
                                                 </option>
                                             </t>
@@ -83,19 +100,17 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="col-form-label" for="numero_documento">Número documento*</label>
-                                    <input class="form-control" type="text" name="numero_documento" t-att-value="partner.identification_document" />
+                                    <input class="form-control" type="text" name="numero_documento"/>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <label class="col-form-label" for="expedition_date">Fecha de exp del documento</label>
-                                            <input type="date" name="expedition_date" id="expedition_date" t-att-value="partner.expedition_date"
-                                            t-attf-class="form-control" 
-                                             />
+                                            <input type="date" name="expedition_date" id="expedition_date" t-attf-class="form-control"/>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="col-form-label" for="email">Email*</label>
-                                    <input class="form-control" type="email"  name="email" placeholder='ejemplo@ejemplo.com'  t-att-value="partner.email"/>
+                                    <input class="form-control" type="email"  name="email" placeholder='ejemplo@ejemplo.com'/>
                                 </div>
                             </div>
                         </div>
@@ -103,7 +118,7 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="col-form-label" for="phone">Teléfono Móvil*</label>
-                                    <input class="form-control" type="text" name="phone" t-att-value="partner.phone" />
+                                    <input class="form-control" type="text" name="phone"/>
                                 </div>
                             </div>
                             <div class="col-lg-3">
@@ -143,13 +158,13 @@
                             <div class="col-lg-8">
                                 <div class="form-group">
                                     <label class="col-form-label" for="address">Dirección de residencia</label>
-                                    <input class="form-control" type="text" name="address" placeholder="Dirección de residencia" t-att-value="partner.street"/>
+                                    <input class="form-control" type="text" name="address" placeholder="Dirección de residencia"/>
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <label class="col-form-label" for="date">Fecha nacimiento*</label>
-                                    <input class="form-control" type="date" name="date"  t-att-value="partner.birthdate_date"/>
+                                    <input class="form-control" type="date" name="date"/>
                                 </div>
                             </div>
 
@@ -163,7 +178,7 @@
                                     <select name="country_id" class="form-control">
                                         <!--<option t-att-selected="partner.state_id"><t t-esc="partner.state_id.name" /></option>-->
                                         <t t-foreach="countries" t-as="c">
-                                                <option t-att-value="c.id" t-att-selected="c.id == (country and country.id)">
+                                                <option t-att-value="c.id">
                                                     <t t-esc="c.name" />
                                                 </option>
                                             </t>
@@ -176,9 +191,9 @@
                                 <div class="form-group">
                                     <label class="col-form-label" for="deparment">Departamento</label>
                                     <select name="deparment" id="bfdeparment0" class="form-control">
-                                        <!--<option t-att-selected="partner.state_id"><t t-esc="partner.state_id.name" /></option>-->
+                                        <option value="">Seleccione un departamento...</option>
                                         <t t-foreach="country_states" t-as="s">
-                                                <option t-att-value="s.id" t-att-selected="s.id == partner.state_id.id">
+                                                <option t-att-value="s.id">
                                                     <t t-esc="s.name" />
                                                 </option>
                                         </t>
@@ -190,8 +205,9 @@
                                 <div class="form-group">
                                     <label class="col-form-label" for="city">Ciudad</label>
                                     <select name="city" id="bfcity0" class="form-control">
+                                        <option value="">Seleccione una Ciudad...</option>
                                         <t t-foreach="cities" t-as="c">
-                                            <option t-att-value="c.city_id.name" t-att-selected="c.city_id.id == partner.zip_id.city_id.id">
+                                            <option t-att-value="c.city_id.id">
                                                  <t t-esc="c.city_id.name" />
                                             </option>
                                         </t>
@@ -211,13 +227,7 @@
                                 <div class="form-group">
                                     <label class="col-form-label" for="beneficiario">Cantidad de beneficiarios a incluir</label>
                                     <select name="beneficiario" id="cant_beneficiarios" class="form-control">
-                                        <option value="0">...</option>
-                                        <option value="1" style="">1</option>
-                                        <option value="2" style="">2</option>
-                                        <option value="3" style="">3</option>
-                                        <option value="4" style="">4</option>
-                                        <option value="5" style="">5</option>
-                                        <option value="6" style="">6</option>
+                                        <option value="0">...</option>                                        
                                     </select>
                                 </div>
                             </div>
@@ -236,8 +246,14 @@
                     <br/>
                     <br/>
                     <!-- BENEFICIARIO 1-->
-                    <div id="beneficiary1" class="card">
+                    <div id="beneficiary1" class="card">                        
                         <h4 id="subti1"></h4>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="bfCheckBox1"/>
+                            <label class="form-check-label" for="bfCheckBox1">
+                                ¿Vive conmigo?
+                            </label>
+                        </div>
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
@@ -314,11 +330,10 @@
                         </div>
 
                         <div class="row">
-                            
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfaddress1">Dirección de residencia</label>
-                                    <input class="form-control" type="text" name="bfaddress1" placeholder="Dirección de residencia" t-att-value="partner.street"/>
+                                    <input class="form-control" type="text" name="bfaddress1" placeholder="Dirección de residencia"/>
                                 </div>
                             </div>
                             <div class="col-lg-3">
@@ -330,7 +345,7 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfphone1">Teléfono Móvil</label>
-                                    <input class="form-control" type="text" name="bfphone1" t-att-value="partner.phone" />
+                                    <input class="form-control" type="text" name="bfphone1"/>
                                 </div>
                             </div>
                         </div>
@@ -355,10 +370,10 @@
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfdeparment1">Departamento</label>
                                     <select name="bfdeparment1" class="form-control">
-                                        <!--<option t-att-selected="partner.state_id"><t t-esc="partner.state_id.name" /></option>-->
-                                        
+                                        <option value="">Seleccione un departamento...</option>
+                                        <!--<option t-att-selected="partner.state_id"><t t-esc="partner.state_id.name" /></option>-->                                        
                                         <t t-foreach="country_states" t-as="s">
-                                                <option t-att-value="s.id" t-att-selected="s.id == partner.state_id.id">
+                                                <option t-att-value="s.id">
                                                     <t t-esc="s.name" />
                                                 </option>
                                         </t>
@@ -370,9 +385,9 @@
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfcity1">Ciudad</label>
                                     <select name="bfcity1" id="bfcity1" class="form-control">
-                                        
+                                        <option value="">Seleccione una Ciudad...</option>
                                         <t t-foreach="cities" t-as="c">
-                                            <option t-att-value="c.city_id.name" t-att-selected="c.city_id.id == partner.zip_id.city_id.id">
+                                            <option t-att-value="c.city_id.name">
                                                  <t t-esc="c.city_id.name" />
                                             </option>
                                         </t>
@@ -428,6 +443,12 @@
 
                     <div id="beneficiary2" class="card">
                         <h4 id="subti2"></h4>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="bfCheckBox2"/>
+                            <label class="form-check-label" for="bfCheckBox2">
+                                ¿Vive conmigo?
+                            </label>
+                        </div>
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
@@ -507,7 +528,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfaddress2">Dirección de residencia</label>
-                                    <input class="form-control" type="text" name="bfaddress2" placeholder="Dirección de residencia" t-att-value="partner.street"/>
+                                    <input class="form-control" type="text" name="bfaddress2" placeholder="Dirección de residencia"/>
                                 </div>
                             </div>
                             <div class="col-lg-3">
@@ -519,7 +540,7 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfphone2">Teléfono Móvil</label>
-                                    <input class="form-control" type="text" name="bfphone2" t-att-value="partner.phone" />
+                                    <input class="form-control" type="text" name="bfphone2"/>
                                 </div>
                             </div>
                         </div>
@@ -544,10 +565,11 @@
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfdeparment2">Departamento</label>
                                     <select name="bfdeparment2" class="form-control">
+                                        <option value="">Seleccione un departamento...</option>
                                         <!--<option t-att-selected="partner.state_id"><t t-esc="partner.state_id.name" /></option>-->
                                         
                                         <t t-foreach="country_states" t-as="s">
-                                                <option t-att-value="s.id" t-att-selected="s.id == partner.state_id.id">
+                                                <option t-att-value="s.id">
                                                     <t t-esc="s.name" />
                                                 </option>
                                         </t>
@@ -559,9 +581,9 @@
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfcity2">Ciudad</label>
                                     <select name="bfcity2" id="bfcity2" class="form-control">
-                                        
+                                        <option value="">Seleccione una Ciudad...</option>
                                         <t t-foreach="cities" t-as="c">
-                                            <option t-att-value="c.city_id.name" t-att-selected="c.city_id.id == partner.zip_id.city_id.id">
+                                            <option t-att-value="c.city_id.name">
                                                  <t t-esc="c.city_id.name" />
                                             </option>
                                         </t>
@@ -618,6 +640,12 @@
 
                     <div id="beneficiary3" class="card">
                         <h4 id="subti3"></h4>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="bfCheckBox3"/>
+                            <label class="form-check-label" for="bfCheckBox3">
+                                ¿Vive conmigo?
+                            </label>
+                        </div>
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
@@ -697,7 +725,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfaddress3">Dirección de residencia</label>
-                                    <input class="form-control" type="text" name="bfaddress3" placeholder="Dirección de residencia" t-att-value="partner.street"/>
+                                    <input class="form-control" type="text" name="bfaddress3" placeholder="Dirección de residencia"/>
                                 </div>
                             </div>
                             <div class="col-lg-3">
@@ -709,7 +737,7 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfphone3">Teléfono Móvil*</label>
-                                    <input class="form-control" type="text" name="bfphone3" t-att-value="partner.phone" />
+                                    <input class="form-control" type="text" name="bfphone3"/>
                                 </div>
                             </div>
                         </div>
@@ -734,10 +762,11 @@
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfdeparment3">Departamento</label>
                                     <select name="bfdeparment3" class="form-control">
+                                        <option value="">Seleccione un departamento...</option>
                                         <!--<option t-att-selected="partner.state_id"><t t-esc="partner.state_id.name" /></option>-->
                                         
                                         <t t-foreach="country_states" t-as="s">
-                                                <option t-att-value="s.id" t-att-selected="s.id == partner.state_id.id">
+                                                <option t-att-value="s.id">
                                                     <t t-esc="s.name" />
                                                 </option>
                                         </t>
@@ -749,9 +778,9 @@
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfcity3">Ciudad</label>
                                     <select name="bfcity3" id="bfcity3" class="form-control">
-                                        
+                                        <option value="">Seleccione una Ciudad...</option>
                                         <t t-foreach="cities" t-as="c">
-                                            <option t-att-value="c.city_id.name" t-att-selected="c.city_id.id == partner.zip_id.city_id.id">
+                                            <option t-att-value="c.city_id.name">
                                                  <t t-esc="c.city_id.name" />
                                             </option>
                                         </t>
@@ -806,6 +835,12 @@
 
                     <div id="beneficiary4" class="card">
                         <h4 id="subti4"></h4>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="bfCheckBox4"/>
+                            <label class="form-check-label" for="bfCheckBox4">
+                                ¿Vive conmigo?
+                            </label>
+                        </div>
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
@@ -885,7 +920,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfaddress4">Dirección de residencia</label>
-                                    <input class="form-control" type="text" name="bfaddress4" placeholder="Dirección de residencia" t-att-value="partner.street"/>
+                                    <input class="form-control" type="text" name="bfaddress4" placeholder="Dirección de residencia"/>
                                 </div>
                             </div>
                             <div class="col-lg-3">
@@ -897,7 +932,7 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfphone4">Teléfono Móvil*</label>
-                                    <input class="form-control" type="text" name="bfphone4" t-att-value="partner.phone" />
+                                    <input class="form-control" type="text" name="bfphone4"/>
                                 </div>
                             </div>
                         </div>
@@ -922,10 +957,11 @@
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfdeparment4">Departamento</label>
                                     <select name="bfdeparment4" class="form-control">
+                                        <option value="">Seleccione un departamento...</option>
                                         <!--<option t-att-selected="partner.state_id"><t t-esc="partner.state_id.name" /></option>-->
                                         
                                         <t t-foreach="country_states" t-as="s">
-                                                <option t-att-value="s.id" t-att-selected="s.id == partner.state_id.id">
+                                                <option t-att-value="s.id">
                                                     <t t-esc="s.name" />
                                                 </option>
                                         </t>
@@ -937,9 +973,9 @@
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfcity4">Ciudad</label>
                                     <select name="bfcity4" id="bfcity4" class="form-control">
-                                        
+                                        <option value="">Seleccione una Ciudad...</option>
                                         <t t-foreach="cities" t-as="c">
-                                            <option t-att-value="c.city_id.name" t-att-selected="c.city_id.id == partner.zip_id.city_id.id">
+                                            <option t-att-value="c.city_id.name">
                                                  <t t-esc="c.city_id.name" />
                                             </option>
                                         </t>
@@ -993,6 +1029,12 @@
                     <br/>
                      <div id="beneficiary5" class="card">
                         <h4 id="subti5"></h4>
+                         <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="bfCheckBox5"/>
+                            <label class="form-check-label" for="bfCheckBox5">
+                                ¿Vive conmigo?
+                            </label>
+                        </div>
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
@@ -1072,7 +1114,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfaddress5">Dirección de residencia</label>
-                                    <input class="form-control" type="text" name="bfaddress5" placeholder="Dirección de residencia" t-att-value="partner.street"/>
+                                    <input class="form-control" type="text" name="bfaddress5" placeholder="Dirección de residencia"/>
                                 </div>
                             </div>
                             <div class="col-lg-3">
@@ -1084,7 +1126,7 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfphone5">Teléfono Móvil*</label>
-                                    <input class="form-control" type="text" name="bfphone5" t-att-value="partner.phone" />
+                                    <input class="form-control" type="text" name="bfphone5"/>
                                 </div>
                             </div>
                         </div>
@@ -1109,10 +1151,11 @@
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfdeparment5">Departamento</label>
                                     <select name="bfdeparment5" class="form-control">
+                                        <option value="">Seleccione un departamento...</option>
                                         <!--<option t-att-selected="partner.state_id"><t t-esc="partner.state_id.name" /></option>-->
                                         
                                         <t t-foreach="country_states" t-as="s">
-                                                <option t-att-value="s.id" t-att-selected="s.id == partner.state_id.id">
+                                                <option t-att-value="s.id">
                                                     <t t-esc="s.name" />
                                                 </option>
                                         </t>
@@ -1124,9 +1167,9 @@
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfcity5">Ciudad</label>
                                     <select name="bfcity5" id="bfcity5" class="form-control">
-                                        
+                                        <option value="">Seleccione una Ciudad...</option>
                                         <t t-foreach="cities" t-as="c">
-                                            <option t-att-value="c.city_id.name" t-att-selected="c.city_id.id == partner.zip_id.city_id.id">
+                                            <option t-att-value="c.city_id.name">
                                                  <t t-esc="c.city_id.name" />
                                             </option>
                                         </t>
@@ -1181,6 +1224,12 @@
 
                      <div id="beneficiary6" class="card">
                         <h4 id="subti6"></h4>
+                         <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="bfCheckBox6"/>
+                            <label class="form-check-label" for="bfCheckBox6">
+                                ¿Vive conmigo?
+                            </label>
+                        </div>
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
@@ -1260,7 +1309,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfaddress6">Dirección de residencia</label>
-                                    <input class="form-control" type="text" name="bfaddress6" placeholder="Dirección de residencia" t-att-value="partner.street"/>
+                                    <input class="form-control" type="text" name="bfaddress6" placeholder="Dirección de residencia"/>
                                 </div>
                             </div>
                             <div class="col-lg-3">
@@ -1272,7 +1321,7 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfphone6">Teléfono Móvil*</label>
-                                    <input class="form-control" type="text" name="bfphone6" t-att-value="partner.phone" />
+                                    <input class="form-control" type="text" name="bfphone6"/>
                                 </div>
                             </div>
                         </div>
@@ -1297,10 +1346,11 @@
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfdeparment6">Departamento</label>
                                     <select name="bfdeparment6" class="form-control">
+                                        <option value="">Seleccione un departamento...</option>
                                         <!--<option t-att-selected="partner.state_id"><t t-esc="partner.state_id.name" /></option>-->
                                         
                                         <t t-foreach="country_states" t-as="s">
-                                                <option t-att-value="s.id" t-att-selected="s.id == partner.state_id.id">
+                                                <option t-att-value="s.id">
                                                     <t t-esc="s.name" />
                                                 </option>
                                         </t>
@@ -1312,9 +1362,9 @@
                                 <div class="form-group">
                                     <label class="col-form-label" for="bfcity6">Ciudad</label>
                                     <select name="bfcity6" id="bfcity6" class="form-control">
-                                        
+                                        <option value="">Seleccione una Ciudad...</option>
                                         <t t-foreach="cities" t-as="c">
-                                            <option t-att-value="c.city_id.name" t-att-selected="c.city_id.id == partner.zip_id.city_id.id">
+                                            <option t-att-value="c.city_id.name">
                                                  <t t-esc="c.city_id.name" />
                                             </option>
                                         </t>

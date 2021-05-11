@@ -6,13 +6,13 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
     'use strict';
 
     $(function() {
-        $('#country_id').selectpicker();
-        $('#state_id').selectpicker('val', '');
+        $('#country_address_id').selectpicker();
+        $('#state_address_id').selectpicker('val', '');
         $('#fiscal_position_id').selectpicker();
         $('#city').selectpicker();
         $('#document').selectpicker('val', '');
         $('#fiscal_position').selectpicker();
-
+               
         function consultarZipcode(ciudad){
             $.ajax({
                 data: { 'city_id': ciudad },
@@ -25,10 +25,80 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                 }
             });
         }
+        
+        function consultarPhoneCode(pais){
+            $.ajax({
+                data: { 'id': pais },
+                url: "/search/phonecode",
+                type: 'get',
+                success: function(data) {
+                    let decode_data = JSON.parse(data);
+                    let phone = document.querySelector("input[name='phone']").value;
+                    phone = phone.split(')');
+                    let number = phone[phone.length - 1].trim();
+                    document.querySelector("input[name='phone']").value = '(+' + decode_data['data'].phonecode + ') ' + number;    
+                }
+            });
+        }
+        
+        function consultarEstados(pais) {
+            $.ajax({
+                data: { 'id': pais },
+                url: "/search/states",
+                type: 'get',
+                success: function(data) {
+                    let decode_data = JSON.parse(data);                    
+                    $('#state_address_id').selectpicker('destroy');
+                    $('#state_address_id').empty();
+                    $('#city').selectpicker('destroy');
+                    $('#city').empty();
+                    decode_data.data.states.forEach(function(obj) {
+                        $('#state_address_id').append($("<option></option>")
+                            .attr("value", obj.state_id).text(obj.state));
+                    });
+                    let estado = $('#state_address_id').val();
+                    let elemento = "select[name='city']";
+                    consultarCiudades(estado, elemento);
+                    $('#state_address_id').selectpicker('render');
+                    $('#city').selectpicker('render');
+                    
+                }
+            });
+        }
 
         $('#city').change(function() {
             let data_select = $("#city option:selected").val();
-            consultarZipcode(data_select);
+            let country = $("#country_address_id option:selected").val();
+            if(country == 49){
+                consultarZipcode(data_select);
+            }
+            
+        });
+        
+        $('.div_state_text').hide();
+        $('.div_city_text').hide();
+        
+        consultarPhoneCode($("#country_address_id option:selected").val());
+        consultarEstados($("#country_address_id option:selected").val());
+        
+        $('#country_address_id').change(function() {
+            let data_select = $("#country_address_id option:selected").val();            
+            consultarPhoneCode(data_select);
+            if (data_select != 49){  
+                document.querySelector("input[name='zip']").value = "";
+                document.querySelector("input[name='zip_id']").value = "";
+                $('.div_state').hide();
+                $('.div_city').hide();
+                $('.div_state_text').show();
+                $('.div_city_text').show();
+            }
+            else{ 
+                consultarEstados(data_select);                
+                $('.div_state_text').hide();
+                $('.div_city_text').hide();
+                $('.div_state').show();
+                $('.div_city').show();   
+            }
         });
 
         function consultarCiudades(estado, elemento) {
@@ -52,10 +122,11 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
             });
         }
 
-        $("select[name='state_id']").on('change', function cambiarEstado() {
+        $("select[name='state_address_id']").on('change', function cambiarEstado() {
             let estado = $(this).val();
             let elemento = "select[name='city']";
-            if (estado != ''){
+            let country = $("#country_address_id option:selected").val();
+            if (country == 49){
                 consultarCiudades(estado, elemento);
             } else {
                 $('#city').selectpicker('destroy');
@@ -74,7 +145,7 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
         if (parseInt(partner_id) > 0 && parseInt(partner_city_id) > 0){
             $("select[name='state_id']").val(partner_state_id)
             $("select[name='document']").val(partner_document_type)
-            $('#state_id').selectpicker('refresh')
+            $('#state_address_id').selectpicker('refresh')
             $('#document').selectpicker('refresh')
             consultarCiudades(partner_state_id, partner_city_id);
         }
@@ -228,7 +299,10 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
         });
         
         $.validator.addMethod("formMovilFijoLength", function (value, element) {
-           if(element.value.length == 7 || element.value.length == 10){
+            let number = element.value;
+            number = number.split(')');
+            number = number[number.length - 1].trim();
+           if(number.length == 7 || number.length == 10){
               return true;
            } else {
               return false;
@@ -292,7 +366,6 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                 },
                 phone: {
                     required: true,
-                    number: true,
                     formMovilFijoLength: true,
                 },
                 document: {
@@ -335,10 +408,10 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                 city: {
                     required: true,
                 },
-                country_id: {
+                country_address_id: {
                     required: true,
                 },
-                state_id: {
+                state_address_id: {
                     required: true,
                 },
                 aceptacion_datos: {
@@ -425,7 +498,6 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                 },
                 phone: {
                     required: "¡Upss! tu telefono es requerido",
-                    number: "¡Upss! este campo solo es numérico",
                     minlength: "¡Upss! debe tener 10 digitos",
                     maxlength: "¡Upss! debe tener 10 digitos"
                 },
@@ -447,10 +519,10 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                     required: "¡Upss! tu ciudad es requerida",
 
                 },
-                country_id: {
+                country_address_id: {
                     required: "¡Upss! tu país es requerido",
                 },
-                state_id: {
+                state_address_id: {
                     required: "¡Upss! tu departamento es requerido",
 
                 },
@@ -487,7 +559,18 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
         $("#beneficiary5").hide();
         $("#beneficiary6").hide();
     }
-
+    
+    
+     function llenar(){
+        let beneficiary_number = parseInt($("#beneficiaries_number").val());
+        for(let i = 1; i <= beneficiary_number; i++){
+            $('#cant_beneficiarios').append($("<option></option>").attr("value", i).text(i));
+        };
+    }
+    
+    llenar();
+    
+        
 
     $("#cant_beneficiarios").on('change', function mostrarbeneficiarios() {
         let cantidad_beneficiarios = parseInt($(this).val());
@@ -650,12 +733,252 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                             $('#bfcity5').append($("<option></option>")
                                 .attr("value", obj.city_id).text(obj.city));
                         });
+                    } else if (item == 6) {
+                        $('#bfcity6').empty();
+                        decode_data.data.cities.forEach(function(obj) {
+                            $('#bfcity6').append($("<option></option>")
+                                .attr("value", obj.city_id).text(obj.city));
+                        });
                     }
+                    
                 }
             });
         }
-
-
+    
+    function obtenerInfoComprador(order_id){
+            $.ajax({
+                data: { 'order_id': order_id },
+                url: "/search/buyer/info",
+                type: 'get',
+                success: function(data) {
+                    let decode_data = JSON.parse(data);
+                    if(decode_data['data'].country_id == 49){
+                        document.querySelector("input[name='name']").value = decode_data['data'].firstname;
+                        document.querySelector("input[name='othername']").value = decode_data['data'].othernames;
+                        document.querySelector("input[name='lastname']").value = decode_data['data'].lastname;
+                        document.querySelector("input[name='lastname2']").value = decode_data['data'].lastname2;                        
+                        document.querySelector("input[name='numero_documento']").value = decode_data['data'].identification_document;
+                        document.querySelector("input[name='expedition_date']").value = decode_data['data'].expedition_date;
+                        document.querySelector("input[name='email']").value = decode_data['data'].email;
+                        document.querySelector("input[name='phone']").value = decode_data['data'].phone;
+                        document.querySelector("input[name='address']").value = decode_data['data'].address;
+                        document.querySelector("input[name='date']").value = decode_data['data'].birthdate_date;                        
+                        $("#document_type").val(String(decode_data['data'].document_type_id)).change();
+                        $("#bfdeparment0").val(String(decode_data['data'].state_id)).change();
+                        setTimeout(() => { $("#bfcity0").val(String(decode_data['data'].city_id)).change(); }, 500);
+                    }
+                    else{
+                        $('#flexCheckDefault').val('0');
+                        $('#div_error').show();
+                        $("#flexCheckDefault").prop("checked", false);
+                        $("#flexCheckDefault").attr("disabled", true);
+                    }
+                                   
+                }
+            });
+        }
+    
+    
+    $('#flexCheckDefault').on('click', function() {
+        if( $(this).is(':checked') ){
+            // Hacer algo si el checkbox ha sido seleccionado
+            $(this).val('1');
+            let url = window.location.href.split("/");
+            let number = url[url.length - 1];
+            obtenerInfoComprador(number);
+        } else {
+            // Hacer algo si el checkbox ha sido deseleccionado
+            document.querySelector("input[name='name']").value = "";
+            document.querySelector("input[name='othername']").value = "";
+            document.querySelector("input[name='lastname']").value = "";
+            document.querySelector("input[name='lastname2']").value = "";
+            document.querySelector("select[name='document_type']").value = "";
+            document.querySelector("input[name='numero_documento']").value = "";
+            document.querySelector("input[name='expedition_date']").value = "";
+            document.querySelector("input[name='email']").value = "";
+            document.querySelector("input[name='phone']").value = "";
+            document.querySelector("input[name='address']").value = "";
+            document.querySelector("input[name='date']").value = "";
+            $('#bfdeparment0').val('');
+            $('#bfcity0').val('');
+            $(this).val('0');
+        }
+    });
+    
+    
+    $('#bfCheckBox1').on('click', function() {
+        if( $(this).is(':checked') ){
+            // Hacer algo si el checkbox ha sido seleccionado
+            $("input[name='bfaddress1']").val($("input[name='address']").val());
+            $("select[name='bfdeparment1']").val($("select[name='deparment']").val()).change();            
+            setTimeout(() => { $("select[name='bfcity1']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo1']").val($("input[name='fijo']").val());
+        } else {
+            // Hacer algo si el checkbox ha sido deseleccionado
+            $("input[name='bfaddress1']").val('');
+            $("select[name='bfdeparment1']").val('');
+            $("select[name='bfcity1']").val('');
+        }
+    });
+    
+    $('#bfCheckBox2').on('click', function() {
+        if( $(this).is(':checked') ){
+            // Hacer algo si el checkbox ha sido seleccionado
+            $("input[name='bfaddress2']").val($("input[name='address']").val());
+            $("select[name='bfdeparment2']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity2']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo2']").val($("input[name='fijo']").val());
+        } else {
+            // Hacer algo si el checkbox ha sido deseleccionado
+            $("input[name='bfaddress2']").val('');
+            $("select[name='bfdeparment2']").val('');
+            $("select[name='bfcity2']").val('');
+        }
+    });
+    
+    $('#bfCheckBox3').on('click', function() {
+        if( $(this).is(':checked') ){
+            // Hacer algo si el checkbox ha sido seleccionado
+            $("input[name='bfaddress3']").val($("input[name='address']").val());
+            $("select[name='bfdeparment3']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity3']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo3']").val($("input[name='fijo']").val());
+        } else {
+            // Hacer algo si el checkbox ha sido deseleccionado
+            $("input[name='bfaddress3']").val('');
+            $("select[name='bfdeparment3']").val('');
+            $("select[name='bfcity3']").val('');
+        }
+    });
+    
+    $('#bfCheckBox4').on('click', function() {
+        if( $(this).is(':checked') ){
+            // Hacer algo si el checkbox ha sido seleccionado
+            $("input[name='bfaddress4']").val($("input[name='address']").val());
+            $("select[name='bfdeparment4']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity4']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo4']").val($("input[name='fijo']").val());
+        } else {
+            // Hacer algo si el checkbox ha sido deseleccionado
+            $("input[name='bfaddress4']").val('');
+            $("select[name='bfdeparment4']").val('');
+            $("select[name='bfcity4']").val('');
+        }
+    });
+    
+    $('#bfCheckBox5').on('click', function() {
+        if( $(this).is(':checked') ){
+            // Hacer algo si el checkbox ha sido seleccionado
+            $("input[name='bfaddress5']").val($("input[name='address']").val());
+            $("select[name='bfdeparment5']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity5']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo5']").val($("input[name='fijo']").val());
+        } else {
+            // Hacer algo si el checkbox ha sido deseleccionado
+            $("input[name='bfaddress5']").val('');
+            $("select[name='bfdeparment5']").val('');
+            $("select[name='bfcity5']").val('');
+        }
+    });
+    
+    $('#bfCheckBox6').on('click', function() {
+        if( $(this).is(':checked') ){
+            // Hacer algo si el checkbox ha sido seleccionado
+            $("input[name='bfaddress6']").val($("input[name='address']").val());
+            $("select[name='bfdeparment6']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity6']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo6']").val($("input[name='fijo']").val());
+        } else {
+            // Hacer algo si el checkbox ha sido deseleccionado
+            $("input[name='bfaddress6']").val('');
+            $("select[name='bfdeparment6']").val('');
+            $("select[name='bfcity6']").val('');
+        }
+    });
+    
+    document.getElementById("submit_beneficiaries").addEventListener("click", function(event){
+        event.preventDefault();
+        if( $('#bfCheckBox1').is(':checked') ){
+            $("input[name='bfaddress1']").val($("input[name='address']").val());
+            $("select[name='bfdeparment1']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity1']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo1']").val($("input[name='fijo']").val());
+        }
+        if( $('#bfCheckBox2').is(':checked') ){
+            $("input[name='bfaddress2']").val($("input[name='address']").val());
+            $("select[name='bfdeparment2']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity2']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo2']").val($("input[name='fijo']").val());
+        }
+        if( $('#bfCheckBox3').is(':checked') ){
+            $("input[name='bfaddress3']").val($("input[name='address']").val());
+            $("select[name='bfdeparment3']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity3']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo3']").val($("input[name='fijo']").val());
+        }
+        if( $('#bfCheckBox4').is(':checked') ){
+            $("input[name='bfaddress4']").val($("input[name='address']").val());
+            $("select[name='bfdeparment4']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity4']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo4']").val($("input[name='fijo']").val());
+        }
+        if( $('#bfCheckBox5').is(':checked') ){
+            $("input[name='bfaddress5']").val($("input[name='address']").val());
+            $("select[name='bfdeparment5']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity5']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo5']").val($("input[name='fijo']").val());
+        }
+        if( $('#bfCheckBox6').is(':checked') ){
+            $("input[name='bfaddress6']").val($("input[name='address']").val());
+            $("select[name='bfdeparment6']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity6']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo6']").val($("input[name='fijo']").val());
+        }
+        $('#beneficiary').submit();
+        
+    });
+    
+//     $('#submit_beneficiaries').on('click', function() {
+//         if( $('#bfCheckBox1').is(':checked') ){
+//             $("input[name='bfaddress1']").val($("input[name='address']").val());
+//             $("select[name='bfdeparment1']").val($("select[name='deparment']").val()).change();
+//             setTimeout(() => { $("select[name='bfcity1']").val($("select[name='city']").val()).change(); }, 500);
+//             $("input[name='bffijo1']").val($("input[name='fijo']").val());
+//         }
+//         if( $('#bfCheckBox2').is(':checked') ){
+//             $("input[name='bfaddress2']").val($("input[name='address']").val());
+//             $("select[name='bfdeparment2']").val($("select[name='deparment']").val()).change();
+//             setTimeout(() => { $("select[name='bfcity2']").val($("select[name='city']").val()).change(); }, 500);
+//             $("input[name='bffijo2']").val($("input[name='fijo']").val());
+//         }
+//         if( $('#bfCheckBox3').is(':checked') ){
+//             $("input[name='bfaddress3']").val($("input[name='address']").val());
+//             $("select[name='bfdeparment3']").val($("select[name='deparment']").val()).change();
+//             setTimeout(() => { $("select[name='bfcity3']").val($("select[name='city']").val()).change(); }, 500);
+//             $("input[name='bffijo3']").val($("input[name='fijo']").val());
+//         }
+//         if( $('#bfCheckBox4').is(':checked') ){
+//             $("input[name='bfaddress4']").val($("input[name='address']").val());
+//             $("select[name='bfdeparment4']").val($("select[name='deparment']").val()).change();
+//             setTimeout(() => { $("select[name='bfcity4']").val($("select[name='city']").val()).change(); }, 500);
+//             $("input[name='bffijo4']").val($("input[name='fijo']").val());
+//         }
+//         if( $('#bfCheckBox5').is(':checked') ){
+//             $("input[name='bfaddress5']").val($("input[name='address']").val());
+//             $("select[name='bfdeparment5']").val($("select[name='deparment']").val()).change();
+//             setTimeout(() => { $("select[name='bfcity5']").val($("select[name='city']").val()).change(); }, 500);
+//             $("input[name='bffijo5']").val($("input[name='fijo']").val());
+//         }
+//         if( $('#bfCheckBox6').is(':checked') ){
+//             $("input[name='bfaddress6']").val($("input[name='address']").val());
+//             $("select[name='bfdeparment6']").val($("select[name='deparment']").val()).change();
+//             setTimeout(() => { $("select[name='bfcity6']").val($("select[name='city']").val()).change(); }, 500);
+//             $("input[name='bffijo6']").val($("input[name='fijo']").val());
+//         }
+//     });
+    
+    
+   
     $("select[id='bfdeparment0']").on('change', function cambiarCiudades() {
         let estado = $(this).val();
         let elemento = "select[id='bfcity0']";
@@ -690,6 +1013,12 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
         let estado = $(this).val();
         let elemento = "select[name='bfcity5']";
         consultarCiudadesBeneficiary(estado, elemento, 5);
+
+    });
+    $("select[name='bfdeparment6']").on('change', function cambiarCiudades() {
+        let estado = $(this).val();
+        let elemento = "select[name='bfcity6']";
+        consultarCiudadesBeneficiary(estado, elemento, 6);
 
     });
 
@@ -802,7 +1131,10 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
     });
 
     $.validator.addMethod("formMovilFijoLength", function (value, element) {
-        if(element.value.length == 7 || element.value.length == 10){
+        let number = element.value;
+            number = number.split(')');
+            number = number[number.length - 1].trim();
+        if(number.length == 7 || number.length == 10){
             return true;
         } else {
             return false;
@@ -1191,7 +1523,6 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 phone: {
                     required: true,
-                    number: true,
                     formMovilFijoLength: true,
                 },
                 fijo: {
@@ -1219,10 +1550,13 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 city: {
                     required: true,
                 },
-                country_id: {
+                country_address_id: {
                     required: true,
                 },
-                state_id: {
+                deparment: {
+                    required: true,
+                },
+                state_address_id: {
                     required: true,
                 },
                 date: {
@@ -1308,9 +1642,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfphone1: {
                     required: true,
-                    number: true,
-                    minlength:10,
-                    maxlength:10,
+                    formMovilFijoLength: true,
                 },
                 bffijo1: {
                     required: false,
@@ -1394,9 +1726,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfphone2: {
                     required: true,
-                    number: true,
-                    minlength:10,
-                    maxlength:10,
+                    formMovilFijoLength: true,
                 },
                 bffijo2: {
                     required: false,
@@ -1480,9 +1810,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfphone3: {
                     required: true,
-                    number: true,
-                    minlength:10,
-                    maxlength:10,
+                    formMovilFijoLength: true,
                 },
                 bffijo3: {
                     required: false,
@@ -1566,9 +1894,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfphone4: {
                     required: true,
-                    number: true,
-                    minlength:10,
-                    maxlength:10,
+                    formMovilFijoLength: true,
                 },
                 bffijo4: {
                     required: false,
@@ -1652,9 +1978,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfphone5: {
                     required: true,
-                    number: true,
-                    minlength:10,
-                    maxlength:10,
+                    formMovilFijoLength: true,
                 },
                 bffijo5: {
                     required: false,
@@ -1738,9 +2062,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfphone6: {
                     required: true,
-                    number: true,
-                    minlength:10,
-                    maxlength:10,
+                    formMovilFijoLength: true,
                 },
                 bffijo6: {
                     required: false,
@@ -1815,8 +2137,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     email: "¡Upss! escribe un email valido"
                 },
                 phone: {
-                    required: "¡Upss! un telefono es requerido",
-                    number: "¡Upss! este campo solo es numérico",
+                    required: "¡Upss! un telefono es requerido",                    
                 },
                 fijo: {
                     number: "¡Upss! este campo solo es numérico",
@@ -1843,10 +2164,13 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 city: {
                     required: "¡Upss! una ciudad es requerida",
                 },
-                country_id: {
+                country_address_id: {
                     required: "¡Upss! un país es requerido",
                 },
-                state_id: {
+                deparment: {
+                    required: "¡Upss! un departamento es requerido",
+                },
+                state_address_id: {
                     required: "¡Upss! un departamento es requerido",
                 },
                 date: {
@@ -1875,9 +2199,6 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfphone1: {
                     required: "¡Upss! un telefono es requerido",
-                    number: "¡Upss! este campo solo es numérico",
-                    minlength: "¡Upss! debe tener 10 digitos",
-                    maxlength: "¡Upss! debe tener 10 digitos",
                 },
                 bffijo1: {
                     number: "¡Upss! este campo solo es numérico",
@@ -1928,10 +2249,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     email: "¡Upss! escribe un email valido"
                 },
                 bfphone2: {
-                    required: "¡Upss! un telefono es requerido",
-                    number: "¡Upss! este campo solo es numérico",
-                    minlength: "¡Upss! debe tener 10 digitos",
-                    maxlength: "¡Upss! debe tener 10 digitos",
+                    required: "¡Upss! un telefono es requerido",                    
                 },
                 bffijo2: {
                     number: "¡Upss! este campo solo es numérico",
@@ -1982,10 +2300,7 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                     email: "¡Upss! escribe un email valido"
                 },
                 bfphone3: {
-                    required: "¡Upss! tu telefono es requerido",
-                    number: "¡Upss! este campo solo es numérico",
-                    minlength: "¡Upss! debe tener 10 digitos",
-                    maxlength: "¡Upss! debe tener 10 digitos",
+                    required: "¡Upss! tu telefono es requerido", 
                 },
                 bffijo3: {
                     number: "¡Upss! este campo solo es numérico",
@@ -2037,9 +2352,6 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfphone4: {
                     required: "¡Upss! tu telefono es requerido",
-                    number: "¡Upss! este campo solo es numérico",
-                    minlength: "¡Upss! debe tener 10 digitos",
-                    maxlength: "¡Upss! debe tener 10 digitos",
                 },
                 bffijo4: {
                     number: "¡Upss! este campo solo es numérico",
@@ -2086,14 +2398,9 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfemail5: {
                     required: "¡Upss! tu email es requerido",
-                    email2: "¡Upss! Escribe un email valido",
-                    email: "¡Upss! escribe un email valido"
                 },
                 bfphone5: {
-                    required: "¡Upss! tu telefono es requerido",
-                    number: "¡Upss! este campo solo es numérico",
-                    minlength: "¡Upss! debe tener 10 digitos",
-                    maxlength: "¡Upss! debe tener 10 digitos",
+                    required: "¡Upss! tu telefono es requerido", 
                 },
                 bffijo5: {
                     number: "¡Upss! este campo solo es numérico",
@@ -2145,9 +2452,6 @@ odoo.define('web_sale_extended.subscription_add_beneficiaries', function(require
                 },
                 bfphone6: {
                     required: "¡Upss! tu telefono es requerido",
-                    number: "¡Upss! este campo solo es numérico",
-                    minlength: "¡Upss! debe tener 10 digitos",
-                    maxlength: "¡Upss! debe tener 10 digitos"
                 },
                 bffijo6: {
                     number: "¡Upss! este campo solo es numérico",
@@ -2311,7 +2615,140 @@ odoo.define('web_sale_extended.payment_process', function(require) {
             var url = '/shop'
             window.location.href = url;
         });
-        function consultarZipcodeCreditCard(ciudad){
+        
+        function consultarEstadosCreditCard(pais) {
+            $.ajax({
+                data: { 'id': pais },
+                url: "/search/states",
+                type: 'get',
+                success: function(data) {
+                    let decode_data = JSON.parse(data);                    
+                    $('#credit_card_state_id').selectpicker('destroy');
+                    $('#credit_card_state_id').empty();
+                    $('#credit_card_city').selectpicker('destroy');
+                    $('#credit_card_city').empty();
+                    decode_data.data.states.forEach(function(obj) {
+                        $('#credit_card_state_id').append($("<option></option>")
+                            .attr("value", obj.state_id).text(obj.state));
+                    });
+                    let estado = $('#credit_card_state_id').val();
+                    let elemento = "select[name='credit_card_city']";
+                    consultarCiudadesCreditCard(estado, elemento);
+                    $('#credit_card_state_id').selectpicker('render');
+                    $('#credit_card_city').selectpicker('render');
+                    
+                }
+            });
+        }
+        
+        
+        
+        function consultarEstadosCash(pais) {
+            $.ajax({
+                data: { 'id': pais },
+                url: "/search/states",
+                type: 'get',
+                success: function(data) {
+                    let decode_data = JSON.parse(data);                    
+                    $('#cash_state_id').selectpicker('destroy');
+                    $('#cash_state_id').empty();
+                    $('#cash_city').selectpicker('destroy');
+                    $('#cash_city').empty();
+                    decode_data.data.states.forEach(function(obj) {
+                        $('#cash_state_id').append($("<option></option>")
+                            .attr("value", obj.state_id).text(obj.state));
+                    });
+                    let estado = $('#cash_state_id').val();
+                    let elemento = "select[name='cash_city']";
+                    consultarCiudadesCash(estado, elemento);
+                    $('#cash_state_id').selectpicker('render');
+                    $('#cash_city').selectpicker('render');
+                    
+                }
+            });
+        }
+        
+        
+        
+        function consultarEstadosPse(pais) {
+            $.ajax({
+                data: { 'id': pais },
+                url: "/search/states",
+                type: 'get',
+                success: function(data) {
+                    let decode_data = JSON.parse(data);                    
+                    $('#pse_state_id').selectpicker('destroy');
+                    $('#pse_state_id').empty();
+                    $('#pse_city').selectpicker('destroy');
+                    $('#pse_city').empty();
+                    decode_data.data.states.forEach(function(obj) {
+                        $('#pse_state_id').append($("<option></option>")
+                            .attr("value", obj.state_id).text(obj.state));
+                    });
+                    let estado = $('#pse_state_id').val();
+                    let elemento = "select[name='pse_city']";
+                    consultarCiudadesPSE(estado, elemento);
+                    $('#pse_state_id').selectpicker('render');
+                    $('#pse_city').selectpicker('render');
+                    
+                }
+            });
+        }
+        
+        
+        $('#credit_card_country_id').change(function() {
+            let data_select = $("#credit_card_country_id option:selected").val();            
+            if (data_select != 49){               
+                $('.div_state').hide();
+                $('.div_city').hide();
+                $('.div_state_text').show();
+                $('.div_city_text').show();
+            }
+            else{ 
+                consultarEstadosCreditCard(data_select);                
+                $('.div_state_text').hide();
+                $('.div_city_text').hide();
+                $('.div_state').show();
+                $('.div_city').show();   
+            }
+        });
+        
+        
+        $('#pse_country_id').change(function() {
+            let data_select = $("#pse_country_id option:selected").val();            
+            if (data_select != 49){               
+                $('.div_state').hide();
+                $('.div_city').hide();
+                $('.div_state_text').show();
+                $('.div_city_text').show();
+            }
+            else{ 
+                consultarEstadosCreditCard(data_select);                
+                $('.div_state_text').hide();
+                $('.div_city_text').hide();
+                $('.div_state').show();
+                $('.div_city').show();   
+            }
+        });
+        
+        $('#cash_country_id').change(function() {
+            let data_select = $("#cash_country_id option:selected").val();            
+            if (data_select != 49){               
+                $('.div_state').hide();
+                $('.div_city').hide();
+                $('.div_state_text').show();
+                $('.div_city_text').show();
+            }
+            else{ 
+                consultarEstadosCreditCard(data_select);                
+                $('.div_state_text').hide();
+                $('.div_city_text').hide();
+                $('.div_state').show();
+                $('.div_city').show();   
+            }
+        });
+        
+        function consultarZipcodeCreditCard(ciudad){            
             $.ajax({
                 data: { 'city_id': ciudad },
                 url: "/search/zipcodes",
@@ -2625,8 +3062,7 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                     email2: true,
                 },
                 credit_card_partner_phone: {
-                    required: true,
-                    number: true,
+                    required: true,                    
                     formMovilFijoLength: true,
                 },
                 credit_card_partner_document: {
@@ -2678,7 +3114,6 @@ odoo.define('web_sale_extended.payment_process', function(require) {
                 },
                 credit_card_partner_phone: {
                     required: "¡Upss! tu telefono es requerido",
-                    number: "¡Upss! este campo solo es numérico",
                     minlength: "¡Upss! debe tener 10 digitos",
                     maxlength: "¡Upss! debe tener 10 digitos"
 
