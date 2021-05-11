@@ -17,6 +17,9 @@ class SaleOrder(models.Model):
     tusdatos_approved = fields.Boolean('Approved', default=False)
     tusdatos_email = fields.Char('Client e-mail', default='')
     tusdatos_request_expired = fields.Boolean('Request Expired')
+    
+    tusdatos_retry = fields.Boolean('Retry request', default=False)
+    
     subscription_id = fields.Many2one('sale.subscription', 'Suscription ID')
     beneficiary0_id = fields.Many2one('res.partner')
     beneficiary1_id = fields.Many2one('res.partner')
@@ -192,19 +195,27 @@ class SaleOrder(models.Model):
                 _logger.info(' '.join([str(approval), process_id]))
                 _logger.error('***************************** CONSULTA EN TUS DATOS ++++++++++++++++++++++++++++++++++')
                 approval = self.env['api.tusdatos'].personal_data_approval(process_id)
+                
+                _logger.error('-----------------------------------approval impreso por felipe----------------------')
+                _logger.error(approval)
+                
+                _logger.error(approval[1])
                 if approval[0]:
                     _logger.error('***************************** LLEGA POSITIVO LA VERIFICACION EN TUS DATOS ++++++++++++++++++++++++++++++++++')
                     _logger.error(approval[0])
+                    _logger.error(approval[0])
                     sale_id.write({'tusdatos_approved': True})
-                    if '-' in process_id:
+                    _logger.error('prodcesssssssss')
+                    _logger.error(process_id)
+                    #if '-' in process_id:
                         #sale_id.write({'tusdatos_request_id': approval[1]['id']})
-                        body_message = """
-                            <b><span style='color:green;'>TusDatos - Solicitud de Verificación Aprobada</span></b><br/>
-                            <b>Respuesta:</b> %s<br/>
-                        """ % (
-                            json.dumps(approval),
-                        )
-                        sale_id.message_post(body=body_message, type="comment")
+                    body_message = """
+                        <b><span style='color:green;'>TusDatos - Solicitud de Verificación Aprobada</span></b><br/>
+                        <b>Respuesta:</b> %s<br/>
+                    """ % (
+                        json.dumps(approval),
+                    )
+                    sale_id.message_post(body=body_message, type="comment")
                 else:
                     if approval[1] and 'estado' in approval[1]:
                         if approval[1]['estado'] in ('error, tarea no valida'):
@@ -219,13 +230,18 @@ class SaleOrder(models.Model):
                         else:
                             message = """<b><span style='color:red;'>TusDatos - Solicitud de Verificación Rechazada</span></b><br/>
                             <b>Respuesta:</b> %s
-                            """, (approval if approval else '') 
+                            """ % (
+                                json.dumps(approval),
+                            )
                             sale_id.write({'tusdatos_request_expired' : True,})
                             sale_id.message_post(body=message)
                     else:
                         message = """<b><span style='color:red;'>TusDatos - Solicitud de Verificación Rechazada</span></b><br/>
                         Esta respuesta se da por que el documento del comprador se encuentra reportado
-                        en las lista Onu o OFAC"""
+                        en las lista Onu o OFAC<br/>
+                        <b>Respuesta:</b> %s""" % (
+                            json.dumps(approval),
+                        )
                         sale_id.write({'tusdatos_request_expired' : True,})
                         sale_id.message_post(body=message)
                 """Aseguramos que las transacciones ocurren cada 5 segundos"""

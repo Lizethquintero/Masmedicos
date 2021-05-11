@@ -23,15 +23,23 @@ class SaleSubscription(models.Model):
     
     #recurring_sale_order_line_ids = fields.One2many('sale.subscription.line', 'analytic_account_id', string='Subscription Lines', copy=True)
     subscription_partner_ids = fields.One2many('res.partner', 'subscription_id', string="Beneficiarios")
-    policy_number = fields.Char('Número de Poliza')
+    policy_number = fields.Char('Número de Certificado')
+    number = fields.Char(string='Número de Póliza')
+    recurring_next_date = fields.Date(string='Date of Next Invoice', help="The next invoice will be created on this date then the period will be extended.")
     
     
     @api.model
     def create(self, vals):
         res = super(SaleSubscription, self).create(vals)
-        sequence_id = res.recurring_invoice_line_ids[0].product_id.product_tmpl_id.categ_id.sequence_id
+        
+        if res.recurring_invoice_line_ids[0].product_id.product_tmpl_id.sequence_id:
+            sequence_id = res.recurring_invoice_line_ids[0].product_id.product_tmpl_id.sequence_id
+        else:
+            sequence_id = res.recurring_invoice_line_ids[0].product_id.product_tmpl_id.categ_id.sequence_id
         res.write({
             'policy_number': str(sequence_id.number_next_actual).zfill(10),
+            'number': str(sequence_id.code),
+            'recurring_next_date': datetime.date.today(),
         })
         sequence_id.write({
             'number_next_actual': int(sequence_id.number_next_actual) + 1,

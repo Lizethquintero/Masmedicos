@@ -49,7 +49,48 @@
                                                         <span style="font-size: 18px;">
                                                             <b>Llenemos</b>
                                                         </span>
-                                                        <b style="font-size: 18px;">la siguiente información para adquirir tu <t t-esc="order_detail[0].product_template_id.name"/> de vigencia anual, es fácil y rápido.</b>
+                                                        
+                                                        <t t-set="vigencia_plan" t-value="order_detail[0].product_template_id.subscription_template_id.recurring_rule_count * order_detail[0].product_template_id.subscription_template_id.recurring_interval" />
+                                                        
+                                                        <t t-if="order_detail[0].product_template_id.subscription_template_id.recurring_rule_type == 'monthly' and vigencia_plan == 1">
+                                                             <b style="font-size: 18px;">la siguiente información para adquirir tu <t t-esc="order_detail[0].product_template_id.name"/> de vigencia <t t-esc="vigencia_plan"/> Mes, es fácil y rápido.</b>
+                                                        </t>
+                                                            
+                                                        <t t-elif="order_detail[0].product_template_id.subscription_template_id.recurring_rule_type == 'monthly'">
+                                                             <b style="font-size: 18px;">la siguiente información para adquirir tu <t t-esc="order_detail[0].product_template_id.name"/> de vigencia <t t-esc="vigencia_plan"/> Meses, es fácil y rápido.</b>
+                                                        </t>
+                                                            
+                                                        
+                                                         <t t-if="order_detail[0].product_template_id.subscription_template_id.recurring_rule_type == 'daily' and vigencia_plan == 1">
+                                                             <b style="font-size: 18px;">la siguiente información para adquirir tu <t t-esc="order_detail[0].product_template_id.name"/> de vigencia <t t-esc="vigencia_plan"/> Día, es fácil y rápido.</b>
+                                                        </t>
+                                                            
+                                                        
+                                                        <t t-elif="order_detail[0].product_template_id.subscription_template_id.recurring_rule_type == 'daily'">
+                                                             <b style="font-size: 18px;">la siguiente información para adquirir tu <t t-esc="order_detail[0].product_template_id.name"/> de vigencia <t t-esc="vigencia_plan"/> Días, es fácil y rápido.</b>
+                                                        </t>
+                                                            
+                                                            
+                                                         <t t-if="order_detail[0].product_template_id.subscription_template_id.recurring_rule_type == 'weekly' and vigencia_plan == 1">
+                                                             <b style="font-size: 18px;">la siguiente información para adquirir tu <t t-esc="order_detail[0].product_template_id.name"/> de vigencia <t t-esc="vigencia_plan"/> Semana, es fácil y rápido.</b>
+                                                        </t>
+                                                            
+                                                            
+                                                        <t t-elif="order_detail[0].product_template_id.subscription_template_id.recurring_rule_type == 'weekly'">
+                                                             <b style="font-size: 18px;">la siguiente información para adquirir tu <t t-esc="order_detail[0].product_template_id.name"/> de vigencia <t t-esc="vigencia_plan"/> Semanas, es fácil y rápido.</b>
+                                                        </t>
+                                                            
+                                                        
+                                                        <t t-if="order_detail[0].product_template_id.subscription_template_id.recurring_rule_type == 'yearly' and vigencia_plan == 1">
+                                                             <b style="font-size: 18px;">la siguiente información para adquirir tu <t t-esc="order_detail[0].product_template_id.name"/> de vigencia <t t-esc="vigencia_plan"/> Año, es fácil y rápido.</b>
+                                                        </t>
+                                                            
+                                                            
+                                                        <t t-elif="order_detail[0].product_template_id.subscription_template_id.recurring_rule_type == 'yearly'">
+                                                             <b style="font-size: 18px;">la siguiente información para adquirir tu <t t-esc="order_detail[0].product_template_id.name"/> de vigencia <t t-esc="vigencia_plan"/> Años, es fácil y rápido.</b>
+                                                        </t>
+                                                            
+                                                        
                                                         </font>
                                                         <br/>
                                                     </div>
@@ -104,7 +145,7 @@
                                             <label class="col-form-label" for="name">Primer Nombre</label>
                                             <input type="text" name="name" 
                                             t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" 
-                                            t-att-value="'name' in checkout and checkout['firstname']" />
+                                            t-att-value="'name' in checkout and checkout['name']" />
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -156,9 +197,9 @@
                                     <div t-attf-class="form-group #{error.get('phone') and 'o_has_error' or ''} col-lg-6" 
                                     id="div_phone">
                                         <label class="col-form-label" for="phone">Teléfono</label>
-                                        <input type="tel" name="phone" 
+                                        <input type="text" name="phone" 
                                         t-attf-class="form-control #{error.get('phone') and 'is-invalid' or ''}" 
-                                        t-att-value="'phone' in checkout and checkout['phone']" />
+                                        t-att-value="'' in checkout and checkout['']" />
                                     </div>
                                     <div t-attf-class="form-group #{error.get('') and 'o_has_error' or ''} col-lg-6">
                                         <label class="col-form-label" for="document">Tipo de documento</label>
@@ -217,28 +258,37 @@
                                     
                                     
                                     <div class="w-100"/>
-                                    <div t-attf-class="form-group #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
-                                        <label class="col-form-label" for="country_id">País</label>
-                                        <select class="selectpicker" data-size="5" data-live-search="true"  id="country_id" name="country_id" 
-                                        t-attf-class="form-control #{error.get('country_id') and 'is-invalid' or ''}" t-att-mode="mode[1]">
+                                    <div t-attf-class="form-group #{error.get('country_address_id') and 'o_has_error' or ''} col-lg-6 div_country">
+                                        <label class="col-form-label" for="country_address_id">País</label>
+                                        <select class="selectpicker" data-size="5" data-live-search="true"  id="country_address_id" name="country_address_id" 
+                                        t-attf-class="form-control #{error.get('country_address_id') and 'is-invalid' or ''}" t-att-mode="mode[1]">
                                             <!--<option value="">País...</option>-->
                                             <t t-foreach="countries" t-as="c">
-                                                <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
+                                                <option t-att-value="c.id" t-att-selected="c.id == 49">
                                                     <t t-esc="c.name" />
                                                 </option>
                                             </t>
                                         </select>
                                     </div>
-                                    <div t-attf-class="form-group #{error.get('state_id') and 'o_has_error' or ''} col-lg-6 div_state" 
-                                    t-att-style="(not country or not country.state_ids) and 'display: none'">
-                                        <label class="col-form-label" for="state_id">Departamento</label>
-                                        <select class="selectpicker" data-size="4" id="state_id" data-live-search="true" name="state_id" 
-                                        t-attf-class="form-control #{error.get('state_id') and 'is-invalid' or ''}" data-init="1">
+                                    
+                                    
+                                    <div t-attf-class="div_state_text form-group col-lg-6">
+                                        <label class="col-form-label" for="state_id_text">Departamento / Provincia / Estado</label>
+                                        <input type="text" name="state_id_text" id="state_id_text" t-attf-class="form-control" t-att-value="'state_id_text' in checkout and checkout['state_id_text']" />
+                                    </div>
+                                    
+                                    
+<!--                                     <div t-attf-class="form-group #{error.get('state_address_id') and 'o_has_error' or ''} col-lg-6 div_state" 
+                                    t-att-style="(not country or not country.state_ids) and 'display: none'"> -->
+                                    <div t-attf-class="form-group #{error.get('state_id') and 'o_has_error' or ''} col-lg-6 div_state">
+                                        <label class="col-form-label" for="state_address_id">Departamento / Provincia / Estado</label>
+                                        <select class="selectpicker" data-size="4" id="state_address_id" data-live-search="true" name="state_address_id" 
+                                        t-attf-class="form-control #{error.get('state_address_id') and 'is-invalid' or ''}" data-init="1">
                                             <option value="">Seleccione el Departamento </option>
                                             <t t-foreach="country_states" t-as="s">
                                                 <option t-att-value="s.id" 
-                                                        t-att-selected="s.id == ('state_id' in checkout and country and checkout['state_id'] != '' 
-                                                                        and int(checkout['state_id']))">
+                                                        t-att-selected="s.id == ('state_address_id' in checkout and country and checkout['state_address_id'] != '' 
+                                                                        and int(checkout['state_address_id']))">
                                                     <t t-esc="s.name" />
                                                 </option>
                                             </t>
@@ -247,6 +297,36 @@
                                     
                                     
                                     <div class="w-100"></div>
+                                    
+                                    <div class="div_city_text form-group col-md-8">
+                                        <label class="col-form-label" for="city_text">Ciudad</label>         
+                                        <input type="text" name="city_id_text" id="city_id_text" t-attf-class="form-control" t-att-value="'city_2' in checkout and checkout['city_2']" />
+                                    </div>
+                                    
+                                    <div t-attf-class="form-group #{error.get('city') and 'o_has_error' or ''} col-md-8 div_city">
+                                        <label class="col-form-label" for="city">Ciudad</label>         
+                                        <select 
+                                                class="selectpicker"
+                                                data-size="10" 
+                                                data-live-search="true"
+                                                id="city"
+                                                name="city" 
+                                                t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}" 
+                                                t-att-value="'city' in checkout and checkout['city']"
+                                                t-att-style="(not country or not country.state_ids) and 'display: none'"
+                                                >
+                                            <!--++++++Modificación de selecctor de ciudad+++++-->
+                                            <option value="">Seleccione la Ciudad</option><!--<option value="Seleccione la ciudad"> </option>-->  <!--<option value="">Ciudad...</option>-->
+                                            <t t-foreach="cities" t-as="c">
+                                                <option t-att-value="c.city_id.name" t-att-selected="c.name">
+                                                    <t t-esc="c.name" /> <t t-esc="c.city_id.name" /> <t t-esc="c.city_id.state_id.name" /> <t t-esc="c.city_id.state_id.country_id.name" />
+                                                </option>
+                                            <!--++++++Modificación de selecctor de ciudad+++++-->
+                                            </t>
+                                        </select>
+                                    </div>
+                                    
+                                    
                                     <t t-set='zip_city' />
                                     <!--t-value='country and [x for x in country.get_address_fields() if x in ["zip", "city"]] or ["city", "zip"]'-->
                                     <!--<t t-if="'zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')">-->
@@ -274,28 +354,6 @@
                                                 <input type="text" name="city" t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}" 
                                                 t-att-value="'city' in checkout and checkout['city']" />
                                             </div> -->
-                                    <div t-attf-class="form-group #{error.get('city') and 'o_has_error' or ''} col-md-8 div_city">
-                                        <label class="col-form-label" for="city">Ciudad</label>
-                                        <select 
-                                                class="selectpicker"
-                                                data-size="10" 
-                                                data-live-search="true"
-                                                id="city"
-                                                name="city" 
-                                                t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}" 
-                                                t-att-value="'city' in checkout and checkout['city']"
-                                                t-att-style="(not country or not country.state_ids) and 'display: none'"
-                                                >
-                                            <!--++++++Modificación de selecctor de ciudad+++++-->
-                                            <option value="">Seleccione la Ciudad</option><!--<option value="Seleccione la ciudad"> </option>-->  <!--<option value="">Ciudad...</option>-->
-                                            <t t-foreach="cities" t-as="c">
-                                                <option t-att-value="c.city_id.name" t-att-selected="c.name">
-                                                    <t t-esc="c.name" /> <t t-esc="c.city_id.name" /> <t t-esc="c.city_id.state_id.name" /> <t t-esc="c.city_id.state_id.country_id.name" />
-                                                </option>
-                                            <!--++++++Modificación de selecctor de ciudad+++++-->
-                                            </t>
-                                        </select>
-                                    </div>
 
                                             <!-- <div t-attf-class="input-group row">
                                                   <label for="city_id" class="col-md-3 col-form-label">Ciudad Origen</label>
@@ -406,10 +464,10 @@
                                            t-att-value="('country_id' in checkout and checkout['country_id'].id or website_sale_order.partner_id.country_id and website_sale_order.partner_id.country_id.id or '0')" />
                                     <input type="hidden" name="partner_document_type" 
                                            t-att-value="('document_type_id' in checkout and checkout['document_type_id'].id or website_sale_order.partner_id.document_type_id and website_sale_order.partner_id.document_type_id.id or '0')" />
-                                    <input type="hidden" name="partner_state_id" 
+                                    <!--<input type="hidden" name="partner_state_id" 
                                            t-att-value="('state_id' in checkout and checkout['state_id'].id or website_sale_order.partner_id.state_id and website_sale_order.partner_id.state_id.id or '0')" />
                                     <input type="hidden" name="partner_city_id" 
-                                           t-att-value="('city' in checkout and checkout['city'] or website_sale_order.partner_id.zip_id.city_id and website_sale_order.partner_id.zip_id.city_id.id or '0')" />
+                                           t-att-value="('city' in checkout and checkout['city'] or website_sale_order.partner_id.zip_id.city_id and website_sale_order.partner_id.zip_id.city_id.id or '0')" />-->
                                     <input type="hidden" name="callback" t-att-value="callback" />
                                         <!-- Example -->
                                     <!--<input type="hidden" name="field_required" t-att-value="'phone,name'" />-->

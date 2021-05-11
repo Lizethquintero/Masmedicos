@@ -117,7 +117,7 @@
                             <p>
                                 <font color="#39b54a">
                                 <span style="color: #333333; font-size: 16px;">
-                                    <b>Certificado de póliza de accidentes personales No <!--<t t-esc="partner.firstname"/> <t t-esc="partner.lastname"/>-->  No. <t t-esc="order_detail.product_id.product_tmpl_id.categ_id.sequence_id.code"/> - <t t-esc="order_detail.subscription_id.policy_number"/></b>
+                                    <b>Certificado de póliza de accidentes personales No <!--<t t-esc="partner.firstname"/> <t t-esc="partner.lastname"/>-->  No. <t t-esc="order_detail.subscription_id.number"/> - <t t-esc="order_detail.subscription_id.policy_number"/></b>
                                 </span>
                                 </font>
                                 <br/>
@@ -125,7 +125,7 @@
                             </p>
                             <p>
                                 <font style="">
-                                <span style="font-size: 14px; white-space: normal;">Póliza de seguros de accidentes Más Médicos <t t-esc="order_detail.product_template_id[0].name"/> para <t t-esc="partner.firstname"/> <t t-esc="partner.othernames"/> <t t-esc="partner.lastname"/> <t t-esc="partner.lastname2"/><!--No. <t t-esc="order_detail.order_id.id"/>-->.</span>
+                                <span style="font-size: 14px; white-space: normal; text-transform: capitalize;">Póliza de seguros de accidentes Más Médicos <t t-esc="order_detail.product_template_id[0].name"/> para <t style="text-transform: capitalize;" t-esc="partner.firstname"/> <t style="text-transform: capitalize;" t-esc="partner.othernames"/> <t t-esc="partner.lastname"/> <t style="text-transform: capitalize;" t-esc="partner.lastname2"/><!--No. <t t-esc="order_detail.order_id.id"/>-->.</span>
                                 </font>
                                 <br/>
                             </p>
