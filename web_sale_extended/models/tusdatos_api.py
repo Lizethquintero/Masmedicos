@@ -112,10 +112,8 @@ class TusDatosAPI(models.TransientModel):
 
         if document_type in ['CC', 'CE']:
             query = {"doc": document, "typedoc": document_type, "fechaE": expedition_date}
-#             query = {"doc": document, "typedoc": document_type, "fechaE": expedition_date, "force": 1}
         elif document_type in ['PP', 'PEP']:
             query = {"doc": document, "typedoc": document_type}
-#             query = {"doc": document, "typedoc": document_type, "force": 1}
         else:
             _logger.error("****** ERROR: Invalid document type. ******")
             raise ValidationError(f"ERROR: Document type {document_type} not allowed.")
@@ -156,32 +154,26 @@ class TusDatosAPI(models.TransientModel):
         query_type = '-' in process_id
 
         if query_type:
-            _logger.error('results')
             endpoint = 'results'
             results_query = {'jobid': process_id}
             validation = self.request_tusdatos_api(endpoint, results_query)
         else:
-            _logger.error('report_json')
             endpoint = 'report_json'
             results_query = {'id': process_id}
             validation = self.request_tusdatos_api(endpoint, results_query)
 
         if validation:
-            _logger.error('validationnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn')
-            #_logger.error(validation)
+            
             if 'estado' in validation and validation['estado'] == 'error, tarea no valida':
                 _logger.error("****** ERROR: tarea no valida. ******")
             else:
-                _logger.error("****** REALIZANDO VALIDACIÓN EN LISTAS. ******")
                 if endpoint == 'results':
-                    _logger.error("****** endpoint = a result. ******")
                     #approval = not 'LISTA_ONU' in validation or 'OFAC' in validation
                     approval = not ( ('LISTA_ONU' in validation or 'OFAC' in validation) and (validation['OFAC'] or validation['LISTA_ONU']) )
                 elif endpoint == 'report_json':
-                    _logger.error("****** endpoint = a report_json. ******")
                     #approval = not (validation['ofac'] or validation['lista_onu'] or validation['lista_ofac'])
+                    #approval = not ('ofac' in validation or 'lista_onu' in validation)
                     approval = not ( ('ofac' in validation or 'lista_onu' in validation) and (validation['ofac'] or validation['lista_onu']) )
-                    _logger.error(approval)
         else:
             # TODO: add id to sale_order for queue validation process
             _logger.error("****** ERROR: Approbation not processed. ******")

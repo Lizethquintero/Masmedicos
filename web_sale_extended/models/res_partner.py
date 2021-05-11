@@ -38,13 +38,6 @@ class ResPartner(models.Model):
     beneficiary_number = fields.Integer('Número de Beneficiario')
     clerk_code = fields.Char('Código de Empleado')
     
-    city_2 = fields.Char('Ciudad')
-    state_2 = fields.Char('Departamento / Provincia / Estado')
-    
-    buyer = fields.Boolean(string='Comprador', copy=False)
-    beneficiary = fields.Boolean(string='Beneficiario', copy=False)
-    main_insured = fields.Boolean(string='Asegurado Principal', copy=False)
-    
     """
     def _compute_clerk_code(self):
         partners = self.env['res.partner'].search([('subscription_id', '=', self.subscription_id)])

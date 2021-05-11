@@ -62,13 +62,6 @@
                     <field name='marital_status' />
                     <field name='clerk_code' />
                 </field>
-                
-                <field name="street" position="after">
-                    <field name='city_2' placeholder="Ciudad" style="display: block" />                    
-                    <field name='state_2' placeholder="Departamento / Provincia / Estado" style="display: block" />
-                </field>
-                
-                
             </field>
         </record>
 </odoo>

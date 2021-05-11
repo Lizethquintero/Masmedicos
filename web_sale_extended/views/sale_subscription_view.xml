@@ -6,25 +6,23 @@
             <field name="inherit_id" ref="sale_subscription.sale_subscription_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="inside">
-                    <page string="Beneficiarios" id="beneficiaries">                        
-                        <field name="subscription_partner_ids">
-                            <tree>
-                                <field name="name"/>
-                                <field name="document_type_id"/>
-                                <field name="identification_document"/>
-                                <field name="email"/>
-                                <field name="mobile"/>
-                                <field name="birthdate_date"/>
-                                <field name="buyer" style="text-align:center;"/>
-                                <field name="beneficiary" style="text-align:center;"/>
-                                <field name="main_insured" style="text-align:center;"/>
-                            </tree>
-                        </field>                        
+                    <page string="Beneficiarios" id="beneficiaries">
+                        <group>
+                            <field name="subscription_partner_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="document_type_id"/>
+                                    <field name="identification_document"/>
+                                    <field name="email"/>
+                                    <field name="phone"/>
+                                    <field name="birthdate_date"/>
+                                </tree>
+                            </field>
+                        </group>
                     </page>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="policy_number"/>
-                    <field name="number"/>
                 </xpath>
             </field>
         </record>

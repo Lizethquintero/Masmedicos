@@ -1,4 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_web_sale_extended_web_sale_extended,web_sale_extended.web_sale_extended,model_web_sale_extended_web_sale_extended,sale_subscription.group_sale_subscription_view,1,1,1,1
-access_web_sale_extended_report_sftp,web_sale_extended.report_sftp,model_report_sftp,base.group_user,1,1,1,1
-access_web_sale_extended_report_beneficiary_sftp,web_sale_extended.report_beneficiary_sftp,model_report_beneficiary_sftp,sale_subscription.group_sale_subscription_view,1,1,1,1

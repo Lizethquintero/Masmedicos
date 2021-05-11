@@ -8,30 +8,21 @@
                     <page string="Sponsors">
                         <label for="is_product_landpage"/>
                         <field name="is_product_landpage"/>
-                        
                         <group>
-                            <field name="product_class"/>
-                        </group>
-                        
-                        <group>
-                            <field name="sequence_id" string="Secuencia del Producto"/>
-                        </group>
-                        
-<!--                         <group>
                             <group>
                                 <field name="logo_website_pdf" attrs="{'readonly': [('is_product_landpage', '=', False)]}"/>
                             </group>
                             <group>
                                 <field name="logo_header_website_sponsor" attrs="{'readonly': [('is_product_landpage', '=', False)]}"/>
                             </group>
-                        </group> -->
+                        </group>
                         <group>
-<!--                             <group>
-                                <field name="logo_body_website_sponsor" attrs="{'readonly': [('is_product_landpage', '=', False)]}"/>
-                            </group> -->
                             <group>
-<!--                                 <field name="beneficiaries_number" attrs="{'readonly': [('is_product_landpage', '=', False)]}"/>
-                                <field name="sponsor_payment_url" attrs="{'readonly': [('is_product_landpage', '=', False)]}"/> -->
+                                <field name="logo_body_website_sponsor" attrs="{'readonly': [('is_product_landpage', '=', False)]}"/>
+                            </group>
+                            <group>
+                                <field name="beneficiaries_number" attrs="{'readonly': [('is_product_landpage', '=', False)]}"/>
+                                <field name="sponsor_payment_url" attrs="{'readonly': [('is_product_landpage', '=', False)]}"/>
                                 <field name="product_landpage_url" attrs="{'readonly': [('is_product_landpage', '=', False)]}"/>
                             </group>
                         </group>

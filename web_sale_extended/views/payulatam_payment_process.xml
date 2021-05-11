@@ -1465,7 +1465,7 @@
                                                   t-attf-class="form-control" >
                                                       <option value="">País...</option>
                                                       <t t-foreach="countries" t-as="c">
-                                                          <option t-att-value="c.id" t-att-selected="c.id == order.partner_id.country_id">
+                                                          <option t-att-value="c.id">
                                                               <t t-esc="c.name" />
                                                           </option>
                                                       </t>
@@ -1473,60 +1473,50 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6">
-                                        <div class="form-group">
-                                            <div t-attf-class="div_state_text">
-                                                <label class="col-form-label" for="credit_card_state_id_text">Departamento / Provincia / Estado</label>
-                                                <input type="text" name="credit_card_state_id_text" id="credit_card_state_id_text" t-attf-class="form-control" t-att-value="order.partner_id.state_2" />
-                                            </div>
-                                            <div class="div_state">
-                                                <label class="col-form-label" for="state_id">Departamento / Provincia / Estado</label>
-                                                    <select class="selectpicker" data-size="4" 
-                                                            id="credit_card_state_id" data-live-search="true" name="credit_card_state_id" 
-                                                    t-attf-class="form-control" data-init="1">
-                                                        <option value="">Departamento</option>
-                                                        <t t-foreach="country_states" t-as="s">
-                                                            <option t-att-value="s.id">
-                                                                <t t-esc="s.name" />
-                                                            </option>
-                                                        </t>
-                                                    </select>                                              
-                                            </div>                                                
+                                              <div class="form-group">
+                                                <label class="col-form-label" for="state_id">Departamento</label>
+                                                <select class="selectpicker" data-size="4" 
+                                                        id="credit_card_state_id" data-live-search="true" name="credit_card_state_id" 
+                                                t-attf-class="form-control" data-init="1">
+                                                    <option value="">Departamento</option>
+                                                    <t t-foreach="country_states" t-as="s">
+                                                        <option t-att-value="s.id">
+                                                            <t t-esc="s.name" />
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                              </div>
                                         </div>
-                                    </div>
                                       </div>
                                       
                                       <div class="row">
                                         <div class="col-lg-6 col-md-6">
-                                            <div class="div_city_text">
-                                                <label class="col-form-label" for="credit_card_city_text">Ciudad</label>         
-                                                <input type="text" name="credit_card_city_text" id="credit_card_city_text" t-attf-class="form-control" t-att-value="order.partner_id.city_2" />
-                                            </div>
-                                            <div class="div_city">
-                                                <label class="col-form-label" for="city">Ciudad</label>
-                                                <select 
-                                                    class="selectpicker"
-                                                    data-size="10" 
-                                                    data-live-search="true"
-                                                    id="credit_card_city"
-                                                    name="credit_card_city" 
-                                                    t-attf-class="form-control" 
-                                                    t-att-style="(not country or not country.state_ids) and 'display: none'"
-                                                    >
-                                                <option value="">Ciudad...</option>
-                                                <t t-foreach="cities" t-as="c">
-                                                    <option t-att-value="c.city_id.name" t-att-selected="c.name">
-                                                        <t t-esc="c.name" /> <t t-esc="c.city_id.name" /> <t t-esc="c.city_id.state_id.name" /> <t t-esc="c.city_id.state_id.country_id.name" />
-                                                    </option>
-                                                </t>
-                                                </select>
-                                            </div>
+                                            <label class="col-form-label" for="city">Ciudad</label>
+                                            <select 
+                                                class="selectpicker"
+                                                data-size="10" 
+                                                data-live-search="true"
+                                                id="credit_card_city"
+                                                name="credit_card_city" 
+                                                t-attf-class="form-control" 
+                                                t-att-style="(not country or not country.state_ids) and 'display: none'"
+                                                >
+                                            <option value="">Ciudad...</option>
+                                            <t t-foreach="cities" t-as="c">
+                                                <option t-att-value="c.city_id.name" t-att-selected="c.name">
+                                                    <t t-esc="c.name" /> <t t-esc="c.city_id.name" /> <t t-esc="c.city_id.state_id.name" /> <t t-esc="c.city_id.state_id.country_id.name" />
+                                                </option>
+                                            </t>
+                                            </select>
                                         </div>
                                         <div class="col-lg-6 col-md-6" style="color: transparent">
-                                            <label class="col-form-label label-optional" for="credit_card_zip">Código postal</label>
-                                            <input style="visibility: hidden;" type="text"  name="credit_card_zip" t-attf-class="form-control" readonly="true" />
+                                          <label class="col-form-label label-optional" for="credit_card_zip">Código postal</label>
+                                            <input style="visibility: hidden;" type="text"  name="credit_card_zip"
+                                            t-attf-class="form-control" 
+                                            readonly="true" />
                                             <input type="hidden"  name="credit_card_zip_id"/>
-                                        </div>
-                                    </div>
+                                          </div>
+                                      </div>
                                       
                                       
                                       <!--<div class="row">
@@ -1775,67 +1765,67 @@
                                       <div class="row">
                                         <div class="col-lg-6 col-md-6">
                                             <div class="form-group">
-                                                <label class="col-form-label" for="cash_country_id">País</label>
-                                                <select class="selectpicker" data-size="5" data-live-search="true" id="cash_country_id" name="cash_country_id" t-attf-class="form-control">
-                                                    <option value="">País...</option>
-                                                    <t t-foreach="countries" t-as="c">
-                                                        <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
-                                                            <t t-esc="c.name" />
-                                                        </option>
-                                                    </t>
-                                                </select>
+                                                 <label class="col-form-label" for="cash_country_id">País</label>
+                                                  <select class="selectpicker" data-size="5" data-live-search="true"  id="cash_country_id" name="cash_country_id" 
+                                                  t-attf-class="form-control" >
+                                                      <option value="">País...</option>
+                                                      <t t-foreach="countries" t-as="c">
+                                                          <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
+                                                              <t t-esc="c.name" />
+                                                          </option>
+                                                      </t>
+                                                  </select>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6">
-                                            <div class="form-group">
-                                                <div t-attf-class="div_state_text">
-                                                    <label class="col-form-label" for="cash_state_id_text">Departamento / Provincia / Estado</label>
-                                                    <input type="text" name="cash_state_id_text" id="cash_state_id_text" t-attf-class="form-control" t-att-value="order.partner_id.state_2" />
-                                                </div>
-                                                <div class="div_state">
-                                                    <label class="col-form-label" for="cash_state_id">Departamento / Provincia / Estado</label>
-                                                    <select class="selectpicker" data-size="4" id="cash_state_id" data-live-search="true" name="cash_state_id" t-attf-class="form-control" data-init="1">
-                                                        <option value="">Departamento / Provincia / Estado</option>
-                                                        <t t-foreach="country_states" t-as="s" t-att-selected="s.id == order.partner_id.zip_id.city_id.state_id.id">
-                                                            <option t-att-value="s.id">
-                                                                <t t-esc="s.name" />
-                                                            </option>
-                                                        </t>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="div_city_text">
-                                                <label class="col-form-label" for="cash_city_text">Ciudad</label>
-                                                <input type="text" name="cash_city_text" id="cash_city_text" t-attf-class="form-control" t-att-value="order.partner_id.city_2" />
-                                            </div>
-                                            <div class="div_city">
-                                                <label class="col-form-label" for="cash_city">Ciudad</label>
-                                                <select class="selectpicker" data-size="10" data-live-search="true" id="cash_city" name="cash_city" t-attf-class="form-control" t-att-style="(not country or not country.state_ids) and 'display: none'">
-                                                    <option value="">Ciudad...</option>
-                                                    <t t-foreach="cities" t-as="c">
-                                                        <option t-att-value="c.city_id.name" t-att-selected="c.name">
-                                                            <t t-esc="c.name" />
-                                                            <t t-esc="c.city_id.name" />
-                                                            <t t-esc="c.city_id.state_id.name" />
-                                                            <t t-esc="c.city_id.state_id.country_id.name" />
+                                              <div class="form-group">
+                                                <label class="col-form-label" for="cash_state_id">Departamento</label>
+                                                <select class="selectpicker" data-size="4" id="cash_state_id" data-live-search="true" name="cash_state_id" 
+                                                t-attf-class="form-control" data-init="1">
+                                                    <option value="">Departamento</option>
+                                                    <t t-foreach="country_states" t-as="s" t-att-selected="s.id == order.partner_id.zip_id.city_id.state_id.id">
+                                                        <option t-att-value="s.id">
+                                                            <t t-esc="s.name" />
                                                         </option>
                                                     </t>
                                                 </select>
-                                            </div>
+                                              </div>
+                                        </div>
+                                      </div>
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <label class="col-form-label" for="cash_city">Ciudad</label>
+                                            <select 
+                                                class="selectpicker"
+                                                data-size="10" 
+                                                data-live-search="true"
+                                                id="cash_city"
+                                                name="cash_city" 
+                                                t-attf-class="form-control" 
+                                                
+                                                t-att-style="(not country or not country.state_ids) and 'display: none'"
+                                                >
+                                            <option value="">Ciudad...</option>
+                                            <t t-foreach="cities" t-as="c">
+                                                <option t-att-value="c.city_id.name" t-att-selected="c.name">
+                                                    <t t-esc="c.name" /> 
+                                                    <t t-esc="c.city_id.name" /> 
+                                                    <t t-esc="c.city_id.state_id.name" /> 
+                                                    <t t-esc="c.city_id.state_id.country_id.name" />
+                                                </option>
+                                            </t>
+                                            </select>
                                         </div>
                                         <!--+++++++Inicio Código del código postal++++++++++++++-->
                                         <div class="col-lg-6 col-md-6" style="color: transparent">
-                                            <label class="col-form-label label-optional" for="zip">Código postal</label>
-                                            <input style="visibility: hidden;" type="text" name="cash_zip" t-attf-class="form-control" readonly="true" />
-                                            <input style="visibility: hidden;" type="hidden" name="cash_zip_id"/>
-                                        </div>
-                                    </div>
+                                          <label class="col-form-label label-optional" for="zip">Código postal</label>
+                                            <input style="visibility: hidden;" type="text"  name="cash_zip"
+                                            t-attf-class="form-control" 
+                                            readonly="true" />
+                                            <input style="visibility: hidden;" type="hidden"  name="cash_zip_id"/>
+                                          </div>
+                                      </div>
                                     <!--+++++++Fin Código del código postal++++++++++++++-->   
                                       <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                       <input type="hidden" name="submitted" value="1" />
@@ -2046,66 +2036,64 @@
                                       <div class="row">
                                         <div class="col-lg-6 col-md-6">
                                             <div class="form-group">
-                                                <label class="col-form-label" for="pse_country_id">País</label>
-                                                <select class="selectpicker" data-size="5" data-live-search="true" id="pse_country_id" name="pse_country_id" t-attf-class="form-control">
-                                                    <option value="">País...</option>
-                                                    <t t-foreach="countries" t-as="c">
-                                                        <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
-                                                            <t t-esc="c.name" />
-                                                        </option>
-                                                    </t>
-                                                </select>
+                                                 <label class="col-form-label" for="pse_country_id">País</label>
+                                                  <select class="selectpicker" data-size="5" data-live-search="true"  id="pse_country_id" name="pse_country_id" 
+                                                  t-attf-class="form-control" >
+                                                      <option value="">País...</option>
+                                                      <t t-foreach="countries" t-as="c">
+                                                          <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
+                                                              <t t-esc="c.name" />
+                                                          </option>
+                                                      </t>
+                                                  </select>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6">
-                                            <div class="form-group">
-                                                <div t-attf-class="div_state_text">
-                                                    <label class="col-form-label" for="pse_state_id_text">Departamento / Provincia / Estado</label>
-                                                    <input type="text" name="pse_state_id_text" id="pse_state_id_text" t-attf-class="form-control" t-att-value="order.partner_id.state_2" />
-                                                </div>
-                                                <div class="div_state">
-                                                    <label class="col-form-label" for="pse_state_id">Departamento / Provincia / Estado</label>
-                                                    <select class="selectpicker" data-size="4" id="pse_state_id" data-live-search="true" name="pse_state_id" t-attf-class="form-control" data-init="1">
-                                                        <option value="">Departamento / Provincia / Estado</option>
-                                                        <t t-foreach="country_states" t-as="s">
-                                                            <option t-att-value="s.id">
-                                                                <t t-esc="s.name" />
-                                                            </option>
-                                                        </t>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="div_city_text">
-                                                <label class="col-form-label" for="pse_city_text">Ciudad</label>
-                                                <input type="text" name="pse_city_text" id="pse_city_text" t-attf-class="form-control" t-att-value="order.partner_id.city_2" />
-                                            </div>
-                                            <div class="div_city">
-                                                <label class="col-form-label" for="pse_city">Ciudad</label>
-                                                <select class="selectpicker" data-size="10" data-live-search="true" id="pse_city" name="pse_city" t-attf-class="form-control" t-att-style="(not country or not country.state_ids) and 'display: none'">
-                                                    <option value="">Ciudad...</option>
-                                                    <t t-foreach="cities" t-as="c">
-                                                        <option t-att-value="c.city_id.name" t-att-selected="c.name">
-                                                            <t t-esc="c.name" />
-                                                            <t t-esc="c.city_id.name" />
-                                                            <t t-esc="c.city_id.state_id.name" />
-                                                            <t t-esc="c.city_id.state_id.country_id.name" />
+                                              <div class="form-group">
+                                                <label class="col-form-label" for="pse_state_id">Departamento</label>
+                                                <select class="selectpicker" data-size="4" id="pse_state_id" data-live-search="true" name="pse_state_id" 
+                                                t-attf-class="form-control" data-init="1">
+                                                    <option value="">Departamento</option>
+                                                    <t t-foreach="country_states" t-as="s">
+                                                        <option t-att-value="s.id">
+                                                            <t t-esc="s.name" />
                                                         </option>
                                                     </t>
                                                 </select>
-                                            </div>
+                                              </div>
+                                        </div>
+                                      </div>
+                                      
+                                      <div class="row">
+                                        <div class="col-lg-6 col-md-6">
+                                            <label class="col-form-label" for="pse_city">Ciudad</label>
+                                            <select 
+                                                class="selectpicker"
+                                                data-size="10" 
+                                                data-live-search="true"
+                                                id="pse_city"
+                                                name="pse_city" 
+                                                t-attf-class="form-control" 
+                                                
+                                                t-att-style="(not country or not country.state_ids) and 'display: none'"
+                                                >
+                                            <option value="">Ciudad...</option>
+                                            <t t-foreach="cities" t-as="c">
+                                                <option t-att-value="c.city_id.name" t-att-selected="c.name">
+                                                    <t t-esc="c.name" /> <t t-esc="c.city_id.name" /> <t t-esc="c.city_id.state_id.name" /> <t t-esc="c.city_id.state_id.country_id.name" />
+                                                </option>
+                                            </t>
+                                            </select>
                                         </div>
                                         <!--++++Inicio del código postal++++-->
                                         <div class="col-lg-6 col-md-6" style="color: transparent">
-                                            <label class="col-form-label label-optional" for="zip"></label>        <!--<label class="col-form-label label-optional" for="zip">Código postal</label>-->
-                                            <input style="visibility: hidden;" type="text" name="pse_zip" t-attf-class="form-control" readonly="true" />
-                                            <input style="visibility: hidden;" type="hidden" name="pse_zip_id"/>
-                                        </div>
-                                    </div>
+                                          <label class="col-form-label label-optional" for="zip"></label><!--<label class="col-form-label label-optional" for="zip">Código postal</label>-->
+                                            <input style="visibility: hidden;" type="text"  name="pse_zip"
+                                            t-attf-class="form-control" 
+                                            readonly="true" />
+                                            <input style="visibility: hidden;" type="hidden"  name="pse_zip_id"/>
+                                          </div>
+                                      </div>
                                       
                                       <!--<div class="row">
                                         <div class="col-lg-12 col-md-12" style="padding-top:20px;">

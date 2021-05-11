@@ -78,7 +78,7 @@ class SftpReportLine(models.Model):
         select 
         row_number() OVER (ORDER BY sub.id) as id,
         sub.policy_number as certificate_number,
-        sub.number as policy_number,
+        seq.code as policy_number,
         p.firstname,
         p.othernames,
         p.lastname || ' ' || p.lastname2 as lastname,
@@ -128,7 +128,7 @@ class SftpReportLine(models.Model):
         ''::text as phone2,
         'A'::text as change_type,
         ''::text as localization,
-        tmpl.product_class as palig,
+        '001'::text as palig,
         p.marital_status as marital_status
         
         
@@ -146,7 +146,7 @@ class SftpReportLine(models.Model):
         left join ir_sequence seq on seq.id = cat.sequence_id
         left join sale_subscription_template subtmpl on subtmpl.id = sub.template_id
         
-        where 1=1 and p.main_insured='t'
+        where 1=1
         order by sub.id desc
         );
         """

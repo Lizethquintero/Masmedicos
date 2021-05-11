@@ -51,8 +51,8 @@ class WebsiteSaleExtended(WebsiteSale):
                     checkout.pop('name')
                 if "zip_id" in checkout:
                     checkout.update({'zip_id': int(checkout['zip_id'])})
-                if "state_address_id" in checkout:
-                    checkout.update({'state_id': int(checkout['state_address_id'])})
+                if "state_id" in checkout:
+                    checkout.update({'state_id': int(checkout['state_id'])})
                 Partner.browse(partner_id).sudo().write(checkout)
         return partner_id
 
@@ -73,82 +73,6 @@ class WebsiteSaleExtended(WebsiteSale):
             'order': order,
         }
         return request.render("web_sale_extended.tusdatos_request_confirmation", render_values)
-    
-    
-    
-    def checkout_form_validate(self, mode, all_form_values, data):
-        # mode: tuple ('new|edit', 'billing|shipping')
-        # all_form_values: all values before preprocess
-        # data: values after preprocess
-        error = dict()
-        error_message = []
-        
-        
-        _logger.info("****ID Pais fieldname*****")
-        _logger.info(data.get('country_address_id'))
-        _logger.info("****Dataaa fieldname*****")
-        _logger.info(data)
-        
-
-        # Required fields from form
-        required_fields = [f for f in (all_form_values.get('field_required') or '').split(',') if f]
-        # Required fields from mandatory field function
-        required_fields += mode[1] == 'shipping' and self._get_mandatory_shipping_fields() or self._get_mandatory_billing_fields()
-        # Check if state required
-        country = request.env['res.country']
-        if data.get('country_address_id'):
-            country = country.browse(int(data.get('country_address_id')))
-            if 'state_code' in country.get_address_fields() and country.state_ids:
-                required_fields += ['state_address_id']
-
-        # error message for empty required fields
-        for field_name in required_fields:
-            if field_name == 'country_id':
-                field_name = 'country_address_id'
-            elif field_name == 'state_id':
-                if int(data.get('country_address_id')) == 49:
-                    field_name = 'state_address_id'
-                else:
-                    field_name = 'state_id_text'
-            elif field_name == 'city':
-                if int(data.get('country_address_id')) == 49:
-                    field_name = 'state_address_id'
-                else:
-                    field_name = 'city'
-            if not data.get(field_name):
-                error[field_name] = 'missing'
-                _logger.info("****Error fieldname*****")
-                _logger.info(field_name)
-
-        # email validation
-        if data.get('email') and not tools.single_email_re.match(data.get('email')):
-            error["email"] = 'error'
-            error_message.append(_('Invalid Email! Please enter a valid email address.'))
-
-        # vat validation
-        Partner = request.env['res.partner']
-        if data.get("vat") and hasattr(Partner, "check_vat"):
-            if data.get("country_address_id"):
-                data["vat"] = Partner.fix_eu_vat_number(data.get("country_address_id"), data.get("vat"))
-            partner_dummy = Partner.new({
-                'vat': data['vat'],
-                'country_id': (int(data['country_address_id'])
-                               if data.get('country_address_id') else False),
-            })
-            try:
-                partner_dummy.check_vat()
-            except ValidationError:
-                error["vat"] = 'error'
-
-        if [err for err in error.values() if err == 'missing']:
-            error_message.append(_('Some required fields are empty.'))
-
-        return error, error_message
-    
-    
-    
-    
-    
 
     # toma de datos de pago y se crea el asegurador principal
     @http.route(['/shop/address'], type='http', methods=['GET', 'POST'], auth="public", website=True, sitemap=False)
@@ -203,15 +127,11 @@ class WebsiteSaleExtended(WebsiteSale):
             _logger.info("****FORMULARIO*****")
             pre_values = self.values_preprocess(order, mode, kw)
             errors, error_msg = self.checkout_form_validate(mode, kw, pre_values)
-            _logger.info(errors)
             post, errors, error_msg = self.values_postprocess(order, mode, pre_values, errors, error_msg)
-            _logger.info(errors)
             if errors:
-                _logger.info("****con errores*****")
                 errors['error_message'] = error_msg
                 values = kw
             else:
-                _logger.info("****sin errores*****")
                 if kw['othernames'] == '':
                     post['othernames'] = ''
                 else:
@@ -225,17 +145,9 @@ class WebsiteSaleExtended(WebsiteSale):
                 post['identification_document'] = kw["identification_document"]
                 post["birthdate_date"] = kw["birthdate_date"]
                 #post["city_id"] = kw["city"]
-                post["country_id"] = int(kw["country_address_id"])
-                
-                post["buyer"] = True
-                
-                if kw['country_address_id'] =='49':                    
-                    post["zip"] = kw["zip"]
-                    post["zip_id"] = kw["zip_id"]
-                    post["state_id"] = int(kw["state_address_id"])                    
-                else:
-                    post["state_2"] = kw["state_id_text"]
-                    post["city_2"] = kw["city_id_text"]
+                post["zip"] = kw["zip"]
+                post["zip_id"] = kw["zip_id"]
+                post["state_id"] = kw["state_id"]
                 if 'estado_civil' in kw:
                     post["marital_status"] = kw["estado_civil"]
                 if 'expedition_date' in kw:
@@ -281,8 +193,6 @@ class WebsiteSaleExtended(WebsiteSale):
                             """ % (
                                 json.dumps(tusdatos_validation),
                             )
-                            _logger.error('********************************8888')
-                            _logger.error(json.dumps(tusdatos_validation))
                             order.message_post(body=body_message, type="comment")
                             return werkzeug.utils.redirect('/shop/address?errortusdatos=document_invalid')
                         
@@ -296,7 +206,6 @@ class WebsiteSaleExtended(WebsiteSale):
                                 tusdatos_validation['process_id'],
                                 json.dumps(tusdatos_validation),
                             )
-                            _logger.error(json.dumps(tusdatos_validation))
                             order.message_post(body=body_message, type="comment")
                         elif tusdatos_validation and tusdatos_validation.get('error'):
                             body_message = """
@@ -305,8 +214,6 @@ class WebsiteSaleExtended(WebsiteSale):
                             """ % (
                                 json.dumps(tusdatos_validation),
                             )
-                            _logger.error('********************************8888')
-                            _logger.error(json.dumps(tusdatos_validation))
                             order.message_post(body=body_message, type="comment")
                             return werkzeug.utils.redirect('/shop/address?errortusdatos=document_invalid')
                             
@@ -330,7 +237,6 @@ class WebsiteSaleExtended(WebsiteSale):
         ])
         
         if errortusdatos:
-            _logger.error(errortusdatos)
             errors['error_message'] = errortusdatos
         
         if 'name' in values and values['name']:
@@ -357,7 +263,7 @@ class WebsiteSaleExtended(WebsiteSale):
             'can_edit_vat': can_edit_vat,
             'country': country,
             'country_states': country.get_website_sale_states(mode=mode[1]),
-            'countries': country.get_website_sale_countries(mode=mode[1]),
+            'countries': country.get_website_sale_countries(mode=mode[1]).filtered(lambda line: line.id == 49),
             'fiscal_position_ids': fiscal_position_ids,
             'error': errors,
             'callback': kw.get('callback'),
@@ -440,12 +346,11 @@ class WebsiteSaleExtended(WebsiteSale):
         #    return redirection
         
         product = order.order_line[0].product_id
-        beneficiaries_number = product.product_tmpl_id.sequence_id.beneficiaries_number if product.product_tmpl_id.sequence_id.beneficiaries_number else 6
+        beneficiaries_number = product.product_tmpl_id.beneficiaries_number if product.product_tmpl_id.beneficiaries_number else 6
         country = request.env['res.country'].browse(int(order.partner_id.country_id))
-        _logger.info(country)
         render_values = {
             "partner": order.partner_id,
-            'country_states': request.env['res.country'].browse(49).get_website_sale_states(),
+            'country_states': country.get_website_sale_states(),
             'cities': self.get_cities(order.partner_id.state_id.id if order.partner_id.state_id else None),
             'countries': country.get_website_sale_countries().filtered(lambda line: line.id == 49),
             'document_types': self.get_document_types('beneficiary'),
@@ -455,7 +360,6 @@ class WebsiteSaleExtended(WebsiteSale):
             'beneficiaries_number': beneficiaries_number,
             'order_id': order.id,
         }
-        _logger.info(render_values)
         return request.render("web_sale_extended.beneficiary", render_values)
 
 
@@ -481,59 +385,40 @@ class WebsiteSaleExtended(WebsiteSale):
         
         Partner = order.partner_id
         BeneficiaryPartner = request.env['res.partner'].sudo()
+        _logger.error(Partner)
+        _logger.error(order_detail)
+        _logger.error(order_detail.subscription_id)
+        _logger.error('222*****************++++++++')
         Subscription = order_detail.subscription_id
         beneficiary_list = []
-                
-        if 'infoBuyer' in kwargs:
-            Partner.sudo().write({
-                'company_type': 'person',
-                'active': True,
-                'beneficiary_number': 1,
-                'ocupation': kwargs['ocupation'],
-                'gender' : kwargs['sex'],
-                'marital_status' : kwargs['estado_civil'],
-                'main_insured': True,
-                'subscription_id': Subscription.id
-            })
         
-            beneficiary_list.append((4, Partner.id))
-            order.write({
-                'beneficiary0_id': Partner.id
-            })
-        else:
-            NewBeneficiaryPartner = BeneficiaryPartner.create({
-                    'firstname': kwargs['name'],
-                    'lastname': kwargs['lastname'],
-                    'lastname2':kwargs['lastname2'],
-                    'othernames': kwargs['othername'],
-                    'email': kwargs['email'],
-                    'person_type': "2",
-                    "mobile": kwargs['phone'],  
-                    'phone': kwargs['fijo'],
-                    'document_type_id': int(kwargs['document_type']),
-                    'identification_document': kwargs['numero_documento'],
-                    'company_type': 'person',
-                    'active': True,
-                    'parent_id': Partner.id,
-                    'country_id': int(kwargs['country_id']),
-                    'state_id': int(kwargs['deparment']),
-                    #'zip_id': int(kwargs[zip_id]),
-                    'city': kwargs['city'],
-                    'birthdate_date': kwargs['date'],
-                    'expedition_date' : kwargs['expedition_date'],
-                    'marital_status' : kwargs['estado_civil'],
-                    'ocupation': kwargs['ocupation'],
-                    'gender': kwargs['sex'],
-                    'address_beneficiary': kwargs['address'],
-                    'beneficiary_number': 1,
-                    'main_insured': True,
-                    'subscription_id': Subscription.id,
-                })
-            beneficiary_list.append((4, NewBeneficiaryPartner.id))
-            order.write({
-                'beneficiary0_id': NewBeneficiaryPartner.id
-            })
-            
+        Partner.sudo().write({
+            'firstname': kwargs['name'],
+            'lastname': kwargs['lastname'],
+            'lastname2':kwargs['lastname2'],
+            'othernames': kwargs['othername'],
+            'email': kwargs['email'],
+            'mobile': kwargs['phone'],
+            'phone': kwargs['fijo'],
+            #'document_type_id': kwargs[document_type],
+            'identification_document': kwargs['numero_documento'],
+            'company_type': 'person',
+            'active': True,
+            'beneficiary_number': 1,
+            'ocupation': kwargs['ocupation'],
+            'birthdate_date' : kwargs['date'],
+            'gender' : kwargs['sex'],
+            'marital_status' : kwargs['estado_civil'],
+            #'parent_id': InsurerPartner
+            'expedition_date' : kwargs['expedition_date'],
+            'subscription_id': Subscription.id
+        })
+        
+        beneficiary_list.append((4, Partner.id))
+        order.write({
+            'beneficiary0_id': Partner.id
+        })
+        
         cont_d, cont_h, cont_c, cont_m, cont_s = 0,0,0,0,0
         for i in range(int(kwargs['beneficiario'])):
             firtst_name = "bfirstname"+str(i+1)
@@ -600,11 +485,10 @@ class WebsiteSaleExtended(WebsiteSale):
                 'relationship': kwargs[relationship],
                 'address_beneficiary': kwargs[address_beneficiary],
                 'beneficiary_number': i+2,
-                'beneficiary': True,
                 'clerk_code': clerk_code,
                 'subscription_id': Subscription.id,
             })
-            beneficiary_list.append((4, NewBeneficiaryPartner.id))                
+            beneficiary_list.append((4, NewBeneficiaryPartner.id))
             if i == 0:
                 order.write({
                     'beneficiary1_id': NewBeneficiaryPartner.id
@@ -629,8 +513,6 @@ class WebsiteSaleExtended(WebsiteSale):
                 order.write({
                     'beneficiary6_id': NewBeneficiaryPartner.id
                 })
-            
-                
                 
         
         kwargs['order_detail'] = order_detail
@@ -639,10 +521,15 @@ class WebsiteSaleExtended(WebsiteSale):
         """ Confirmando Orden de Venta luego del proceso exitoso de beneficiarios """
         order.action_confirm()
         order._send_order_confirmation_mail()
-
+        
+        
+        _logger.error("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+        _logger.error(beneficiary_list)
         order.subscription_id.write({
             'subscription_partner_ids': beneficiary_list,
         })
+        _logger.error(Subscription.subscription_partner_ids)
+        _logger.error(Subscription)
         request.session['sale_order_id'] = None
         request.session['sale_transaction_id'] = None
         return request.render("web_sale_extended.beneficiary_detail", kwargs)
@@ -698,6 +585,7 @@ class WebsiteSaleExtended(WebsiteSale):
 
         #for city in suggested_cities:
         for city in complete_cities_with_zip:
+            _logger.info(city.city_id.name)
             if city.city_id.state_id.id == int(kwargs['departamento']):
                 cities.append({
                     'city': city.city_id.name.lower().title(),
@@ -707,27 +595,6 @@ class WebsiteSaleExtended(WebsiteSale):
         data['status'] = True,
         data['error'] = None,
         data['data'] = {'cities': cities}
-        return json.dumps(data)
-    
-    
-    # search states by ajax peticion
-    @http.route(['/search/states'],  methods=['GET'], type='http', auth="public", website=True)
-    def search_states(self, city_id=None, **kwargs):
-        ''' Busca los estados del pais en peticiones ajax retorna un json '''
-        states = []
-        suggested_states = request.env['res.country'].browse(49).get_website_sale_states()
-
-         #for states in suggested_states:
-        for state in suggested_states: 
-            states.append({
-                    'state': state.name.lower().title(),
-                    'state_id': state.id,
-                })
-        
-        data = {}
-        data['status'] = True,
-        data['error'] = None,
-        data['data'] = {'states': states}
         return json.dumps(data)
 
 
@@ -739,42 +606,6 @@ class WebsiteSaleExtended(WebsiteSale):
         data['status'] = True,
         data['error'] = None,
         data['data'] = {'zipcode': suggested_zipcode.name, 'zipid': suggested_zipcode.id}
-        return json.dumps(data)
-    
-    # search phone code country by ajax peticion
-    @http.route(['/search/phonecode'],  methods=['GET'], type='http', auth="public", website=True)
-    def search_phonecodes(self, **kwargs):
-        suggested_phonecode = request.env['res.country'].sudo().search([('id', '=', int(kwargs['id']))], limit=1)
-        data = {}
-        data['status'] = True,
-        data['error'] = None,
-        data['data'] = {'phonecode': suggested_phonecode.phone_code, 'countryid': suggested_phonecode.id}
-        return json.dumps(data)
-    
-    
-    # search buyer information by order_id by ajax peticion
-    @http.route(['/search/buyer/info'],  methods=['GET'], type='http', auth="public", website=True)
-    def search_buyer_info(self, **kwargs):
-        order = request.env['sale.order'].sudo().browse(int(kwargs['order_id']))
-        data = {}
-        data['status'] = True,
-        data['error'] = None,
-        data['data'] = {            
-            'firstname': order.partner_id.firstname,
-            'othernames': order.partner_id.othernames,
-            'lastname': order.partner_id.lastname,
-            'lastname2':order.partner_id.lastname2,            
-            'email': order.partner_id.email,
-            "phone": order.partner_id.phone,
-            'document_type_id': order.partner_id.document_type_id.id,
-            'identification_document': order.partner_id.identification_document,
-            'birthdate_date': order.partner_id.birthdate_date.strftime("%Y-%m-%d"),
-            'expedition_date': order.partner_id.expedition_date.strftime("%Y-%m-%d"),
-            'address': order.partner_id.street,
-            'country_id': order.partner_id.country_id.id,
-            'state_id': order.partner_id.state_id.id,
-            'city_id': order.partner_id.zip_id.city_id.id
-        }
         return json.dumps(data)
 
 
@@ -863,7 +694,6 @@ class WebsiteSaleExtended(WebsiteSale):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
     
-    """
     @http.route([
         '''/shop''',
         '''/shop/page/<int:page>''',
@@ -876,7 +706,6 @@ class WebsiteSaleExtended(WebsiteSale):
             #return request.redirect(request.httprequest.referrer or '/web/login')
             return request.redirect(checkout_landpage_redirect)
         raise UserError('Landpage de Productos sin definir. Revise la configuración de PayU Latam')
-    """
 
     @http.route(['/shop/confirmation'], type='http', auth="public", website=True, sitemap=False)
     def payment_confirmation(self, **post):
