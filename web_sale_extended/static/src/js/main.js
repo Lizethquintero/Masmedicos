@@ -896,48 +896,6 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
         }
     });
     
-    document.getElementById("submit_beneficiaries").addEventListener("click", function(event){
-        event.preventDefault();
-        if( $('#bfCheckBox1').is(':checked') ){
-            $("input[name='bfaddress1']").val($("input[name='address']").val());
-            $("select[name='bfdeparment1']").val($("select[name='deparment']").val()).change();
-            setTimeout(() => { $("select[name='bfcity1']").val($("select[name='city']").val()).change(); }, 500);
-            $("input[name='bffijo1']").val($("input[name='fijo']").val());
-        }
-        if( $('#bfCheckBox2').is(':checked') ){
-            $("input[name='bfaddress2']").val($("input[name='address']").val());
-            $("select[name='bfdeparment2']").val($("select[name='deparment']").val()).change();
-            setTimeout(() => { $("select[name='bfcity2']").val($("select[name='city']").val()).change(); }, 500);
-            $("input[name='bffijo2']").val($("input[name='fijo']").val());
-        }
-        if( $('#bfCheckBox3').is(':checked') ){
-            $("input[name='bfaddress3']").val($("input[name='address']").val());
-            $("select[name='bfdeparment3']").val($("select[name='deparment']").val()).change();
-            setTimeout(() => { $("select[name='bfcity3']").val($("select[name='city']").val()).change(); }, 500);
-            $("input[name='bffijo3']").val($("input[name='fijo']").val());
-        }
-        if( $('#bfCheckBox4').is(':checked') ){
-            $("input[name='bfaddress4']").val($("input[name='address']").val());
-            $("select[name='bfdeparment4']").val($("select[name='deparment']").val()).change();
-            setTimeout(() => { $("select[name='bfcity4']").val($("select[name='city']").val()).change(); }, 500);
-            $("input[name='bffijo4']").val($("input[name='fijo']").val());
-        }
-        if( $('#bfCheckBox5').is(':checked') ){
-            $("input[name='bfaddress5']").val($("input[name='address']").val());
-            $("select[name='bfdeparment5']").val($("select[name='deparment']").val()).change();
-            setTimeout(() => { $("select[name='bfcity5']").val($("select[name='city']").val()).change(); }, 500);
-            $("input[name='bffijo5']").val($("input[name='fijo']").val());
-        }
-        if( $('#bfCheckBox6').is(':checked') ){
-            $("input[name='bfaddress6']").val($("input[name='address']").val());
-            $("select[name='bfdeparment6']").val($("select[name='deparment']").val()).change();
-            setTimeout(() => { $("select[name='bfcity6']").val($("select[name='city']").val()).change(); }, 500);
-            $("input[name='bffijo6']").val($("input[name='fijo']").val());
-        }
-        $('#beneficiary').submit();
-        
-    });
-    
 //     $('#submit_beneficiaries').on('click', function() {
 //         if( $('#bfCheckBox1').is(':checked') ){
 //             $("input[name='bfaddress1']").val($("input[name='address']").val());
@@ -1111,8 +1069,47 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
     //     debug: true,
     // });
 
-
-
+    $("#submit_beneficiaries").on('click', function(event){
+        event.preventDefault();
+        if( $('#bfCheckBox1').is(':checked') ){
+            $("input[name='bfaddress1']").val($("input[name='address']").val());
+            $("select[name='bfdeparment1']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity1']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo1']").val($("input[name='fijo']").val());
+        }
+        if( $('#bfCheckBox2').is(':checked') ){
+            $("input[name='bfaddress2']").val($("input[name='address']").val());
+            $("select[name='bfdeparment2']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity2']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo2']").val($("input[name='fijo']").val());
+        }
+        if( $('#bfCheckBox3').is(':checked') ){
+            $("input[name='bfaddress3']").val($("input[name='address']").val());
+            $("select[name='bfdeparment3']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity3']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo3']").val($("input[name='fijo']").val());
+        }
+        if( $('#bfCheckBox4').is(':checked') ){
+            $("input[name='bfaddress4']").val($("input[name='address']").val());
+            $("select[name='bfdeparment4']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity4']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo4']").val($("input[name='fijo']").val());
+        }
+        if( $('#bfCheckBox5').is(':checked') ){
+            $("input[name='bfaddress5']").val($("input[name='address']").val());
+            $("select[name='bfdeparment5']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity5']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo5']").val($("input[name='fijo']").val());
+        }
+        if( $('#bfCheckBox6').is(':checked') ){
+            $("input[name='bfaddress6']").val($("input[name='address']").val());
+            $("select[name='bfdeparment6']").val($("select[name='deparment']").val()).change();
+            setTimeout(() => { $("select[name='bfcity6']").val($("select[name='city']").val()).change(); }, 500);
+            $("input[name='bffijo6']").val($("input[name='fijo']").val());
+        }
+        $('#beneficiary').submit();
+        
+    });
 
 
 });
