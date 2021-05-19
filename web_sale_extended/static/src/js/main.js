@@ -754,16 +754,29 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
                     let decode_data = JSON.parse(data);
                     if(decode_data['data'].country_id == 49){
                         document.querySelector("input[name='name']").value = decode_data['data'].firstname;
+                        $("input[name='name']").prop('readonly', true);
                         document.querySelector("input[name='othername']").value = decode_data['data'].othernames;
+                        $("input[name='othername']").prop('readonly', true);
                         document.querySelector("input[name='lastname']").value = decode_data['data'].lastname;
-                        document.querySelector("input[name='lastname2']").value = decode_data['data'].lastname2;                        
+                        $("input[name='lastname']").prop('readonly', true);
+                        document.querySelector("input[name='lastname2']").value = decode_data['data'].lastname2;    
+                        $("input[name='lastname2']").prop('readonly', true);                    
                         document.querySelector("input[name='numero_documento']").value = decode_data['data'].identification_document;
+                        $("input[name='numero_documento']").prop('readonly', true);
                         document.querySelector("input[name='expedition_date']").value = decode_data['data'].expedition_date;
+                        $("input[name='expedition_date']").prop('disabled', true);  
                         document.querySelector("input[name='email']").value = decode_data['data'].email;
+                        $("input[name='email']").prop('readonly', true); 
                         document.querySelector("input[name='phone']").value = decode_data['data'].phone;
+                        $("input[name='phone']").prop('readonly', true); 
                         document.querySelector("input[name='address']").value = decode_data['data'].address;
-                        document.querySelector("input[name='date']").value = decode_data['data'].birthdate_date;                        
+                        $("input[name='address']").prop('readonly', true); 
+                        document.querySelector("input[name='date']").value = decode_data['data'].birthdate_date;    
+                        $("input[name='date']").prop('disabled', true); 
                         $("#document_type").val(String(decode_data['data'].document_type_id)).change();
+                        $("#document_type").prop('disabled', true); 
+                        $("#bfdeparment0").prop('disabled', true); 
+                        $("#bfcity0").prop('disabled', true); 
                         $("#bfdeparment0").val(String(decode_data['data'].state_id)).change();
                         setTimeout(() => { $("#bfcity0").val(String(decode_data['data'].city_id)).change(); }, 500);
                     }
@@ -802,6 +815,20 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
             $('#bfdeparment0').val('');
             $('#bfcity0').val('');
             $(this).val('0');
+
+            $("input[name='name']").prop('readonly', false);           
+            $("input[name='othername']").prop('readonly', false);            
+            $("input[name='lastname']").prop('readonly', false);           
+            $("input[name='lastname2']").prop('readonly', false); 
+            $("input[name='numero_documento']").prop('readonly', false); 
+            $("input[name='expedition_date']").prop('disabled', false);  
+            $("input[name='email']").prop('readonly', false); 
+            $("input[name='phone']").prop('readonly', false); 
+            $("input[name='address']").prop('readonly', false); 
+            $("input[name='date']").prop('disabled', false);     
+            $("#document_type").prop('disabled', false); 
+            $("#bfdeparment0").prop('disabled', false); 
+            $("#bfcity0").prop('disabled', false); 
         }
     });
     
@@ -981,14 +1008,13 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
     });
 
     $("#btn_terminos").click(function() {
+        $("#terminos").toggle();
         $("#politica").hide();
-        $("#terminos").show();
-
     });
+    
     $("#btn_politica").click(function() {
+        $("#politica").toggle();
         $("#terminos").hide();
-        $("#politica").show();
-
     });
 
     $("#posicion_fiscal_help_icon").on('click', function posicion_fiscal_help() {

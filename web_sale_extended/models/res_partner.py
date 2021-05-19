@@ -40,6 +40,10 @@ class ResPartner(models.Model):
     
     city_2 = fields.Char('Ciudad')
     state_2 = fields.Char('Departamento / Provincia / Estado')
+
+    beneficiary_country_id = fields.Many2one('res.country', 'País del beneficiario')
+    beneficiary_state_id = fields.Many2one('res.country.state', 'Estado del beneficiario')
+    beneficiary_zip_id = fields.Many2one('res.city.zip', 'Ciudad del beneficiario')
     
     buyer = fields.Boolean(string='Comprador', copy=False)
     beneficiary = fields.Boolean(string='Beneficiario', copy=False)

@@ -210,7 +210,7 @@ class SftpReportBeneficiaryLine(models.Model):
         select 
         row_number() OVER (ORDER BY sub.id) as id,
         sub.policy_number as certificate_number,
-        seq.code as policy_number,
+        sub.number as policy_number,
         p.firstname,
         p.othernames,
         p.lastname || ' ' || p.lastname2 as lastname,
@@ -282,7 +282,7 @@ class SftpReportBeneficiaryLine(models.Model):
         left join ir_sequence seq on seq.id = cat.sequence_id
         left join sale_subscription_template subtmpl on subtmpl.id = sub.template_id
         
-        where 1=1
+        where 1=1 and p.beneficiary='t'
         order by sub.id desc
         );
         """

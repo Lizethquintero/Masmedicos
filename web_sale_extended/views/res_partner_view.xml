@@ -58,6 +58,9 @@
                     <field name='gender' />
                     <field name='relationship' />
                     <field name='address_beneficiary' />
+                    <field name='beneficiary_country_id' />
+                    <field name='beneficiary_state_id' />
+                    <field name='beneficiary_zip_id' />
                     <field name='expedition_date' />
                     <field name='marital_status' />
                     <field name='clerk_code' />
