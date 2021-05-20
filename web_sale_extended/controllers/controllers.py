@@ -501,6 +501,8 @@ class WebsiteSaleExtended(WebsiteSale):
                 'beneficiary0_id': Partner.id
             })
         else:
+            suggested_zipcode = request.env['res.city.zip'].sudo().search([('city_id', '=', int(kwargs['city']))], limit=1)
+
             NewBeneficiaryPartner = BeneficiaryPartner.create({
                     'firstname': kwargs['name'],
                     'lastname': kwargs['lastname'],
@@ -517,7 +519,7 @@ class WebsiteSaleExtended(WebsiteSale):
                     'parent_id': Partner.id,
                     'beneficiary_country_id': int(kwargs['country_id']),
                     'beneficiary_state_id': int(kwargs['deparment']),
-                    'beneficiary_zip_id': kwargs['city'],
+                    'beneficiary_zip_id': suggested_zipcode.id,
                     'birthdate_date': kwargs['date'],
                     'expedition_date' : kwargs['expedition_date'],
                     'marital_status' : kwargs['estado_civil'],
@@ -574,6 +576,9 @@ class WebsiteSaleExtended(WebsiteSale):
 
             if kwargs[other_name] == '':
                 kwargs[other_name] = ' '
+            
+            suggested_zipcode = request.env['res.city.zip'].sudo().search([('city_id', '=', int(kwargs[city]))], limit=1)
+
             NewBeneficiaryPartner = BeneficiaryPartner.create({
                 'firstname': kwargs[firtst_name],
                 'lastname': kwargs[last_name],
@@ -590,7 +595,7 @@ class WebsiteSaleExtended(WebsiteSale):
                 'parent_id': Partner.id,
                 'beneficiary_country_id': int(kwargs[country_id]),
                 'beneficiary_state_id': int(kwargs[state_id]),
-                'beneficiary_zip_id': kwargs[city],
+                'beneficiary_zip_id': suggested_zipcode.id,
                 'birthdate_date': kwargs[birthdate],
                 #'marital_status': kwargs[marital_status],
                 'ocupation': kwargs[ocupation],
