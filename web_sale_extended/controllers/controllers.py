@@ -261,54 +261,8 @@ class WebsiteSaleExtended(WebsiteSale):
                 order.write({'require_signature': False, 'require_payment': True,})
                 if not errors:
                     if not order.tusdatos_request_id:
-                        document_types = {'3': 'CC', '5':'CE', '8':'PEP', '7':'PP'}
-                        expedition_date = kw["expedition_date"]
-                        expedition_date = '/'.join(expedition_date.split('-')[::-1])
-                        tusdatos_validation = request.env['api.tusdatos'].launch_query_tusdatos(
-                            str(kw["identification_document"]),
-                            document_types[str(kw["document"])],
-                            expedition_date)
-                        
-                        #if 'hallazgo' in tusdatos_validation and tusdatos_validation['hallazgo']:
-                        #'hallazgos' in tusdatos_validation and tusdatos_validation['hallazgos'] == 'alto':
-                        if 'errores' in tusdatos_validation and ('LISTA_ONU' in tusdatos_validation['errores'] \
-                                                                 or 'lista_onu' in tusdatos_validation['errores']\
-                                                                 or 'OFAC' in tusdatos_validation['errores']\
-                                                                 or 'ofac' in tusdatos_validation['errores']):
-                            body_message = """
-                                <b><span style='color:red;'>TusDatos - Verificación Rechazada</span></b><br/>
-                                <b>Respuesta:</b> %s<br/>
-                            """ % (
-                                json.dumps(tusdatos_validation),
-                            )
-                            _logger.error('********************************8888')
-                            _logger.error(json.dumps(tusdatos_validation))
-                            order.message_post(body=body_message, type="comment")
-                            return werkzeug.utils.redirect('/shop/address?errortusdatos=document_invalid')
-                        
-                        if tusdatos_validation and tusdatos_validation.get('process_id'):
-                            order.write({'tusdatos_request_id': tusdatos_validation['process_id']})
-                            body_message = """
-                                <b><span style='color:blue;'>TusDatos - Solicitud de Verificación</span></b><br/>
-                                <b>No. Solicitud:</b> %s<br/>
-                                <b>Respuesta:</b> %s
-                            """ % (
-                                tusdatos_validation['process_id'],
-                                json.dumps(tusdatos_validation),
-                            )
-                            _logger.error(json.dumps(tusdatos_validation))
-                            order.message_post(body=body_message, type="comment")
-                        elif tusdatos_validation and tusdatos_validation.get('error'):
-                            body_message = """
-                                <b><span style='color:red;'>TusDatos - Error en la Solicitud</span></b><br/>
-                                <b>Respuesta:</b> %s<br/>
-                            """ % (
-                                json.dumps(tusdatos_validation),
-                            )
-                            _logger.error('********************************8888')
-                            _logger.error(json.dumps(tusdatos_validation))
-                            order.message_post(body=body_message, type="comment")
-                            return werkzeug.utils.redirect('/shop/address?errortusdatos=document_invalid')
+                        document_types = {'3': 'CC', '5':'CE', '8':'PEP', '7':'PP'}                        
+                        order.write({'tusdatos_typedoc': document_types[str(kw["document"])]})  
                             
                         render_values = {'email': kw['email'],}
                         return request.redirect(kw.get('callback') or '/shop/confirm_order')
@@ -321,7 +275,7 @@ class WebsiteSaleExtended(WebsiteSale):
 
                     if not errors:
                         return request.redirect(kw.get('callback') or '/shop/confirm_order')
-
+                    
         country = 'country_id' in values and values['country_id'] != '' and request.env['res.country'].browse(int(values['country_id']))
         country = country and country.exists() or def_country_id
         fiscal_position_ids = request.env['account.fiscal.position'].sudo().search([

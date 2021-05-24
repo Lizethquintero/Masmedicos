@@ -18,7 +18,8 @@ class SaleOrder(models.Model):
     tusdatos_email = fields.Char('Client e-mail', default='')
     tusdatos_request_expired = fields.Boolean('Request Expired')
     
-    tusdatos_retry = fields.Boolean('Retry request', default=False)
+    tusdatos_typedoc = fields.Char('Tipo de documento', default='')
+    tusdatos_send = fields.Boolean('Solicitud enviada', default=False)    
     
     subscription_id = fields.Many2one('sale.subscription', 'Suscription ID')
     beneficiary0_id = fields.Many2one('res.partner')
@@ -178,9 +179,39 @@ class SaleOrder(models.Model):
     
     
     def cron_get_status_tusdatos(self):
+        """
+        Se tienen en cuenta las ordenes que no han enviado peticiones a tusdatos
+        """
+        need_to_send_tusdatos_sale_ids = self.env['sale.order'].search([('tusdatos_send', '=', False), ('tusdatos_typedoc', '!=', '')])
+        _logger.error('***************************** ENVIANDO PETICIONES A TUSDATOS ++++++++++++++++++++++++++++++++++')
+        for need_to_send_tusdatos_sale_id in need_to_send_tusdatos_sale_ids:
+            expedition_date = str(need_to_send_tusdatos_sale_id.partner_id.expedition_date)
+            expedition_date = '/'.join(expedition_date.split('-')[::-1])
+            tusdatos_validation = request.env['api.tusdatos'].launch_query_tusdatos(
+                str(need_to_send_tusdatos_sale_id.partner_id.identification_document),
+                str(need_to_send_tusdatos_sale_id.tusdatos_typedoc),
+                expedition_date)
+
+            if tusdatos_validation and tusdatos_validation.get('process_id'):            
+                need_to_send_tusdatos_sale_id.write({'tusdatos_send': True, 'tusdatos_request_id': tusdatos_validation['process_id']})
+                body_message = """
+                    <b><span style='color:blue;'>TusDatos - Solicitud de Verificación</span></b><br/>
+                    <b>No. Solicitud:</b> %s<br/>
+                    <b>Respuesta:</b> %s
+                """ % (
+                    tusdatos_validation['process_id'],
+                    json.dumps(tusdatos_validation),
+                )
+                _logger.error('******************* Response request tusdatos --------------------------')
+                _logger.error(json.dumps(tusdatos_validation))
+                need_to_send_tusdatos_sale_id.message_post(body=body_message, type="comment")
+            """Aseguramos que las transacciones ocurren cada 5 segundos"""
+            time.sleep(6)
+
         """Se tienen en cuenta únicamente ordenes de venta que no esten aprobadas pero que tengan un número de proceso
         de parte de tusdatos."""
         sale_ids = self.env['sale.order'].search([
+            ('tusdatos_send', '=', True),
             ('tusdatos_approved', '=', False),
             ('tusdatos_request_id', '!=', ''),
             ('tusdatos_request_expired', '=', False)
@@ -190,63 +221,87 @@ class SaleOrder(models.Model):
         for sale_id in sale_ids:
             approval = sale_id.tusdatos_approved
             process_id = sale_id.tusdatos_request_id
-            # user_id = record.user_id
+            type_doc = sale_id.tusdatos_typedoc
             if process_id and not approval:
                 _logger.info(' '.join([str(approval), process_id]))
                 _logger.error('***************************** CONSULTA EN TUS DATOS ++++++++++++++++++++++++++++++++++')
                 approval = self.env['api.tusdatos'].personal_data_approval(process_id)
-                
-                _logger.error('-----------------------------------approval impreso por felipe----------------------')
-                _logger.error(approval)
-                
-                _logger.error(approval[1])
-                if approval[0]:
-                    _logger.error('***************************** LLEGA POSITIVO LA VERIFICACION EN TUS DATOS ++++++++++++++++++++++++++++++++++')
-                    _logger.error(approval[0])
-                    _logger.error(approval[0])
-                    sale_id.write({'tusdatos_approved': True})
-                    _logger.error('prodcesssssssss')
-                    _logger.error(process_id)
-                    #if '-' in process_id:
-                        #sale_id.write({'tusdatos_request_id': approval[1]['id']})
-                    body_message = """
-                        <b><span style='color:green;'>TusDatos - Solicitud de Verificación Aprobada</span></b><br/>
-                        <b>Respuesta:</b> %s<br/>
-                    """ % (
-                        json.dumps(approval),
-                    )
-                    sale_id.message_post(body=body_message, type="comment")
-                else:
-                    if approval[1] and 'estado' in approval[1]:
-                        if approval[1]['estado'] in ('error, tarea no valida'):
-                            message = """<b><span style='color:red;'>TusDatos - Solicitud de Verificación Rechazada</span></b><br/>
-                                        <b>Respuesta Error en Tusdatos.co: Esta respuesta se puede dar por que transcurrieron 4 horas o más 
-                                        entre la consulta en tusdatos al momento de la compra y la verificación de Odoo en tus datos para 
-                                        ver si la respuesta en positiva o negativa </b><br/><b>Respuesta:</b> %s"""% (
-                                            json.dumps(approval),
-                                        )
-                            sale_id.write({'tusdatos_request_expired' : True,})
-                            sale_id.message_post(body=message)
+
+                if approval[1]['estado'] == 'finalizado':      
+                    sale_id.write({'tusdatos_request_id': approval[1].get('id')})              
+                    if 'LISTA_ONU' in approval[1]['errores'] or 'lista_onu' in approval[1]['errores'] or 'OFAC' in approval[1]['errores'] or 'ofac' in approval[1]['errores']:
+                        # Enviar retry y obtener el nuevo jobid
+                        _logger.error('-----------------------------------Retry----------------------')
+                        endpoint = 'retry'
+                        _logger.error('-----------------------------------Query retry----------------------')
+                        if '-' in process_id:
+                            query = {'id': approval[1].get('id'), 'typedoc': type_doc}
                         else:
-                            message = """<b><span style='color:red;'>TusDatos - Solicitud de Verificación Rechazada</span></b><br/>
-                            <b>Respuesta:</b> %s
+                            query = {'id': process_id, 'typedoc': type_doc}
+                        _logger.error(query)
+                        validation = self.env['api.tusdatos'].request_tusdatos_api(endpoint, query)
+                        # obtengo nuevo jobid
+                        _logger.error('-----------------------------------Respuesta Retry----------------------')
+                        _logger.error(validation)
+                        process_id2 = validation.get('jobid')
+                        # Vuelvo a hacer el request a results con el nuevo jobid
+                        # sale_id.write({'tusdatos_request_id': approval[1].get('id')})
+                        approval = self.env['api.tusdatos'].personal_data_approval(process_id2)
+                        _logger.error('-----------------------------------New request----------------------')
+                        _logger.error(approval)
+                        if approval[1].get('estado') == 'procesando':
+                            _logger.error('-----------------------------------Entro al continue----------------------')
+                            continue
+                    else:
+                        approval = self.env['api.tusdatos'].personal_data_approval(approval[1].get('id'))
+                        
+                        if approval[0]:
+                            _logger.error('***************************** LLEGA POSITIVO LA VERIFICACION EN TUS DATOS ++++++++++++++++++++++++++++++++++')
+                            _logger.error(approval[0])
+                            _logger.error(approval[0])
+                            sale_id.write({'tusdatos_approved': True})
+                            _logger.error('prodcesssssssss')
+                            _logger.error(process_id)
+                            #if '-' in process_id:
+                                #sale_id.write({'tusdatos_request_id': approval[1]['id']})
+                            body_message = """
+                                <b><span style='color:green;'>TusDatos - Solicitud de Verificación Aprobada</span></b><br/>
+                                <b>Respuesta:</b> %s<br/>
                             """ % (
                                 json.dumps(approval),
                             )
-                            sale_id.write({'tusdatos_request_expired' : True,})
-                            sale_id.message_post(body=message)
-                    else:
-                        message = """<b><span style='color:red;'>TusDatos - Solicitud de Verificación Rechazada</span></b><br/>
-                        Esta respuesta se da por que el documento del comprador se encuentra reportado
-                        en las lista Onu o OFAC<br/>
-                        <b>Respuesta:</b> %s""" % (
-                            json.dumps(approval),
-                        )
-                        sale_id.write({'tusdatos_request_expired' : True,})
-                        sale_id.message_post(body=message)
-                """Aseguramos que las transacciones ocurren cada 5 segundos"""
-                time.sleep(6)
-                    
+                            sale_id.message_post(body=body_message, type="comment")
+                        else:
+                            if approval[1] and 'estado' in approval[1]:
+                                if approval[1]['estado'] in ('error, tarea no valida'):
+                                    message = """<b><span style='color:red;'>TusDatos - Solicitud de Verificación Rechazada</span></b><br/>
+                                                <b>Respuesta Error en Tusdatos.co: Esta respuesta se puede dar por que transcurrieron 4 horas o más 
+                                                entre la consulta en tusdatos al momento de la compra y la verificación de Odoo en tus datos para 
+                                                ver si la respuesta en positiva o negativa </b><br/><b>Respuesta:</b> %s"""% (
+                                                    json.dumps(approval),
+                                                )
+                                    sale_id.write({'tusdatos_request_expired' : True,})
+                                    sale_id.message_post(body=message)
+                                else:
+                                    message = """<b><span style='color:red;'>TusDatos - Solicitud de Verificación Rechazada</span></b><br/>
+                                    <b>Respuesta:</b> %s
+                                    """ % (
+                                        json.dumps(approval),
+                                    )
+                                    sale_id.write({'tusdatos_request_expired' : True,})
+                                    sale_id.message_post(body=message)
+                            else:
+                                message = """<b><span style='color:red;'>TusDatos - Solicitud de Verificación Rechazada</span></b><br/>
+                                Esta respuesta se da por que el documento del comprador se encuentra reportado
+                                en las lista Onu o OFAC<br/>
+                                <b>Respuesta:</b> %s""" % (
+                                    json.dumps(approval),
+                                )
+                                sale_id.write({'tusdatos_request_expired' : True,})
+                                sale_id.message_post(body=message)
+                               
+                else:
+                    continue
 
     def create_subscriptions(self):
         """
