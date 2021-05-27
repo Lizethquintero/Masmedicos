@@ -13,6 +13,7 @@ class ResCompany(models.Model):
     """ Logos que aplican a todas las compras y son usados en el pdf de poliza """
     logo_website_pdf  = fields.Binary(string="Logo Website PDF", readonly=False)
     logo_supervigilado  = fields.Binary(string="Logo Supervigilado", readonly=False)
+    firma  = fields.Binary(string="Firma Certificado", readonly=False)
     
     """ Datos de conexión al api de tusdatos.co """
     mail_tusdatos = fields.Char("Cuenta - E-mail")

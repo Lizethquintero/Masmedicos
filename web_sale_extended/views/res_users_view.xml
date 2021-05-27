@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_users_form_inherit" model="ir.ui.view">
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook/page[@name='access_rights']/group/field[@name='company_id']" position="after">
+                <field name="sponsor_id"/>     
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -26,6 +26,9 @@
                     <field name="policy_number"/>
                     <field name="number"/>
                 </xpath>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="sponsor_id"/>
+                </xpath>
             </field>
         </record>
 

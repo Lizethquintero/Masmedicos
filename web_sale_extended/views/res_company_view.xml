@@ -7,12 +7,11 @@
                 <xpath expr="//sheet/notebook" position="inside">
                     <page string="Otros Logos">
                         <group>
-                            <group>
-                                <label for="logo_website_pdf"/>
-                                <field name="logo_website_pdf"/>
+                            <group>                                
+                                <field name="logo_website_pdf"/>                         
+                                <field name="firma"/>
                             </group>
-                            <group>
-                                <label for="logo_supervigilado"/>
+                            <group>                                
                                 <field name="logo_supervigilado"/>
                             </group>
                         </group>

@@ -1051,10 +1051,34 @@
                                                 <i class="fa-2x s_alert_icon" data-original-title="" title="" aria-describedby="tooltip831158"/>
                                                 <div class="s_alert_content" style="">
                                                     <p/>
+                                                    <t t-if="order.order_line[0].product_template_id.subscription_template_id.recurring_interval == 1 and order.order_line[0].product_template_id.subscription_template_id.recurring_rule_type == 'monthly'">
+                                                        <t t-set="forma_pago" t-value="'Mensual'" />
+                                                    </t>
+                                                    <t t-elif="order.order_line[0].product_template_id.subscription_template_id.recurring_interval == 3 and order.order_line[0].product_template_id.subscription_template_id.recurring_rule_type == 'monthly'">
+                                                        <t t-set="forma_pago" t-value="'Trimestral'" />
+                                                    </t>
+                                                    <t t-elif="order.order_line[0].product_template_id.subscription_template_id.recurring_interval == 6 and order.order_line[0].product_template_id.subscription_template_id.recurring_rule_type == 'monthly'">
+                                                        <t t-set="forma_pago" t-value="'Semestral'" />
+                                                    </t>
+                                                    <t t-elif="order.order_line[0].product_template_id.subscription_template_id.recurring_interval == 12 and order.order_line[0].product_template_id.subscription_template_id.recurring_rule_type == 'monthly'">
+                                                        <t t-set="forma_pago" t-value="'Anual'" />
+                                                    </t>
+                                                    <t t-elif="order.order_line[0].product_template_id.subscription_template_id.recurring_interval == 1 and order.order_line[0].product_template_id.subscription_template_id.recurring_rule_type == 'yearly'">
+                                                        <t t-set="forma_pago" t-value="'Anual'" />
+                                                    </t>
+                                                    <t t-else="">
+                                                        <t t-if="order.order_line[0].product_template_id.subscription_template_id.recurring_rule_type == 'yearly'">
+                                                            <t t-set="tiempo" t-value="' Años'" />
+                                                        </t>
+                                                        <t t-elif="order.order_line[0].product_template_id.subscription_template_id.recurring_rule_type == 'monthly'">
+                                                            <t t-set="tiempo" t-value="' Meses'" />
+                                                        </t>
+                                                        <t t-set="forma_pago" t-value="'cada ' + str(order.order_line[0].product_template_id.subscription_template_id.recurring_interval) + tiempo" />
+                                                    </t>
                                                     <div style="text-align: left;">
                                                         <font color="#3333cc">
                                                             <b style="font-size: 18px;">
-                                                                Realicemos el pago del primer mes de tu 
+                                                                Realicemos el pago <t t-esc="forma_pago"/> de tu 
                                                                 <t t-esc="order.order_line[0].product_template_id.name"/> 
                                                                 para ti y tu grupo familiar, es seguro y muy rápido, gracias a PayU.</b>
                                                         </font>
@@ -1580,7 +1604,7 @@
                                               <span>Atrás</span>
                                           </a>-->
                                           <button class="btn btn-custom mb32">
-                                              <span>Paga el primer mes</span>
+                                              <span>Pagar</span>
                                               <i class="fa fa-chevron-right"/>
                                           </button>
                                          <!-- <a role="button" href="#" class="btn btn-primary mb32 a-submit a-submit-disable a-submit-loading">-->

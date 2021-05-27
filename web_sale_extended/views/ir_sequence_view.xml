@@ -24,6 +24,7 @@
                                  <field name="sponsor_name"/>
                                  <field name="sponsor_nit"/>
                                  <field name="sponsor_payment_url"/>
+                                 <field name="sponsor_id"/>                                 
                             </group>
                         </group>
                     </page>

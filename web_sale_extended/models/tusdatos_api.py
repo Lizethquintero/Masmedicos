@@ -188,4 +188,5 @@ class TusDatosAPI(models.TransientModel):
             # TODO: add id to sale_order for queue validation process
             _logger.error("****** ERROR: Approbation not processed. ******")
         approval_data = (approval, validation)
+        _logger.error(approval_data)
         return approval_data

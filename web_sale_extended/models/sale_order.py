@@ -19,8 +19,10 @@ class SaleOrder(models.Model):
     tusdatos_request_expired = fields.Boolean('Request Expired')
     
     tusdatos_typedoc = fields.Char('Tipo de documento', default='')
-    tusdatos_send = fields.Boolean('Solicitud enviada', default=False)    
+    tusdatos_send = fields.Boolean('Solicitud enviada', default=False)  
     
+    campo_vacio = fields.Boolean('Campo vacio', default=False)  
+        
     subscription_id = fields.Many2one('sale.subscription', 'Suscription ID')
     beneficiary0_id = fields.Many2one('res.partner')
     beneficiary1_id = fields.Many2one('res.partner')
@@ -48,6 +50,14 @@ class SaleOrder(models.Model):
         ("Product Without Price", "Producto con Precio $0"),
     ])
     
+    @api.depends('order_line')
+    def _compute_sponsor_id(self):
+        if self.order_line[0].product_id.sequence_id.sponsor_id: 
+            self.sponsor_id = self.order_line[0].product_id.sequence_id.sponsor_id
+        else:
+            self.sponsor_id = self.order_line[0].product_id.categ_id.sequence_id.sponsor_id
+        
+    sponsor_id = fields.Many2one('res.partner', compute=_compute_sponsor_id, store=True)
     
     def action_payu_confirm(self):
         if self._get_forbidden_state_confirm() & set(self.mapped('state')):
