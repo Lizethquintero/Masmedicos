@@ -187,7 +187,7 @@ class SaleOrder(models.Model):
         for need_to_send_tusdatos_sale_id in need_to_send_tusdatos_sale_ids:
             expedition_date = str(need_to_send_tusdatos_sale_id.partner_id.expedition_date)
             expedition_date = '/'.join(expedition_date.split('-')[::-1])
-            tusdatos_validation = request.env['api.tusdatos'].launch_query_tusdatos(
+            tusdatos_validation = self.env['api.tusdatos'].launch_query_tusdatos(
                 str(need_to_send_tusdatos_sale_id.partner_id.identification_document),
                 str(need_to_send_tusdatos_sale_id.tusdatos_typedoc),
                 expedition_date)
