@@ -394,7 +394,15 @@ class WebsiteSaleExtended(WebsiteSale):
         #    return redirection
         
         product = order.order_line[0].product_id
-        beneficiaries_number = product.product_tmpl_id.sequence_id.beneficiaries_number if product.product_tmpl_id.sequence_id.beneficiaries_number else 6
+
+        if product.sequence_id:
+            beneficiaries_number = product.sequence_id.beneficiaries_number
+        else:
+            beneficiaries_number = product.categ_id.sequence_id.beneficiaries_number
+        
+        if beneficiaries_number < 1 or beneficiaries_number > 6:
+            beneficiaries_number = 6
+        
         country = request.env['res.country'].browse(int(order.partner_id.country_id))
         _logger.info(country)
         render_values = {
@@ -430,8 +438,10 @@ class WebsiteSaleExtended(WebsiteSale):
                 return redirection
         order_detail = order.order_line[0]
 
-        
-
+        if order_detail.product_id.sequence_id.sponsor_id:
+            sponsor_id = order_detail.product_id.sequence_id.sponsor_id
+        else: 
+            sponsor_id = order_detail.product_id.categ_id.sequence_id.sponsor_id
         
         Partner = order.partner_id
         BeneficiaryPartner = request.env['res.partner'].sudo()
@@ -447,6 +457,7 @@ class WebsiteSaleExtended(WebsiteSale):
                 'gender' : kwargs['sex'],
                 'marital_status' : kwargs['estado_civil'],
                 'main_insured': True,
+                'sponsor_id': sponsor_id.id,
                 'subscription_id': Subscription.id
             })
         
@@ -456,6 +467,10 @@ class WebsiteSaleExtended(WebsiteSale):
             })
         else:
             suggested_zipcode = request.env['res.city.zip'].sudo().search([('city_id', '=', int(kwargs['city']))], limit=1)
+
+            Partner.sudo().write({                
+                'sponsor_id': sponsor_id.id,                
+            })
 
             NewBeneficiaryPartner = BeneficiaryPartner.create({
                     'firstname': kwargs['name'],
@@ -482,6 +497,7 @@ class WebsiteSaleExtended(WebsiteSale):
                     'address_beneficiary': kwargs['address'],
                     'beneficiary_number': 1,
                     'main_insured': True,
+                    'sponsor_id': sponsor_id.id,
                     'subscription_id': Subscription.id,
                 })
             beneficiary_list.append((4, NewBeneficiaryPartner.id))
@@ -559,6 +575,7 @@ class WebsiteSaleExtended(WebsiteSale):
                 'beneficiary_number': i+2,
                 'beneficiary': True,
                 'clerk_code': clerk_code,
+                'sponsor_id': sponsor_id.id,
                 'subscription_id': Subscription.id,
             })
             beneficiary_list.append((4, NewBeneficiaryPartner.id))                

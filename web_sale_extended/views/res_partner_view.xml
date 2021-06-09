@@ -64,6 +64,7 @@
                     <field name='expedition_date' />
                     <field name='marital_status' />
                     <field name='clerk_code' />
+                    <field name='sponsor_id' />
                 </field>
                 
                 <field name="street" position="after">

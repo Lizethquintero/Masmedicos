@@ -51,6 +51,8 @@ class ResPartner(models.Model):
     
     company_type = fields.Selection(selection_add=[('sponsor', 'Sponsor')], compute=False, default='person')
     person_type = fields.Selection(compute=False)
+    sponsor_id = fields.Many2one('res.partner', 'Sponsor', domain=[('company_type', '=', 'sponsor')])
+    campo_vacio = fields.Boolean('Campo vacio', default=False)  
     
     """
     def _compute_clerk_code(self):
