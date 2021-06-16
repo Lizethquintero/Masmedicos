@@ -177,7 +177,7 @@
                                 <br/>
                             </p>
                             <div style="text-align: right;">
-                            <a href="/web_sale_extended/static/src/files/manual_usuario.pdf" download="manual_usuario"><img class="img-fluid o_we_custom_image" src="/web_sale_extended/static/src/images/descarga.png" data-original-title="" title="" aria-describedby="tooltip415988" style="font-size: 1rem;"/>&amp;nbsp;&amp;nbsp;</a>
+                            <img class="img-fluid o_we_custom_image" src="/web_sale_extended/static/src/images/descarga.png" data-original-title="" title="" aria-describedby="tooltip415988" style="font-size: 1rem;"/>&amp;nbsp;&amp;nbsp;
                             <img class="img-fluid o_we_custom_image" src="/web_sale_extended/static/src/images/inprimir.png" style="font-size: 1rem;" data-original-title="" title="" aria-describedby="tooltip490252"/></div>
                             </div>
                         </div>
