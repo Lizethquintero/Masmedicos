@@ -50,12 +50,13 @@ class SaleOrder(models.Model):
         ("Product Without Price", "Producto con Precio $0"),
     ])
     
-    @api.depends('order_line')
+    @api.depends('order_line', 'state')
     def _compute_sponsor_id(self):
-        if self.order_line[0].product_id.sequence_id.sponsor_id: 
-            self.sponsor_id = self.order_line[0].product_id.sequence_id.sponsor_id
-        else:
-            self.sponsor_id = self.order_line[0].product_id.categ_id.sequence_id.sponsor_id
+        if self.state == 'sale':
+            if self.main_product_id.sequence_id.sponsor_id: 
+                self.sponsor_id = self.main_product_id.sequence_id.sponsor_id
+            else:
+                self.sponsor_id = self.main_product_id.categ_id.sequence_id.sponsor_id
         
     sponsor_id = fields.Many2one('res.partner', compute=_compute_sponsor_id, store=True)
     
