@@ -16,6 +16,11 @@
                         <group>
                             <field name="sequence_id" string="Secuencia del Producto"/>
                         </group>
+                        <group>
+                            <field name="can_publish" />
+                            <field name="is_published" />
+                            <field name="website_published" />
+                        </group>
                         
 <!--                         <group>
                             <group>
