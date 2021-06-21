@@ -339,9 +339,6 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
             return this.optional(element) || /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test(value);
         }, "¡Upss! deben contener caracteres validos");
 
-
-        $("#terminos").hide();
-        $("#politica").hide();
         $("#shop").validate({
             rules: {
                 name: {
@@ -1008,13 +1005,15 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
     });
 
     $("#btn_terminos").click(function() {
+        document.getElementById("politica").innerHTML = '';
+        document.getElementById("terminos").innerHTML = '<embed src="/web_sale_extended/static/src/files/terminos.pdf" width="100%" height="680px">Acepto términos y condiciones</embed>';
         $("#terminos").toggle();
-        $("#politica").hide();
     });
     
     $("#btn_politica").click(function() {
+        document.getElementById("terminos").innerHTML = '';
+        document.getElementById("politica").innerHTML = '<embed src="/web_sale_extended/static/src/files/tratamiento_de_datos.pdf" width="100%" height="680px">Acepto política de tratamiento de datos</embed>';
         $("#politica").toggle();
-        $("#terminos").hide();
     });
 
     $("#posicion_fiscal_help_icon").on('click', function posicion_fiscal_help() {
