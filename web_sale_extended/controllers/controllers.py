@@ -228,6 +228,15 @@ class WebsiteSaleExtended(WebsiteSale):
                 post["country_id"] = int(kw["country_address_id"])
                 
                 post["buyer"] = True
+
+                phone_form = kw['phone']
+                phone_form = phone_form.split(')')
+                number = phone_form[-1].strip()
+                
+                if len(number) == 7:
+                    post["phone"] = kw["phone"]
+                elif len(number) == 10:
+                    post["mobile"] = kw["phone"]
                 
                 if kw['country_address_id'] =='49':                    
                     post["zip"] = kw["zip"]
@@ -460,6 +469,16 @@ class WebsiteSaleExtended(WebsiteSale):
                 'sponsor_id': sponsor_id.id,
                 'subscription_id': Subscription.id
             })
+
+            if 'phone' in kwargs:
+                Partner.sudo().write({
+                    'mobile' : kwargs['phone']
+                })
+            
+            if 'fijo' in kwargs:
+                 Partner.sudo().write({
+                    'phone' : kwargs['fijo']
+                })
         
             beneficiary_list.append((4, Partner.id))
             order.write({
