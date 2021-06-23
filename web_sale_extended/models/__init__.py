@@ -15,3 +15,4 @@ from . import ir_sequence
 from . import payu_latam_api
 from . import http
 from . import website
+from . import sale_subscription_template
