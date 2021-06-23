@@ -759,6 +759,7 @@ class WebsiteSaleExtended(WebsiteSale):
             'lastname2':order.partner_id.lastname2,            
             'email': order.partner_id.email,
             "phone": order.partner_id.phone,
+            'mobile': order.partner_id.mobile,
             'document_type_id': order.partner_id.document_type_id.id,
             'identification_document': order.partner_id.identification_document,
             'birthdate_date': order.partner_id.birthdate_date.strftime("%Y-%m-%d"),
