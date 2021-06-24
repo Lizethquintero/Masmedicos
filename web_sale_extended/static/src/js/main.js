@@ -302,7 +302,7 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
             let number = element.value;
             number = number.split(')');
             number = number[number.length - 1].trim();
-           if(number.length == 7 || number.length == 10){
+           if(number.length == 7 || number.length == 10 || number.length == 0){
               return true;
            } else {
               return false;

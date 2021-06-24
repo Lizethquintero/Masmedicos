@@ -235,8 +235,10 @@ class WebsiteSaleExtended(WebsiteSale):
                 
                 if len(number) == 7:
                     post["phone"] = kw["phone"]
+                    post["mobile"] = ''
                 elif len(number) == 10:
                     post["mobile"] = kw["phone"]
+                    post["phone"] = ''
                 
                 if kw['country_address_id'] =='49':                    
                     post["zip"] = kw["zip"]
