@@ -815,6 +815,7 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
             document.querySelector("input[name='expedition_date']").value = "";
             document.querySelector("input[name='email']").value = "";
             document.querySelector("input[name='phone']").value = "";
+            document.querySelector("input[name='fijo']").value = "";
             document.querySelector("input[name='address']").value = "";
             document.querySelector("input[name='date']").value = "";
             $('#bfdeparment0').val('');
@@ -829,6 +830,7 @@ odoo.define('web_sale_extended.show_website_cities', function(require) {
             $("input[name='expedition_date']").prop('disabled', false);  
             $("input[name='email']").prop('readonly', false); 
             $("input[name='phone']").prop('readonly', false); 
+            $("input[name='fijo']").prop('readonly', false); 
             $("input[name='address']").prop('readonly', false); 
             $("input[name='date']").prop('disabled', false);     
             $("#document_type").prop('disabled', false); 
