@@ -130,7 +130,8 @@
                                 <br/>
                             </p>
                             <div style="text-align: right;">
-                            <a id="poliza_download_bt" t-att-href="order_detail.order_id.get_portal_url(report_type='pdf', download=True)">
+                            <t t-set='url_report' t-value="'/report/beneficiary/%s'%(order_detail.order_id.id)" />
+                            <a id="poliza_download_bt" t-att-href="url_report">
                                 <img class="img-fluid o_we_custom_image" 
                                      src="/web_sale_extended/static/src/images/descarga.png" 
                                      data-original-title="" 

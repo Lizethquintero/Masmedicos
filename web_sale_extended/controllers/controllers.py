@@ -660,24 +660,14 @@ class WebsiteSaleExtended(WebsiteSale):
         return "Datos eviados correctamente"
 
 
-    @http.route(['/report/beneficiary'],  methods=['GET'], type='http', auth="public", website=True)
-    def report_poliza(self, city_id=None, **kwargs):
+    @http.route(['/report/beneficiary/<int:order_id>'],  methods=['GET'], type='http', auth="public", website=True)
+    def report_poliza(self, order_id, **kwargs):
+        order = request.env['sale.order'].sudo().browse(order_id)
         report_obj = request.env['ir.actions.report']
-        report = report_obj.sudo()._get_report_from_name('web_sale_extended.report_customreport_customeasytek_template')
-        pdf = report.sudo().render_qweb_pdf()[0]
-        file_name = "prueba"
-        b64_pdf = base64.b64encode(pdf)
-        report_file = request.env['ir.attachment'].sudo().create({
-            'name': file_name,
-            'type': 'binary',
-            'datas': b64_pdf,
-            # 'datas_fname': file_name + '.pdf',
-            # 'store_fname': file_name,
-            'res_model': 'res.partner',
-            # 'res_id': 1,
-            'mimetype': 'application/x-pdf'
-        })
-        return request.render(report_file, kwargs)
+        report = report_obj.sudo()._get_report_from_name('sale.report_saleorder')
+        pdf = report.sudo().render_qweb_pdf(order_id)[0]
+        pdfhttpheaders = [ ('Content-Type', 'application/pdf'), ('Content-Length', len(pdf)), ('Content-Disposition', 'attachment; filename="Certificado Individual P%s C%s.pdf"'%(order.subscription_id.number, order.subscription_id.policy_number)), ]
+        return request.make_response(pdf, headers=pdfhttpheaders)
 
 
     # search cities by ajax peticion
