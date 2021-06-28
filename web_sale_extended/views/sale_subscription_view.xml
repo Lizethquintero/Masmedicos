@@ -150,11 +150,38 @@
             <field name="res_model">report.beneficiary.sftp</field>
             <field name="view_mode">tree</field>
         </record>
+         
+        <record id="collections_report_view_tree" model="ir.ui.view">
+            <field name="name">collections.report.subscription.line.view.tree</field>
+            <field name="type">tree</field>
+            <field name="model">report.collections</field>
+            <field name="arch" type="xml">
+                <tree string="Collections lines" create="0" edit="0">
+                    <field name="policy_number" />
+                    <field name="certificate_number" />
+                    <field name="firstname" />
+                    <field name="othernames" />
+                    <field name="lastname" />
+                    <field name="identification_document" />
+                    <field name="transaction_type" />
+                    <field name="clase" />
+                    <field name="change_date" />
+                    <field name="collected_value" widget="monetary"/>
+                    <field name="number_of_installments" />
+                    <field name="payment_method" />
+                    <field name="number_of_plan_installments" />
+                    <field name="total_installments" />
+                    <field name="number_of_installments_arrears" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_report_collections_tree">
+            <field name="name">Collections Report</field>
+            <field name="res_model">report.collections</field>
+            <field name="view_mode">tree</field>
+        </record>
     </data>
-
-
-        <menuitem id="sale_subscription_sftp_report" name="Reporte SFTP Asegurado" parent="sale_subscription.menu_sale_subscription_config" sequence="5" action="web_sale_extended.action_report_sftp_tree" groups="sale_subscription.group_sale_subscription_view"/>
-    
+    <menuitem id="sale_subscription_sftp_report" name="Reporte SFTP Asegurado" parent="sale_subscription.menu_sale_subscription_config" sequence="5" action="web_sale_extended.action_report_sftp_tree" groups="sale_subscription.group_sale_subscription_view"/>
     <menuitem id="sale_subscription_sftp_beneficiary_report" name="Reporte SFTP Beneficiarios" parent="sale_subscription.menu_sale_subscription_config" sequence="6" action="web_sale_extended.action_report_sftp_beneficiary_tree" groups="sale_subscription.group_sale_subscription_view"/>
-
+    <menuitem id="sale_subscription_collections_report" name="Reporte de recaudos" parent="sale_subscription.menu_sale_subscription_config" sequence="7" action="action_report_collections_tree" groups="sale_subscription.group_sale_subscription_view"/>
 </odoo>
