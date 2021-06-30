@@ -137,14 +137,14 @@ class CollectionsReportLine(models.Model):
 
             data2.append(['Fecha inicio', start_date2, 'Fecha fin', end_date2, 'Numero de registros', nreg2, '', '', 'Total', sum2])
             
-            with open('tmp/collections_files/collection.csv', 'w', encoding='utf-8', newline='') as file, open('tmp/collections_files/collection2.csv', 'w', encoding='utf-8', newline='') as file2:
+            with open('tmp/collection.csv', 'w', encoding='utf-8', newline='') as file, open('tmp/collection2.csv', 'w', encoding='utf-8', newline='') as file2:
                 writer = csv.writer(file, delimiter=',')
                 writer.writerows(data)
                 writer2 = csv.writer(file2, delimiter=',')
                 writer2.writerows(data2)           
             
 
-            with open ('tmp/collections_files/collection.csv', 'rb') as archivo, open ('tmp/collections_files/collection2.csv', 'rb') as archivo2:
+            with open ('tmp/collection.csv', 'rb') as archivo, open ('tmp/collection2.csv', 'rb') as archivo2:
                 encoded = base64.b64encode(archivo.read())
                 encoded2 = base64.b64encode(archivo2.read())        
         
@@ -171,11 +171,11 @@ class CollectionsReportLine(models.Model):
                 }
                 self.env['mail.mail'].sudo().create(mail_values).send()
         else:
-            with open ('tmp/collections_files/collection.csv', 'w', encoding='utf-8', newline='') as file:
+            with open ('tmp/collection.csv', 'w', encoding='utf-8', newline='') as file:
                 writer = csv.writer(file, delimiter=',')
                 writer.writerows(data)
 
-            with open ('tmp/collections_files/collection.csv', 'rb') as archivo:
+            with open ('tmp/collection.csv', 'rb') as archivo:
                 encoded = base64.b64encode(archivo.read())        
         
                 att = self.env['ir.attachment'].sudo().create({
