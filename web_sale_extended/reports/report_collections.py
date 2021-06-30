@@ -71,7 +71,7 @@ class CollectionsReportLine(models.Model):
         sub.recurring_total as collected_value,        
         '1'::text as number_of_installments,        
         sorder.payment_method_type as payment_method,
-        subtmpl.recurring_interval as number_of_plan_installments,
+        subtmpl.recurring_rule_count as number_of_plan_installments,
         ''::text as total_installments,
         ''::text as number_of_installments_arrears        
         
