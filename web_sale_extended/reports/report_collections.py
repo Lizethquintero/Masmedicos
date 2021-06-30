@@ -68,10 +68,10 @@ class CollectionsReportLine(models.Model):
         'R'::text as transaction_type,
         tmpl.product_class as clase,
         sub.date_start as change_date,
-        sub.recurring_monthly as collected_value,        
+        sub.recurring_total as collected_value,        
         '1'::text as number_of_installments,        
         sorder.payment_method_type as payment_method,
-        subtmpl.subscription_duration / subtmpl.recurring_interval as number_of_plan_installments,
+        subtmpl.recurring_interval as number_of_plan_installments,
         ''::text as total_installments,
         ''::text as number_of_installments_arrears        
         
