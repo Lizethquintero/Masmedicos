@@ -17,6 +17,5 @@ class IrSequence(models.Model):
     beneficiaries_number = fields.Integer(string="Número Máximo de Beneficiarios")
     sponsor_name = fields.Char('Nombre del Sponsor')
     sponsor_nit = fields.Char('Identificación del Sponsor')
-    sponsor_payment_url = fields.Char('URL de la Plataforma de Pagos')
-    sponsor_id = fields.Many2one('res.partner', 'Sponsor', domain=[('company_type', '=', 'sponsor')])    
+    sponsor_payment_url = fields.Char('URL de la Plataforma de Pagos')    
     

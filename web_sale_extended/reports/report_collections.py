@@ -42,16 +42,16 @@ class CollectionsReportLine(models.Model):
     clase = fields.Char('Clase', readonly=True)    
     change_date = fields.Char('Fecha de cambio', readonly=True)    
     collected_value = fields.Integer('Valor recaudo', readonly=True)    
-    number_of_installments = fields.Char('Número de cuotas', readonly=True)    
+    number_of_installments = fields.Char('Cuotas recaudo', readonly=True)    
     payment_method = fields.Selection([
         ("Credit Card", "Tarjeta de Crédito"), 
         ("Cash", "Efectivo"), 
         ("PSE", "PSE"),
         ("Product Without Price", "Beneficio "),
     ])
-    number_of_plan_installments = fields.Integer('Número de cuotas plan', readonly=True)    
-    total_installments = fields.Char('Total de cuotas', readonly=True)    
-    number_of_installments_arrears = fields.Char('Número de cuotas en mora', readonly=True)
+    number_of_plan_installments = fields.Integer('Cuotas plan', readonly=True)    
+    total_installments = fields.Char('Pagadas a la fecha', readonly=True)    
+    number_of_installments_arrears = fields.Char('#Cuotas en mora', readonly=True)
     
     def init(self):
         tools.drop_view_if_exists(self._cr, 'report_collections')

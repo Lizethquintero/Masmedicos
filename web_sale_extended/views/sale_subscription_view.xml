@@ -168,7 +168,7 @@
                     <field name="change_date" />
                     <field name="collected_value" widget="monetary"/>
                     <field name="number_of_installments" />
-                    <field name="payment_method" />
+                    <field name="payment_method" string="Metodo de pago" />
                     <field name="number_of_plan_installments" />
                     <field name="total_installments" />
                     <field name="number_of_installments_arrears" />

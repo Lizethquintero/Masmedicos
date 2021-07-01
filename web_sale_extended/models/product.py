@@ -11,6 +11,7 @@ class ProductCategory(models.Model):
     _inherit = 'product.category'
 
     sequence_id = fields.Many2one('ir.sequence','Secuencia del Patrocinador')
+    sponsor_id = fields.Many2one('res.partner', 'Sponsor', domain=[('company_type', '=', 'sponsor')])
     
     
 class ProductProduct(models.Model):

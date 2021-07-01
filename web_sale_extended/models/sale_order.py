@@ -53,10 +53,8 @@ class SaleOrder(models.Model):
     @api.depends('order_line', 'state')
     def _compute_sponsor_id(self):
         if self.state == 'sale':
-            if self.main_product_id.sequence_id.sponsor_id: 
-                self.sponsor_id = self.main_product_id.sequence_id.sponsor_id
-            else:
-                self.sponsor_id = self.main_product_id.categ_id.sequence_id.sponsor_id
+            if self.main_product_id.categ_id.sponsor_id: 
+                self.sponsor_id = self.main_product_id.categ_id.sponsor_id
         
     sponsor_id = fields.Many2one('res.partner', compute=_compute_sponsor_id, store=True)
     

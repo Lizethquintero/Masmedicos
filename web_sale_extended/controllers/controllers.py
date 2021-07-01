@@ -449,11 +449,9 @@ class WebsiteSaleExtended(WebsiteSale):
                 return redirection
         order_detail = order.order_line[0]
 
-        if order_detail.product_id.sequence_id.sponsor_id:
-            sponsor_id = order_detail.product_id.sequence_id.sponsor_id
-        else: 
-            sponsor_id = order_detail.product_id.categ_id.sequence_id.sponsor_id
-        
+        if order_detail.product_id.categ_id.sponsor_id:
+            sponsor_id = order_detail.product_id.categ_id.sponsor_id
+                
         Partner = order.partner_id
         BeneficiaryPartner = request.env['res.partner'].sudo()
         Subscription = order_detail.subscription_id

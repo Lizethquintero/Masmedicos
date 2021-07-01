@@ -42,7 +42,7 @@ class SaleSubscription(models.Model):
             'policy_number': str(sequence_id.number_next_actual).zfill(10),
             'number': str(sequence_id.code),
             'recurring_next_date': datetime.date.today(),
-            'sponsor_id': sequence_id.sponsor_id,
+            'sponsor_id': res.recurring_invoice_line_ids[0].product_id.categ_id.sponsor_id,
         })
         sequence_id.write({
             'number_next_actual': int(sequence_id.number_next_actual) + 1,
