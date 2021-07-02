@@ -83,6 +83,9 @@
             <xpath expr="//field[@name='company_type']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name='generates_accounting' />
+            </xpath>
         </field>
     </record>
     
