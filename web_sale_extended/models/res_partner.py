@@ -53,7 +53,7 @@ class ResPartner(models.Model):
     person_type = fields.Selection(compute=False)
     sponsor_id = fields.Many2one('res.partner', 'Sponsor', domain=[('company_type', '=', 'sponsor')])
     campo_vacio = fields.Boolean('Campo vacio', default=False)  
-    generates_accounting = fields.Boolean('Genera contabilidad', default=False)  
+    generates_accounting = fields.Boolean('Tomador de póliza EasyTek', default=False)  
     
     """
     def _compute_clerk_code(self):
