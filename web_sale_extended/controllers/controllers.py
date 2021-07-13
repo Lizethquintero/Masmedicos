@@ -153,6 +153,10 @@ class WebsiteSaleExtended(WebsiteSale):
     # toma de datos de pago y se crea el asegurador principal
     @http.route(['/shop/address'], type='http', methods=['GET', 'POST'], auth="public", website=True, sitemap=False)
     def address(self, errortusdatos= '', **kw):
+        if 'assisted_purchase' in request.params and request.params['assisted_purchase']:         
+            assisted_purchase = request.params['assisted_purchase']
+        else:
+            assisted_purchase = 0
         ''' Toma de datos de pago y se crea el asegurador principal '''
         Partner = request.env['res.partner'].with_context(show_address=1).sudo()
         order = request.website.sale_get_order()
@@ -199,6 +203,8 @@ class WebsiteSaleExtended(WebsiteSale):
 
         # IF POSTED
         if 'submitted' in kw:
+            if int(assisted_purchase) == 1:
+                order.write({'assisted_purchase': True})
             order.write({'tusdatos_email': kw['email']})
             _logger.info("****FORMULARIO*****")
             pre_values = self.values_preprocess(order, mode, kw)
@@ -333,6 +339,7 @@ class WebsiteSaleExtended(WebsiteSale):
             # 'fiscal_position': self.get_fiscal_position(),
             'only_services': order and order.only_services,
             'order_detail': order_detail,
+            'assisted_purchase': assisted_purchase,
         }
         return request.render("web_sale_extended.address", render_values)
     
@@ -353,6 +360,15 @@ class WebsiteSaleExtended(WebsiteSale):
         if extra_step.active:
             return request.redirect("/shop/extra_info")
         
+        """ Evaluando si es una venta asistida """
+        if 'assisted_purchase' in request.params and request.params['assisted_purchase']:            
+            body_message = """
+                <b><span style='color:green;'>PayU Latam - VENTA ASISTIDA </span></b><br/>
+                Se ha iniciado una transacción de venta asistida y el usuario ha sido redirigido al formulario 
+                para el registro de Asegurado y Beneficiarios<br/>
+            """
+            order.message_post(body=body_message, type="comment")
+            return request.redirect("/my/order/beneficiaries/" + str(order.id))
         
         """ Evaluando si el producto tiene valor cero """
         if order.main_product_id.list_price == 0:
@@ -622,23 +638,25 @@ class WebsiteSaleExtended(WebsiteSale):
                 order.write({
                     'beneficiary6_id': NewBeneficiaryPartner.id
                 })
+        
+        if order.assisted_purchase:
+            request.session['sale_order_id'] = None
+            request.session['sale_transaction_id'] = None
+            return request.render("web_sale_extended.confirm_assisted_purchase", kwargs)
+        else:
+            kwargs['order_detail'] = order_detail
+            kwargs['partner'] = Partner
             
-                
-                
-        
-        kwargs['order_detail'] = order_detail
-        kwargs['partner'] = Partner
-        
-        """ Confirmando Orden de Venta luego del proceso exitoso de beneficiarios """
-        order.action_confirm()
-        order._send_order_confirmation_mail()
+            """ Confirmando Orden de Venta luego del proceso exitoso de beneficiarios """
+            order.action_confirm()
+            order._send_order_confirmation_mail()
 
-        order.subscription_id.write({
-            'subscription_partner_ids': beneficiary_list,
-        })
-        request.session['sale_order_id'] = None
-        request.session['sale_transaction_id'] = None
-        return request.render("web_sale_extended.beneficiary_detail", kwargs)
+            order.subscription_id.write({
+                'subscription_partner_ids': beneficiary_list,
+            })
+            request.session['sale_order_id'] = None
+            request.session['sale_transaction_id'] = None
+            return request.render("web_sale_extended.beneficiary_detail", kwargs)
 
 
     @http.route(['/beneficiary-submit'], type='http', methods=['GET', 'POST'], auth="public", website=True, sitemap=False)
@@ -823,13 +841,17 @@ class WebsiteSaleExtended(WebsiteSale):
             )
             #request.website.sale_reset()
             #return request.redirect("/shop/checkout?express=1&product_id=" + str(product.id))
+            try:                
+                qcontext = '?assisted_purchase=' + str(request.params['assisted_purchase'])
+            except:
+                qcontext = ''
             """ 
                 Redireccionando al formulario de datos del comprador.
                 1er Paso, lanzado desde landpage(no hay proceso de token para saber si la petición es valida),
                 de esta manera se puede iniciar una compra directamente en la página de odoo apuntando
                 a /shop/ + el nombre de un producto publicado para venta en landpage
             """
-            return request.redirect("/shop/address")
+            return request.redirect("/shop/address%s" % qcontext)
             
         checkout_landpage_redirect = request.env.user.company_id.checkout_landpage_redirect
         if checkout_landpage_redirect:
@@ -1040,3 +1062,58 @@ class OdooWebsiteSearchCity(http.Controller):
         data['error'] = None,
         data['data'] = {'cities': cities}
         return json.dumps(data)
+
+    @http.route(['/shop/assisted_purchase'], methods=['GET'], type='http', auth="public", website=True)
+    def assisted_purchase(self):       
+        Products = request.env['product.template'].search([])        
+        data = {}        
+        for product in Products:
+            if product.list_price != 0:
+                if product.categ_id.name in data:
+                    data[product.categ_id.name].append(product)
+                else:
+                    data[product.categ_id.name] = [product]
+        
+        values = {
+            'products': Products,
+            'data': data
+        }
+        
+        return request.render("web_sale_extended.alternativo", values)
+    
+    @http.route(['/shop/assisted_purchase/search'],  methods=['GET'], type='http', auth="public", website=True)
+    def search_sponsor_plans(self, **kwargs):
+        Products = request.env['product.template'].search([])       
+        products_search_ids = []
+        data = {}        
+        for product in Products:
+            if len(request.params['search']) < 3:
+                if (product.categ_id.name).lower().startswith(str(request.params['search']).lower()):
+                    products_search_ids.append(int(product.categ_id))
+            else:
+                if str(request.params['search']).lower() in (product.categ_id.name).lower():
+                    products_search_ids.append(int(product.categ_id))
+                
+     
+        Products = request.env['product.template'].search([('categ_id', 'in', products_search_ids)])       
+        
+        for product in Products:
+            if product.categ_id.name in data:
+                data[product.categ_id.name].append(product)
+            else:
+                data[product.categ_id.name] = [product]
+        
+        values = {
+            'products': Products,
+            'data': data
+        }
+        
+        return request.render("web_sale_extended.alternativo", values)
+    
+
+    @http.route(['/shop/payment/assisted_purchase/<int:order_id>'], methods=['GET'], type='http', auth="public", website=True)
+    def get_payment_assisted_purchase(self, order_id, **kwargs):     
+        if order_id:
+            request.session['sale_order_id'] = order_id
+            request.session['sale_transaction_id'] = None        
+        return request.redirect('/shop/confirm_order')

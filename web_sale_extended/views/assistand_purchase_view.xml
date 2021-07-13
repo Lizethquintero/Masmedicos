@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_frontend_assistand_purchase" inherit_id="website.assets_frontend" name="JS and CSS Venta asistida">
+		<xpath expr="." position="inside">			
+            <script type="text/javascript" src="/web_sale_extended/static/src/js/assisted_purchase.js"></script>
+            <link rel="stylesheet" href="/web_sale_extended/static/src/css/assisted_purchase.css"/>
+		</xpath>
+	</template>
+    
+    
+    <template id="alternativo" name="Shop alternativo">
+        <t t-call="website.layout">
+            <h1>Venta Asistida</h1>       
+            
+            <form method="get" class="o_wsale_products_searchbar_form w-100 w-md-auto mt-2" action="/shop/assisted_purchase/search">
+                <div role="search" class="input-group">
+                    <input type="text" name="search" class="search-query form-control oe_search_box" placeholder="Buscar…" data-limit="0" data-display-description="false" data-display-price="false" data-display-image="false" value="" autocomplete="off"/>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary oe_search_button" aria-label="Búsqueda" title="Búsqueda"><i class="fa fa-search"></i></button>
+                        
+                        <a href="/shop/assisted_purchase" class="btn borrar">Borrar</a>
+                    </div>
+                </div>
+
+<!--                 <input name="order" type="hidden" class="o_wsale_search_order_by" value=""/> -->
+                
+            
+            
+        
+            </form>
+            
+            
+            <div class="contenedor-menu">                
+                <ul class="menu">
+                    <t t-foreach='data' t-as='d'>
+                        <li>
+                            <p><t t-esc='d' /><i class="derecha fa fa-chevron-down"></i></p>
+                            <ul>
+                                <li>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre del plan</th>
+                                                <th>Valor</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach='data[d]' t-as='a'>
+                                                <tr>
+                                                    <td><t t-esc='a.name' /></td>
+                                                    <td><t t-esc='a.list_price' t-options="{'widget': 'monetary', 'display_currency': a.currency_id}" /></td>
+                                                    <td><a t-att-href="a.product_landpage_url+'?assisted_purchase=1'" target="_blank" class="btn btn-primary">Comprar</a></td>
+                                                </tr>    
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </li>
+                            </ul>
+                        </li>
+                    </t>
+                </ul>
+            </div>            
+<!--             <script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>        -->
+<!--             <script src="/web_sale_extended/static/src/js/assisted_purchase.js" type="text/javascript"></script> -->
+        </t>
+    </template>
+</odoo>

@@ -438,9 +438,9 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-lg-12" id="terminos">                             
+                                    <div class="col-lg-12" id="terminos" style='display: none;'>                             
                                     </div>
-                                    <div class="col-lg-12" id="politica">                                        
+                                    <div class="col-lg-12" id="politica" style='display: none;'>                                        
                                     </div>
                                     <div class="w-100"/>
                                     <t t-if="mode == ('new', 'billing') and not only_services">
@@ -454,7 +454,7 @@
                                         </div>
                                     </t>
                                     </div>
-
+                                    <input type="hidden" name="assisted_purchase" t-att-value="assisted_purchase" />
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                     <input type="hidden" name="submitted" value="1" />
                                     <input type="hidden" name="partner_id" t-att-value="website_sale_order.partner_id and website_sale_order.partner_id.id or partner_id or '0'" />
